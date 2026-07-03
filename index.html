@@ -98,21 +98,95 @@
   .streakRow b{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold)}
 
   /* oblasti × měsíce */
-  #areaChartWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
-  #areaChart{display:flex;gap:16px;min-width:min-content}
-  .ag{display:flex;flex-direction:column;align-items:center;gap:6px}
-  .ag-cols{display:flex;align-items:flex-end;gap:3px;height:106px}
-  .ag-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
-  .ag-val{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--gold);height:10px}
-  .ag-bar{width:11px;border-radius:3px 3px 0 0;opacity:.55}
-  .ag-bar.cur{opacity:1;box-shadow:0 0 8px rgba(201,169,78,.25)}
-  .ag-m{font-family:'DM Mono',monospace;font-size:7px;color:var(--muted)}
-  .ag-name{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:.04em;
-    display:flex;align-items:center;gap:5px;white-space:nowrap}
-  .ag-name .dot{width:7px;height:7px;border-radius:50%}
+  #areaChartWrap,#workChartWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  #yearChart{display:flex;gap:12px;min-width:min-content;align-items:flex-end}
+  .mg{display:flex;flex-direction:column;align-items:center;gap:5px}
+  .mg-cols{display:flex;align-items:flex-end;gap:2px;height:96px}
+  .mg-bar{width:8px;border-radius:2px 2px 0 0;opacity:.85;min-height:2px}
+  .mg.cur .mg-bar{box-shadow:0 0 6px rgba(201,169,78,.3)}
+  .mg-name{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.06em}
+  .mg.cur .mg-name{color:var(--gold)}
+  #areaLegend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;padding-top:10px;
+    border-top:1px solid rgba(42,42,58,.5)}
+  #areaLegend span{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);
+    display:flex;align-items:center;gap:5px}
+  #areaLegend i{width:8px;height:8px;border-radius:50%;display:inline-block}
   .tr{font-size:8px;color:var(--muted)}
   .tr.up{color:#7BC96F}
   .tr.dn{color:#D08A8A}
+
+  /* 14 dní — skládané sloupce */
+  #chart .bar{display:flex;flex-direction:column-reverse;background:none;opacity:1}
+  #chart .seg{width:100%}
+  #chart .seg:last-child{border-radius:4px 4px 0 0}
+
+  /* pracovní graf */
+  #workChart{display:flex;gap:9px;min-width:min-content;align-items:flex-end}
+  .wg{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .wg-val{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--gold);height:10px;white-space:nowrap}
+  .wg-bar{width:20px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--gold),var(--edge));
+    opacity:.8;min-height:2px}
+  .wg.cur .wg-bar{opacity:1;box-shadow:0 0 8px rgba(201,169,78,.3)}
+  .wg-h{font-family:'DM Mono',monospace;font-size:7px;color:var(--muted);white-space:nowrap}
+  .wg-m{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--muted)}
+  .wg.cur .wg-m{color:var(--gold)}
+  #workMonth{margin-top:12px;padding-top:10px;border-top:1px solid rgba(42,42,58,.5)}
+  #workMonth .streakRow b{white-space:nowrap}
+
+  /* práce v zápisu */
+  #workBox{margin-top:16px;background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:14px;padding:12px 14px}
+  .wb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .wb-head label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted)}
+  .btn.sm{width:auto;margin:0;padding:7px 11px;font-size:10px}
+  .btn.gold{border-color:var(--edge);color:var(--gold)}
+  #projWheel{height:96px;overflow:hidden;position:relative;touch-action:none;cursor:grab;
+    display:flex;flex-direction:column;justify-content:center;margin-bottom:10px;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 25%,#000 75%,transparent);
+    mask-image:linear-gradient(180deg,transparent,#000 25%,#000 75%,transparent)}
+  .pw-item{height:32px;display:flex;align-items:center;justify-content:center;gap:8px;
+    font-size:13px;font-weight:700;color:var(--muted);opacity:.4;user-select:none}
+  .pw-item .pw-firm{font-family:'DM Mono',monospace;font-size:9px;font-weight:400}
+  .pw-item.on{opacity:1;color:var(--text);font-size:14.5px}
+  .pw-item.on .pw-firm{color:var(--gold)}
+  .pw-empty{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-align:center}
+  .wb-add{display:flex;gap:8px}
+  #workHours{flex:1;background:#0D0D15;border:1px solid var(--line);border-radius:9px;
+    padding:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px}
+  #workList{margin-top:4px}
+  .wl-row{display:flex;align-items:center;gap:8px;padding:8px 0;
+    border-bottom:1px solid rgba(42,42,58,.5);font-size:12px}
+  .wl-row:last-child{border-bottom:none}
+  .wl-row .wl-n{flex:1;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wl-row b{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold);white-space:nowrap}
+  .wl-row .del{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:2px 4px}
+
+  /* modal projektů */
+  #projModal{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;
+    background:rgba(5,5,10,.78);backdrop-filter:blur(4px);padding:14px}
+  #projModal.open{display:flex}
+  #projModal .panel{width:min(560px,94vw);max-height:84vh;overflow-y:auto;
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:16px}
+  #projModal h2{font-family:Georgia,serif;font-weight:400;color:var(--gold);font-size:16px;margin-bottom:12px}
+  #projModal .row{display:flex;gap:8px}
+  .pr{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px}
+  .pr.done{opacity:.6;border-color:var(--edge-dim)}
+  .pr .r1{display:flex;gap:6px;margin-bottom:6px}
+  .pr input[type=text]{flex:1;min-width:0;background:#0D0D15;border:1px solid var(--line);
+    border-radius:7px;padding:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px}
+  .pr .r2{display:flex;gap:6px;align-items:center}
+  .pr select{background:#0D0D15;border:1px solid var(--line);border-radius:7px;padding:8px 5px;
+    color:var(--text);font-family:'DM Mono',monospace;font-size:9.5px}
+  .pr input[type=number]{width:92px;background:#0D0D15;border:1px solid var(--line);
+    border-radius:7px;padding:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px}
+  .pr .kc{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+  .pr .r3{display:flex;gap:6px;align-items:center;margin-top:7px}
+  .pr .stat{flex:1;font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted)}
+  .pr .pbtn{font-family:'DM Mono',monospace;font-size:9px;border-radius:7px;padding:6px 9px;
+    cursor:pointer;background:var(--panel);border:1px solid var(--line);color:var(--text)}
+  .pr .pbtn.doneBtn.on{background:var(--gold);border-color:var(--gold);color:#0B0B12;font-weight:700}
+  .pr .pbtn.delBtn:active{border-color:#B06A6A;color:#D08A8A}
 
   /* streaky s rekordy */
   .spRow{padding:9px 0;border-bottom:1px solid rgba(42,42,58,.5)}
@@ -190,6 +264,18 @@
       <label for="dayNote">Poznámka dne</label>
       <textarea id="dayNote" placeholder="Jak šel den…"></textarea>
     </div>
+    <div id="workBox">
+      <div class="wb-head">
+        <label>Práce · projekt a hodiny</label>
+        <button class="btn sm" id="openProj">⚙ Zadané projekty</button>
+      </div>
+      <div id="projWheel"></div>
+      <div class="wb-add">
+        <input type="text" id="workHours" inputmode="decimal" placeholder="hodiny (např. 1,5)">
+        <button class="btn sm gold" id="addWork">+ Zapsat</button>
+      </div>
+      <div id="workList"></div>
+    </div>
   </section>
 
   <!-- ============ PŘEHLED ============ -->
@@ -204,8 +290,14 @@
       <div id="chart"></div>
     </div>
     <div class="card">
-      <h3>Oblasti v čase · % plnění po měsících</h3>
-      <div id="areaChartWrap"><div id="areaChart"></div></div>
+      <h3 id="yearTitle">Rok · oblasti po měsících</h3>
+      <div id="areaChartWrap"><div id="yearChart"></div></div>
+      <div id="areaLegend"></div>
+    </div>
+    <div class="card">
+      <h3>Práce · vyděláno Kč a hodiny po měsících</h3>
+      <div id="workChartWrap"><div id="workChart"></div></div>
+      <div id="workMonth"></div>
     </div>
     <div class="card">
       <h3>Streaky · 🔥 aktuální / 🏆 rekord</h3>
@@ -242,6 +334,17 @@
     </div>
   </section>
 </main>
+
+<div id="projModal">
+  <div class="panel">
+    <h2>Zadané projekty</h2>
+    <div id="projRows"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="projAdd">+ Přidat projekt</button>
+      <button class="btn" id="projClose">Zavřít</button>
+    </div>
+  </div>
+</div>
 
 <div id="toast"></div>
 
@@ -315,6 +418,8 @@ function load(){
     if(h.scoring!=="levels") h.scoring = "binary";
     if(!h.levels || typeof h.levels!=="object") h.levels = {};
   });
+  /* v3: projekty pro pracovní modul */
+  if(!Array.isArray(state.projects)) state.projects = [];
 }
 var saveTimer=null;
 function save(){
@@ -482,6 +587,7 @@ function renderEntry(){
   habitListEl.innerHTML = html;
   document.querySelector("#dayBar div").style.width = dayPct(selDate)+"%";
   dayNoteEl.value = rec(selDate)._note || "";
+  renderWheel(); renderWorkList();
 }
 
 habitListEl.addEventListener("click", function(ev){
@@ -509,6 +615,155 @@ dayNoteEl.addEventListener("input", function(){
   save();
 });
 
+/* =====================================================================
+   PRÁCE — kolečko projektů, zápis hodin, správa projektů
+   ===================================================================== */
+
+var wheelIdx = 0;
+function activeProjects(){ return state.projects.filter(function(p){ return !p.done; }); }
+
+function renderWheel(){
+  var box = document.getElementById("projWheel");
+  var ap = activeProjects();
+  if(!ap.length){
+    box.innerHTML = '<div class="pw-empty">Žádné aktivní projekty — přidej přes „Zadané projekty“</div>';
+    return;
+  }
+  wheelIdx = ((wheelIdx % ap.length)+ap.length)%ap.length;
+  var idxs = [wheelIdx-1, wheelIdx, wheelIdx+1].map(function(i){
+    return ((i % ap.length)+ap.length)%ap.length;
+  });
+  box.innerHTML = idxs.map(function(pi, slot){
+    var p = ap[pi];
+    return '<div class="pw-item'+(slot===1?" on":"")+'" data-d="'+(slot-1)+'">'+
+      esc(p.name)+' <span class="pw-firm">'+esc(p.firma||"")+'</span></div>';
+  }).join("");
+}
+document.getElementById("projWheel").addEventListener("click", function(ev){
+  var it = ev.target.closest(".pw-item"); if(!it) return;
+  var d = +it.getAttribute("data-d");
+  if(d){ wheelIdx += d; renderWheel(); }
+});
+(function(){ /* tažení prstem = rolování, nekonečné */
+  var box = document.getElementById("projWheel");
+  var startY = null, acc = 0;
+  box.addEventListener("pointerdown", function(ev){
+    startY = ev.clientY; acc = 0;
+    if(box.setPointerCapture) box.setPointerCapture(ev.pointerId);
+  });
+  box.addEventListener("pointermove", function(ev){
+    if(startY===null) return;
+    acc += ev.clientY - startY;
+    startY = ev.clientY;
+    while(acc > 28){ wheelIdx--; acc -= 28; renderWheel(); }
+    while(acc < -28){ wheelIdx++; acc += 28; renderWheel(); }
+  });
+  box.addEventListener("pointerup", function(){ startY = null; });
+})();
+
+function renderWorkList(){
+  var list = workEntries(selDate);
+  document.getElementById("workList").innerHTML = list.map(function(e,i){
+    var p = projById(e.pid);
+    return '<div class="wl-row"><span class="wl-n">'+esc(p?p.name:"?")+
+      (p&&p.firma?' <span class="pw-firm" style="color:var(--muted)">'+esc(p.firma)+'</span>':"")+'</span>'+
+      '<b>'+e.h+' h'+(p&&p.typ==="hodinova"?' · '+fmtKc(e.h*(+p.sazba||0)):"")+'</b>'+
+      '<button class="del" data-i="'+i+'" aria-label="Smazat">✕</button></div>';
+  }).join("");
+}
+document.getElementById("workList").addEventListener("click", function(ev){
+  if(!ev.target.classList.contains("del")) return;
+  var i = +ev.target.getAttribute("data-i");
+  var list = workEntries(selDate);
+  list.splice(i,1);
+  if(!list.length){
+    delete state.records[selDate]._work;
+    if(state.records[selDate] && !Object.keys(state.records[selDate]).length) delete state.records[selDate];
+  }
+  save(); renderWorkList();
+});
+document.getElementById("addWork").addEventListener("click", function(){
+  var ap = activeProjects();
+  if(!ap.length){ toast("Nejdřív přidej projekt"); return; }
+  var hInp = document.getElementById("workHours");
+  var h = parseFloat(String(hInp.value).replace(",","."));
+  if(!h || h<=0){ toast("Zadej počet hodin"); return; }
+  var p = ap[((wheelIdx % ap.length)+ap.length)%ap.length];
+  if(!state.records[selDate]) state.records[selDate]={};
+  if(!state.records[selDate]._work) state.records[selDate]._work=[];
+  state.records[selDate]._work.push({pid:p.id, h:h});
+  hInp.value="";
+  save(); renderWorkList();
+  toast(p.name+" · +"+h+" h");
+});
+
+/* ---- Zadané projekty (modal) ---- */
+var projModal = document.getElementById("projModal");
+function renderProj(){
+  document.getElementById("projRows").innerHTML = state.projects.map(function(p,i){
+    var t = projTotals(p.id);
+    return '<div class="pr'+(p.done?" done":"")+'" data-i="'+i+'">'+
+      '<div class="r1">'+
+        '<input type="text" value="'+esc(p.name)+'" data-f="name" placeholder="Název projektu">'+
+        '<input type="text" value="'+esc(p.firma||"")+'" data-f="firma" placeholder="Firma">'+
+      '</div>'+
+      '<div class="r2">'+
+        '<select data-f="typ">'+
+          '<option value="hodinova"'+(p.typ!=="zakazka"?" selected":"")+'>hodinová</option>'+
+          '<option value="zakazka"'+(p.typ==="zakazka"?" selected":"")+'>zakázka</option>'+
+        '</select>'+
+        '<input type="number" value="'+(+p.sazba||0)+'" data-f="sazba" min="0" step="1" inputmode="numeric">'+
+        '<span class="kc">'+(p.typ==="zakazka"?"Kč celkem":"Kč / h")+'</span>'+
+      '</div>'+
+      '<div class="r3">'+
+        '<span class="stat">Σ '+t.h+' h · '+fmtKc(t.kc)+(p.done&&p.doneDate?' · hotovo '+p.doneDate:"")+'</span>'+
+        '<button class="pbtn doneBtn'+(p.done?" on":"")+'">'+(p.done?"✓ DOKONČENO":"Dokončeno")+'</button>'+
+        '<button class="pbtn delBtn">✕</button>'+
+      '</div>'+
+    '</div>';
+  }).join("") || '<div class="note">Zatím žádné projekty. Přidej první tlačítkem níže.</div>';
+}
+document.getElementById("openProj").addEventListener("click", function(){
+  renderProj(); projModal.classList.add("open");
+});
+document.getElementById("projClose").addEventListener("click", function(){
+  projModal.classList.remove("open"); renderWheel(); renderWorkList();
+});
+projModal.addEventListener("click", function(ev){
+  if(ev.target===projModal){ projModal.classList.remove("open"); renderWheel(); renderWorkList(); }
+});
+document.getElementById("projAdd").addEventListener("click", function(){
+  state.projects.push({id:"p"+Date.now().toString(36), name:"Nový projekt", firma:"",
+    typ:"hodinova", sazba:0, done:false, doneDate:null});
+  save(); renderProj();
+});
+document.getElementById("projRows").addEventListener("input", function(ev){
+  var row = ev.target.closest(".pr"); if(!row) return;
+  var p = state.projects[+row.getAttribute("data-i")];
+  var f = ev.target.getAttribute("data-f");
+  if(p && f){
+    p[f] = (f==="sazba") ? +ev.target.value||0 : ev.target.value;
+    save();
+    if(f==="typ") renderProj();
+  }
+});
+document.getElementById("projRows").addEventListener("click", function(ev){
+  var row = ev.target.closest(".pr"); if(!row) return;
+  var i = +row.getAttribute("data-i");
+  var p = state.projects[i];
+  if(ev.target.classList.contains("doneBtn")){
+    p.done = !p.done;
+    p.doneDate = p.done ? todayISO() : null;
+    save(); renderProj();
+  }
+  if(ev.target.classList.contains("delBtn")){
+    if(confirm("Smazat projekt „"+p.name+"“? Zapsané hodiny v historii zůstanou.")){
+      state.projects.splice(i,1);
+      save(); renderProj();
+    }
+  }
+});
+
 document.getElementById("prevDay").addEventListener("click", function(){
   selDate = shiftDate(selDate,-1); renderEntry();
 });
@@ -534,37 +789,30 @@ function renderOverview(){
   var chart = "";
   var d = shiftDate(todayISO(),-13);
   for(var i=0;i<14;i++){
-    var pct = dayPct(d);
     var dd = fromISO(d);
-    chart += '<div class="col"><div class="bar" style="height:'+Math.max(2,pct*0.8)+'px"></div>'+
+    var total = state.habits.length || 1;
+    var segs = "";
+    AREAS.forEach(function(a){
+      var hs = state.habits.filter(function(h){ return h.area===a.id; });
+      var done = 0;
+      hs.forEach(function(h){ if(isDone(d,h.id)) done++; });
+      if(done>0){
+        segs += '<div class="seg" style="height:'+(done/total*100*0.8)+'px;background:'+a.color+'" '+
+          'title="'+esc(a.name)+': '+done+'"></div>';
+      }
+    });
+    chart += '<div class="col"><div class="bar" style="height:auto">'+segs+'</div>'+
       '<div class="lbl">'+dd.getDate()+'</div></div>';
     d = shiftDate(d,1);
   }
   document.getElementById("chart").innerHTML = chart;
 
-  renderAreaChart();
+  renderYearChart();
+  renderWorkChart();
   renderStreaksPro();
 }
 
-/* ---- Oblasti × měsíce: každá oblast skupina, sloupec za každý měsíc ---- */
-function monthList(){
-  var keys = Object.keys(state.records).sort();
-  var cur = todayISO().slice(0,7);
-  if(!keys.length) return [cur];
-  var out = [], ym = keys[0].slice(0,7);
-  while(ym <= cur){
-    out.push(ym);
-    var y = +ym.slice(0,4), m = +ym.slice(5,7);
-    m++; if(m>12){ m=1; y++; }
-    ym = y+"-"+p2(m);
-  }
-  return out.slice(-12); /* max 12 měsíců, ať se to vejde */
-}
-function daysElapsed(ym){
-  var today = todayISO();
-  if(ym === today.slice(0,7)) return +today.slice(8,10);
-  return new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
-}
+/* ---- Roční graf: měsíce vedle sebe, v každém 6 sloupců oblastí ---- */
 function areaMonthPct(areaId, ym){
   var hs = state.habits.filter(function(h){ return h.area===areaId; });
   if(!hs.length) return 0;
@@ -575,36 +823,110 @@ function areaMonthPct(areaId, ym){
   }
   return Math.round(done/(daysElapsed(ym)*hs.length)*100);
 }
-function renderAreaChart(){
-  var months = monthList();
+function daysElapsed(ym){
+  var today = todayISO();
+  if(ym > today.slice(0,7)) return 1;
+  if(ym === today.slice(0,7)) return +today.slice(8,10);
+  return new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
+}
+var MN_SHORT = ["LED","ÚNO","BŘE","DUB","KVĚ","ČER","ČVC","SRP","ZÁŘ","ŘÍJ","LIS","PRO"];
+function renderYearChart(){
+  var year = todayISO().slice(0,4);
   var curYm = todayISO().slice(0,7);
+  document.getElementById("yearTitle").textContent = "Rok "+year+" · oblasti po měsících";
   var html = "";
-  AREAS.forEach(function(a){
-    var hs = state.habits.filter(function(h){ return h.area===a.id; });
-    if(!hs.length) return;
-    var pcts = months.map(function(ym){ return areaMonthPct(a.id, ym); });
-    /* trend: tento měsíc vs. minulý */
-    var trend = "";
-    if(pcts.length>=2){
-      var diff = pcts[pcts.length-1]-pcts[pcts.length-2];
-      trend = diff>0 ? '<span class="tr up">▲ +'+diff+' %</span>'
-            : diff<0 ? '<span class="tr dn">▼ '+diff+' %</span>'
-            : '<span class="tr">＝</span>';
-    }
-    html += '<div class="ag">'+
-      '<div class="ag-cols">'+months.map(function(ym,i){
-        var p = pcts[i];
-        var isCur = ym===curYm;
-        return '<div class="ag-col"><div class="ag-val">'+(isCur?p+"%":"")+'</div>'+
-          '<div class="ag-bar'+(isCur?" cur":"")+'" style="height:'+Math.max(3,p*0.72)+'px;background:'+a.color+'" '+
-          'title="'+ym+' · '+p+' %"></div>'+
-          '<div class="ag-m">'+(+ym.slice(5,7))+'</div></div>';
+  for(var m=1;m<=12;m++){
+    var ym = year+"-"+p2(m);
+    var future = ym > curYm;
+    html += '<div class="mg'+(ym===curYm?" cur":"")+'">'+
+      '<div class="mg-cols">'+AREAS.map(function(a){
+        var pct = future ? 0 : areaMonthPct(a.id, ym);
+        return '<div class="mg-bar" style="height:'+Math.max(2,pct*0.9)+'px;background:'+a.color+'" '+
+          'title="'+esc(a.name)+' · '+MN_SHORT[m-1]+' · '+pct+' %"></div>';
       }).join("")+'</div>'+
-      '<div class="ag-name"><span class="dot" style="background:'+a.color+'"></span>'+
-      esc(a.name)+' '+trend+'</div>'+
-      '</div>';
+      '<div class="mg-name">'+MN_SHORT[m-1]+'</div></div>';
+  }
+  document.getElementById("yearChart").innerHTML = html;
+  document.getElementById("areaLegend").innerHTML = AREAS.map(function(a){
+    return '<span><i style="background:'+a.color+'"></i>'+esc(a.name)+'</span>';
+  }).join("");
+}
+
+/* ---- Pracovní data ---- */
+function workEntries(date){ return (rec(date)._work)||[]; }
+function projById(pid){
+  for(var i=0;i<state.projects.length;i++) if(state.projects[i].id===pid) return state.projects[i];
+  return null;
+}
+function fmtKc(n){
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ")+" Kč";
+}
+function monthWork(ym){
+  /* hodiny + peníze za měsíc: hodinovky dle hodin, zakázky dle měsíce dokončení */
+  var hours = 0, money = 0, byFirm = {};
+  for(var d in state.records){
+    if(d.slice(0,7)!==ym) continue;
+    workEntries(d).forEach(function(e){
+      var p = projById(e.pid); if(!p) return;
+      hours += e.h;
+      var f = p.firma||"—";
+      if(!byFirm[f]) byFirm[f] = {h:0, kc:0};
+      byFirm[f].h += e.h;
+      if(p.typ==="hodinova"){
+        money += e.h*(+p.sazba||0);
+        byFirm[f].kc += e.h*(+p.sazba||0);
+      }
+    });
+  }
+  state.projects.forEach(function(p){
+    if(p.typ==="zakazka" && p.done && p.doneDate && p.doneDate.slice(0,7)===ym){
+      money += (+p.sazba||0);
+      var f = p.firma||"—";
+      if(!byFirm[f]) byFirm[f] = {h:0, kc:0};
+      byFirm[f].kc += (+p.sazba||0);
+    }
   });
-  document.getElementById("areaChart").innerHTML = html;
+  return {hours:hours, money:money, byFirm:byFirm};
+}
+function projTotals(pid){
+  var h = 0;
+  for(var d in state.records){
+    workEntries(d).forEach(function(e){ if(e.pid===pid) h += e.h; });
+  }
+  var p = projById(pid);
+  var kc = p ? (p.typ==="hodinova" ? h*(+p.sazba||0) : (p.done ? (+p.sazba||0) : 0)) : 0;
+  return {h:h, kc:kc};
+}
+function renderWorkChart(){
+  var year = todayISO().slice(0,4);
+  var curYm = todayISO().slice(0,7);
+  var data = [], maxM = 1;
+  for(var m=1;m<=12;m++){
+    var w = monthWork(year+"-"+p2(m));
+    data.push(w);
+    if(w.money>maxM) maxM = w.money;
+  }
+  var html = "";
+  for(var m=1;m<=12;m++){
+    var w = data[m-1];
+    var ym = year+"-"+p2(m);
+    html += '<div class="wg'+(ym===curYm?" cur":"")+'">'+
+      '<div class="wg-val">'+(w.money>0 ? (w.money>=1000 ? Math.round(w.money/1000)+"k" : Math.round(w.money)) : "")+'</div>'+
+      '<div class="wg-bar" style="height:'+Math.max(2,Math.round(w.money/maxM*84))+'px" '+
+      'title="'+MN_SHORT[m-1]+' · '+fmtKc(w.money)+' · '+w.hours+' h"></div>'+
+      '<div class="wg-h">'+(w.hours>0 ? w.hours+"h" : "·")+'</div>'+
+      '<div class="wg-m">'+MN_SHORT[m-1]+'</div></div>';
+  }
+  document.getElementById("workChart").innerHTML = html;
+  /* aktuální měsíc po firmách — podklad pro fakturaci */
+  var cur = monthWork(curYm);
+  var rows = Object.keys(cur.byFirm).map(function(f){
+    var b = cur.byFirm[f];
+    return '<div class="streakRow"><span>'+esc(f)+'</span><b>'+b.h+' h · '+fmtKc(b.kc)+'</b></div>';
+  }).join("");
+  document.getElementById("workMonth").innerHTML =
+    '<div class="streakRow"><span><b style="color:var(--text)">Tento měsíc celkem</b></span>'+
+    '<b>'+cur.hours+' h · '+fmtKc(cur.money)+'</b></div>'+rows;
 }
 
 /* ---- Streaky: aktuální + rekord + progress k rekordu ---- */
@@ -719,7 +1041,7 @@ function download(name, text, mime){
 document.getElementById("expJson").addEventListener("click", function(){
   download("zivot-je-hra-zaloha-"+todayISO()+".json",
     JSON.stringify({verze:"tracker-1.0", exportováno:todayISO(),
-      habits:state.habits, records:state.records, baseXp:state.baseXp}, null, 2),
+      habits:state.habits, records:state.records, baseXp:state.baseXp, projects:state.projects}, null, 2),
     "application/json");
   toast("Záloha stažena");
 });
@@ -754,6 +1076,11 @@ impConfirm.addEventListener("click", function(){
   state.habits = data.habits;
   state.records = data.records||{};
   state.baseXp = data.baseXp||0;
+  if(Array.isArray(data.projects)) state.projects = data.projects;
+  state.habits.forEach(function(h){
+    if(h.scoring!=="levels") h.scoring="binary";
+    if(!h.levels || typeof h.levels!=="object") h.levels={};
+  });
   save();
   importArea.value=""; importArea.classList.remove("show"); impConfirm.style.display="none";
   renderSettings(); renderEntry();
