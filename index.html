@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B0B12">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Život je hra — Zápis dne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0B12; --bg-soft:#101018; --panel:#14141F; --line:#2A2A3A;
+    --text:#E8E4D8; --muted:#8B8778; --gold:#D9B85C; --edge:#C9A94E;
+    --a1:#B06A6A; --a2:#C97B4A; --a3:#5B7FA6; --a4:#8B6FAE; --a5:#4AA69B; --a6:#5B8C3E;
+    --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;
+    -webkit-font-smoothing:antialiased;min-height:100%}
+  body{padding-bottom:calc(74px + var(--safe-b))}
+
+  header{position:sticky;top:0;z-index:20;padding:14px 16px 10px;
+    background:linear-gradient(180deg,rgba(11,11,18,.98),rgba(11,11,18,.9));
+    border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  header h1{font-family:Georgia,serif;font-weight:400;font-size:20px;color:var(--gold);letter-spacing:.05em}
+  header .sub{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);
+    letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+
+  main{padding:14px 14px 20px;max-width:560px;margin:0 auto}
+  .view{display:none}
+  .view.on{display:block}
+
+  /* ===== Zápis ===== */
+  #dateNav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  #dateNav button{background:var(--panel);border:1px solid var(--line);color:var(--text);
+    border-radius:9px;width:40px;height:40px;font-size:16px;cursor:pointer}
+  #dateNav button:active{border-color:var(--gold)}
+  #dateLabel{flex:1;text-align:center}
+  #dateLabel .d{font-weight:800;font-size:15px}
+  #dateLabel .p{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);margin-top:2px}
+  #todayBtn{width:auto!important;padding:0 12px;font-family:'DM Mono',monospace;font-size:10px!important}
+
+  #dayBar{height:6px;background:var(--panel);border-radius:99px;overflow:hidden;margin-bottom:16px}
+  #dayBar div{height:100%;background:linear-gradient(90deg,var(--edge),var(--gold));width:0%;
+    border-radius:99px;transition:width .3s}
+
+  .area{margin-bottom:14px;background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden}
+  .area .head{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--line)}
+  .area .dot{width:9px;height:9px;border-radius:50%}
+  .area .head h2{font-size:13px;font-weight:800;letter-spacing:.03em;flex:1}
+  .area .head .cnt{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+  .habit{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(42,42,58,.5);cursor:pointer}
+  .habit:last-child{border-bottom:none}
+  .habit:active{background:rgba(201,169,78,.05)}
+  .hcheck{width:26px;height:26px;flex:none;border:2px solid var(--line);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;font-size:15px;color:transparent;transition:all .15s}
+  .habit.done .hcheck{background:var(--gold);border-color:var(--gold);color:#0B0B12}
+  .habit .hname{flex:1;font-size:13.5px;font-weight:700}
+  .habit.done .hname{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(139,135,120,.5)}
+  .habit .hstreak{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+  .habit .hstreak.hot{color:var(--gold)}
+  .badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--muted);
+    border:1px solid var(--line);border-radius:5px;padding:2px 5px}
+
+  #noteBox{margin-top:4px}
+  #noteBox label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+  #dayNote{width:100%;min-height:70px;background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:12px;padding:11px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;resize:vertical}
+
+  /* ===== Přehled ===== */
+  .card{background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+  .card h3{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  #lvlRow{display:flex;align-items:baseline;gap:10px}
+  #lvlNum{font-family:Georgia,serif;font-size:38px;color:var(--gold)}
+  #lvlXp{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted)}
+  #xpBar{height:8px;background:var(--panel);border-radius:99px;overflow:hidden;margin-top:10px}
+  #xpBar div{height:100%;background:linear-gradient(90deg,var(--edge),var(--gold));border-radius:99px}
+  #chart{display:flex;align-items:flex-end;gap:4px;height:90px}
+  #chart .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+  #chart .bar{width:100%;background:var(--edge);opacity:.75;border-radius:4px 4px 0 0;min-height:2px}
+  #chart .lbl{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--muted)}
+  .streakRow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(42,42,58,.5);
+    font-size:12.5px}
+  .streakRow:last-child{border-bottom:none}
+  .streakRow b{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold)}
+
+  /* ===== Nastavení ===== */
+  .btn{font-family:'DM Mono',monospace;font-size:11px;background:var(--panel);color:var(--text);
+    border:1px solid var(--line);border-radius:9px;padding:11px 14px;cursor:pointer;width:100%;margin-bottom:8px;text-align:left}
+  .btn:active{border-color:var(--gold);color:var(--gold)}
+  .btn.warn:active{border-color:#B06A6A;color:#D08A8A}
+  .set-h{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(42,42,58,.5)}
+  .set-h input[type=text]{flex:1;min-width:0;background:#0D0D15;border:1px solid var(--line);
+    border-radius:7px;padding:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px}
+  .set-h select{background:#0D0D15;border:1px solid var(--line);border-radius:7px;padding:8px 5px;
+    color:var(--text);font-family:'DM Mono',monospace;font-size:9.5px;max-width:86px}
+  .set-h .del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:4px}
+  #baseXp{width:100%;background:#0D0D15;border:1px solid var(--line);border-radius:9px;
+    padding:11px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px}
+  .note{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);line-height:1.7;margin-top:8px}
+  #importArea{width:100%;min-height:110px;background:#080810;border:1px solid var(--line);
+    border-radius:9px;padding:10px;color:#9BC77A;font-family:'DM Mono',monospace;font-size:9.5px;
+    resize:vertical;margin-bottom:8px;display:none}
+  #importArea.show{display:block}
+  #toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%) translateY(20px);
+    background:#1E1A0E;border:1px solid var(--edge);color:var(--gold);border-radius:10px;
+    padding:10px 18px;font-family:'DM Mono',monospace;font-size:11px;opacity:0;pointer-events:none;
+    transition:all .25s;z-index:50;white-space:nowrap}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ===== Spodní navigace ===== */
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+    background:rgba(11,11,18,.97);border-top:1px solid var(--line);
+    padding:8px 10px calc(8px + var(--safe-b));backdrop-filter:blur(8px)}
+  nav button{flex:1;background:none;border:none;color:var(--muted);cursor:pointer;
+    font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.08em;padding:8px 0;
+    display:flex;flex-direction:column;align-items:center;gap:3px}
+  nav button .ic{font-size:17px}
+  nav button.on{color:var(--gold)}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Život je hra</h1>
+  <div class="sub">Zápis dne · sběr dat v1</div>
+</header>
+
+<main>
+  <!-- ============ ZÁPIS ============ -->
+  <section class="view on" id="view-zapis">
+    <div id="dateNav">
+      <button id="prevDay" aria-label="Předchozí den">‹</button>
+      <div id="dateLabel"><div class="d"></div><div class="p"></div></div>
+      <button id="todayBtn">DNES</button>
+      <button id="nextDay" aria-label="Další den">›</button>
+    </div>
+    <div id="dayBar"><div></div></div>
+    <div id="habitList"></div>
+    <div id="noteBox">
+      <label for="dayNote">Poznámka dne</label>
+      <textarea id="dayNote" placeholder="Jak šel den…"></textarea>
+    </div>
+  </section>
+
+  <!-- ============ PŘEHLED ============ -->
+  <section class="view" id="view-prehled">
+    <div class="card">
+      <h3>Level hráče</h3>
+      <div id="lvlRow"><div id="lvlNum">1</div><div id="lvlXp"></div></div>
+      <div id="xpBar"><div></div></div>
+    </div>
+    <div class="card">
+      <h3>Posledních 14 dní · % splnění</h3>
+      <div id="chart"></div>
+    </div>
+    <div class="card">
+      <h3>Nejdelší aktuální streaky</h3>
+      <div id="streaks"></div>
+    </div>
+  </section>
+
+  <!-- ============ NASTAVENÍ ============ -->
+  <section class="view" id="view-nastaveni">
+    <div class="card">
+      <h3>Startovní základ</h3>
+      <input type="number" id="baseXp" min="0" step="1" inputmode="numeric">
+      <div class="note">Startovní XP — tvoje 3 roky práce se počítají. 1 splněný návyk = 1 XP, level = 200 XP.
+      Např. 2 roky × ~10 návyků denně × ~70 % ≈ 5 100 XP = level 26.</div>
+    </div>
+    <div class="card">
+      <h3>Návyky</h3>
+      <div id="habitSettings"></div>
+      <button class="btn" id="addHabit" style="margin-top:10px">+ Přidat návyk</button>
+    </div>
+    <div class="card">
+      <h3>Nástroje</h3>
+      <button class="btn" onclick="location.href='./mapa.html'">🗺 Otevřít myšlenkovou mapu</button>
+      <div class="note">Mapa architektury a projektů — samostatná appka ve stejném balíčku.</div>
+    </div>
+    <div class="card">
+      <h3>Data</h3>
+      <button class="btn" id="expJson">⇑ Export JSON (záloha / přenos)</button>
+      <button class="btn" id="expCsv">⇑ Export CSV (Excel)</button>
+      <button class="btn" id="impJson">⇓ Import JSON</button>
+      <textarea id="importArea" placeholder="Sem vlož JSON zálohu…" spellcheck="false"></textarea>
+      <button class="btn" id="impConfirm" style="display:none">Potvrdit import</button>
+      <div class="note">Export JSON ulož jako soubor — je to kompletní záloha. Na novém zařízení: Import JSON → vložit → potvrdit.</div>
+    </div>
+  </section>
+</main>
+
+<div id="toast"></div>
+
+<nav>
+  <button data-v="zapis" class="on"><span class="ic">✓</span>Zápis</button>
+  <button data-v="prehled"><span class="ic">◈</span>Přehled</button>
+  <button data-v="nastaveni"><span class="ic">⚙</span>Nastavení</button>
+</nav>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   DATA
+   ===================================================================== */
+
+var AREAS = [
+  {id:"zdravi",   name:"Zdraví těla",     color:"#B06A6A"},
+  {id:"fyzicky",  name:"Fyzický rozvoj",  color:"#C97B4A"},
+  {id:"mentalni", name:"Mentální rozvoj", color:"#5B7FA6"},
+  {id:"duchovni", name:"Duchovní rozvoj", color:"#8B6FAE"},
+  {id:"prace",    name:"Práce a CEO",     color:"#4AA69B"},
+  {id:"vztahy",   name:"Vztahy a Rodina", color:"#5B8C3E"}
+];
+
+function defaultHabits(){
+  var H = function(id,area,name,type){ return {id:id,area:area,name:name,type:type}; };
+  return [
+    H("h-strava","zdravi","Strava (MIND/PREDIMED)","daily"),
+    H("h-spanek","zdravi","Spánek 7–8 h","daily"),
+    H("h-pust","zdravi","Přerušovaný půst","daily"),
+    H("h-sauna","zdravi","Sauna","weekly"),
+    H("h-suplementy","zdravi","Suplementy","daily"),
+    H("h-masaz","zdravi","Masáž","weekly"),
+    H("h-beh","fyzicky","Běh / kardio","weekly"),
+    H("h-silovy","fyzicky","Silový trénink","weekly"),
+    H("h-yoga","fyzicky","Yoga","daily"),
+    H("h-otuzovani","fyzicky","Otužování","daily"),
+    H("h-studium","mentalni","Studijní blok","weekly"),
+    H("h-cetba","mentalni","Aktivní četba","daily"),
+    H("h-lucidni","mentalni","Lucidní snění","daily"),
+    H("h-pamet","mentalni","Paměť a vizualizace","daily"),
+    H("h-jazyky","mentalni","Jazyky","daily"),
+    H("h-meditace","duchovni","Meditace","daily"),
+    H("h-cesta","duchovni","Vnitřní cesta","weekly"),
+    H("h-ticho","duchovni","Ticho a příroda","weekly"),
+    H("h-deepwork","prace","Deep work blok","daily"),
+    H("h-review","prace","Týdenní CEO review","weekly"),
+    H("h-finance","prace","Finance — přehled","weekly"),
+    H("h-dcera","vztahy","Čas s dcerou","daily"),
+    H("h-partnerka","vztahy","Večer s partnerkou","daily"),
+    H("h-vikend","vztahy","Rodinný víkend","weekly")
+  ];
+}
+
+var LS_KEY = "zjh-tracker-v1";
+var state = null;
+
+function load(){
+  var raw = null;
+  try{ raw = JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){}
+  if(raw && Array.isArray(raw.habits)){
+    state = raw;
+    if(!state.records) state.records = {};
+    if(typeof state.baseXp!=="number") state.baseXp = 0;
+  }else{
+    state = {habits:defaultHabits(), records:{}, baseXp:0};
+  }
+}
+var saveTimer=null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+  },200);
+}
+
+/* =====================================================================
+   DATUM
+   ===================================================================== */
+
+var selDate = todayISO();
+
+function todayISO(){
+  var d = new Date();
+  return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
+}
+function p2(n){ return (n<10?"0":"")+n; }
+function fromISO(s){
+  var a = s.split("-");
+  return new Date(+a[0], +a[1]-1, +a[2]);
+}
+function shiftDate(iso, days){
+  var d = fromISO(iso);
+  d.setDate(d.getDate()+days);
+  return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
+}
+var DAYS = ["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"];
+var MONTHS = ["ledna","února","března","dubna","května","června","července","srpna","září","října","listopadu","prosince"];
+
+/* =====================================================================
+   LOGIKA
+   ===================================================================== */
+
+function rec(date){ return state.records[date] || {}; }
+function isDone(date, hid){ return !!rec(date)[hid]; }
+function toggle(date, hid){
+  if(!state.records[date]) state.records[date]={};
+  if(state.records[date][hid]) delete state.records[date][hid];
+  else state.records[date][hid]=1;
+  if(!Object.keys(state.records[date]).length) delete state.records[date];
+  save();
+}
+
+function habitStreak(h){
+  if(h.type==="weekly") return weeklyStreak(h.id);
+  var s=0, d=todayISO();
+  if(!isDone(d,h.id)) d=shiftDate(d,-1); /* dnešek se nepočítá proti */
+  while(isDone(d,h.id)){ s++; d=shiftDate(d,-1); }
+  return s;
+}
+function weekKey(iso){
+  var d = fromISO(iso);
+  var day = (d.getDay()+6)%7; /* Po=0 */
+  d.setDate(d.getDate()-day);
+  return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
+}
+function weeklyStreak(hid){
+  var doneWeeks = {};
+  for(var date in state.records){
+    if(state.records[date][hid]) doneWeeks[weekKey(date)]=1;
+  }
+  var s=0, wk = weekKey(todayISO());
+  if(!doneWeeks[wk]){ wk = weekKey(shiftDate(wk,-7)); } /* tento týden ještě může přijít */
+  while(doneWeeks[wk]){ s++; wk = weekKey(shiftDate(wk,-7)); }
+  return s;
+}
+
+function totalXP(){
+  var xp = state.baseXp||0;
+  for(var date in state.records){
+    for(var k in state.records[date]){
+      if(k.charAt(0)!=="_") xp++;
+    }
+  }
+  return xp;
+}
+var XP_PER_LEVEL = 200;
+
+function dayPct(date){
+  var hs = state.habits;
+  if(!hs.length) return 0;
+  var done=0;
+  hs.forEach(function(h){ if(isDone(date,h.id)) done++; });
+  return Math.round(done/hs.length*100);
+}
+
+/* =====================================================================
+   RENDER — ZÁPIS
+   ===================================================================== */
+
+var habitListEl = document.getElementById("habitList");
+var dayNoteEl = document.getElementById("dayNote");
+
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function renderDate(){
+  var d = fromISO(selDate);
+  document.querySelector("#dateLabel .d").textContent =
+    DAYS[d.getDay()]+" "+d.getDate()+". "+MONTHS[d.getMonth()];
+  document.querySelector("#dateLabel .p").textContent =
+    (selDate===todayISO()) ? "DNES" : selDate;
+}
+
+function renderEntry(){
+  renderDate();
+  var html = "";
+  AREAS.forEach(function(a){
+    var hs = state.habits.filter(function(h){ return h.area===a.id; });
+    if(!hs.length) return;
+    var done = hs.filter(function(h){ return isDone(selDate,h.id); }).length;
+    html += '<div class="area">'+
+      '<div class="head"><span class="dot" style="background:'+a.color+'"></span>'+
+      '<h2>'+esc(a.name)+'</h2><span class="cnt">'+done+' / '+hs.length+'</span></div>';
+    hs.forEach(function(h){
+      var on = isDone(selDate,h.id);
+      var st = habitStreak(h);
+      html += '<div class="habit'+(on?" done":"")+'" data-h="'+esc(h.id)+'">'+
+        '<div class="hcheck">✓</div>'+
+        '<div class="hname">'+esc(h.name)+'</div>'+
+        (h.type==="weekly" ? '<span class="badge">TÝDNĚ</span>' : '')+
+        '<div class="hstreak'+(st>=7?" hot":"")+'">'+(st>0 ? "🔥"+st : "")+'</div>'+
+        '</div>';
+    });
+    html += '</div>';
+  });
+  habitListEl.innerHTML = html;
+  document.querySelector("#dayBar div").style.width = dayPct(selDate)+"%";
+  dayNoteEl.value = rec(selDate)._note || "";
+}
+
+habitListEl.addEventListener("click", function(ev){
+  var row = ev.target.closest(".habit");
+  if(!row) return;
+  toggle(selDate, row.getAttribute("data-h"));
+  renderEntry();
+});
+
+dayNoteEl.addEventListener("input", function(){
+  if(!state.records[selDate]) state.records[selDate]={};
+  if(dayNoteEl.value) state.records[selDate]._note = dayNoteEl.value;
+  else{
+    delete state.records[selDate]._note;
+    if(!Object.keys(state.records[selDate]).length) delete state.records[selDate];
+  }
+  save();
+});
+
+document.getElementById("prevDay").addEventListener("click", function(){
+  selDate = shiftDate(selDate,-1); renderEntry();
+});
+document.getElementById("nextDay").addEventListener("click", function(){
+  selDate = shiftDate(selDate,1); renderEntry();
+});
+document.getElementById("todayBtn").addEventListener("click", function(){
+  selDate = todayISO(); renderEntry();
+});
+
+/* =====================================================================
+   RENDER — PŘEHLED
+   ===================================================================== */
+
+function renderOverview(){
+  var xp = totalXP();
+  var lvl = Math.floor(xp/XP_PER_LEVEL)+1;
+  var inLvl = xp % XP_PER_LEVEL;
+  document.getElementById("lvlNum").textContent = lvl;
+  document.getElementById("lvlXp").textContent = xp+" XP · do dalšího levelu "+(XP_PER_LEVEL-inLvl)+" XP";
+  document.querySelector("#xpBar div").style.width = (inLvl/XP_PER_LEVEL*100)+"%";
+
+  var chart = "";
+  var d = shiftDate(todayISO(),-13);
+  for(var i=0;i<14;i++){
+    var pct = dayPct(d);
+    var dd = fromISO(d);
+    chart += '<div class="col"><div class="bar" style="height:'+Math.max(2,pct*0.8)+'px"></div>'+
+      '<div class="lbl">'+dd.getDate()+'</div></div>';
+    d = shiftDate(d,1);
+  }
+  document.getElementById("chart").innerHTML = chart;
+
+  var rows = state.habits.map(function(h){
+    return {name:h.name, s:habitStreak(h), w:h.type==="weekly"};
+  }).filter(function(r){ return r.s>0; })
+    .sort(function(a,b){ return b.s-a.s; }).slice(0,8);
+  document.getElementById("streaks").innerHTML = rows.length
+    ? rows.map(function(r){
+        return '<div class="streakRow"><span>'+esc(r.name)+'</span><b>🔥 '+r.s+(r.w?" týdnů":" dní")+'</b></div>';
+      }).join("")
+    : '<div class="note">Zatím žádné streaky — dnes je den jedna. 🔥</div>';
+}
+
+/* =====================================================================
+   RENDER — NASTAVENÍ
+   ===================================================================== */
+
+var baseXpEl = document.getElementById("baseXp");
+baseXpEl.addEventListener("change", function(){
+  state.baseXp = Math.max(0, parseInt(baseXpEl.value,10)||0);
+  baseXpEl.value = state.baseXp;
+  save(); toast("Startovní XP uloženo");
+});
+
+function renderSettings(){
+  baseXpEl.value = state.baseXp||0;
+  var html = "";
+  state.habits.forEach(function(h,i){
+    html += '<div class="set-h" data-i="'+i+'">'+
+      '<input type="text" value="'+esc(h.name)+'" data-f="name">'+
+      '<select data-f="area">'+
+        AREAS.map(function(a){
+          return '<option value="'+a.id+'"'+(a.id===h.area?" selected":"")+'>'+esc(a.name.split(" ")[0])+'</option>';
+        }).join("")+
+      '</select>'+
+      '<select data-f="type">'+
+        '<option value="daily"'+(h.type==="daily"?" selected":"")+'>denní</option>'+
+        '<option value="weekly"'+(h.type==="weekly"?" selected":"")+'>týdenní</option>'+
+      '</select>'+
+      '<button class="del" aria-label="Smazat">✕</button></div>';
+  });
+  document.getElementById("habitSettings").innerHTML = html;
+}
+
+document.getElementById("habitSettings").addEventListener("input", function(ev){
+  var row = ev.target.closest(".set-h"); if(!row) return;
+  var h = state.habits[+row.getAttribute("data-i")];
+  var f = ev.target.getAttribute("data-f");
+  if(h && f){ h[f] = ev.target.value; save(); }
+});
+document.getElementById("habitSettings").addEventListener("click", function(ev){
+  if(!ev.target.classList.contains("del")) return;
+  var row = ev.target.closest(".set-h");
+  var i = +row.getAttribute("data-i");
+  if(confirm("Smazat návyk „"+state.habits[i].name+"“? Historické záznamy zůstanou v datech.")){
+    state.habits.splice(i,1);
+    save(); renderSettings();
+  }
+});
+document.getElementById("addHabit").addEventListener("click", function(){
+  state.habits.push({id:"h"+Date.now().toString(36), area:"zdravi", name:"Nový návyk", type:"daily"});
+  save(); renderSettings();
+});
+
+/* ===== Export / Import ===== */
+
+function download(name, text, mime){
+  var blob = new Blob([text], {type:mime});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+document.getElementById("expJson").addEventListener("click", function(){
+  download("zivot-je-hra-zaloha-"+todayISO()+".json",
+    JSON.stringify({verze:"tracker-1.0", exportováno:todayISO(),
+      habits:state.habits, records:state.records, baseXp:state.baseXp}, null, 2),
+    "application/json");
+  toast("Záloha stažena");
+});
+
+document.getElementById("expCsv").addEventListener("click", function(){
+  var dates = Object.keys(state.records).filter(function(d){return d.charAt(0)!=="_";}).sort();
+  var head = ["Datum"].concat(state.habits.map(function(h){return h.name;})).concat(["% dne","Poznámka"]);
+  var lines = [head.join(";")];
+  dates.forEach(function(d){
+    var row = [d];
+    state.habits.forEach(function(h){ row.push(isDone(d,h.id)?1:0); });
+    row.push(dayPct(d));
+    row.push('"'+String(rec(d)._note||"").replace(/"/g,'""')+'"');
+    lines.push(row.join(";"));
+  });
+  download("zivot-je-hra-data-"+todayISO()+".csv", "\uFEFF"+lines.join("\r\n"), "text/csv");
+  toast("CSV staženo");
+});
+
+var importArea = document.getElementById("importArea");
+var impConfirm = document.getElementById("impConfirm");
+document.getElementById("impJson").addEventListener("click", function(){
+  importArea.classList.toggle("show");
+  impConfirm.style.display = importArea.classList.contains("show") ? "block" : "none";
+});
+impConfirm.addEventListener("click", function(){
+  var data;
+  try{ data = JSON.parse(importArea.value); }
+  catch(e){ toast("Neplatný JSON"); return; }
+  if(!data || !Array.isArray(data.habits)){ toast("JSON neobsahuje habits"); return; }
+  if(!confirm("Import přepíše aktuální data v tomto zařízení. Pokračovat?")) return;
+  state.habits = data.habits;
+  state.records = data.records||{};
+  state.baseXp = data.baseXp||0;
+  save();
+  importArea.value=""; importArea.classList.remove("show"); impConfirm.style.display="none";
+  renderSettings(); renderEntry();
+  toast("Data importována");
+});
+
+/* =====================================================================
+   NAVIGACE + TOAST + START
+   ===================================================================== */
+
+var toastTimer=null;
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ t.classList.remove("show"); },2200);
+}
+
+document.querySelectorAll("nav button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("nav button").forEach(function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    var v = b.getAttribute("data-v");
+    document.querySelectorAll(".view").forEach(function(x){ x.classList.remove("on"); });
+    document.getElementById("view-"+v).classList.add("on");
+    if(v==="prehled") renderOverview();
+    if(v==="nastaveni") renderSettings();
+    if(v==="zapis") renderEntry();
+  });
+});
+
+load();
+renderEntry();
+
+/* Service worker — jen na http(s), ne file:// */
+if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  navigator.serviceWorker.register("./sw.js").catch(function(){});
+}
+</script>
+</body>
+</html>

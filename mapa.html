@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Myšlenkové mapy — Život je hra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0B12; --bg-soft:#101018; --panel:#14141F; --line:#2A2A3A;
+    --edge:#C9A94E; --edge-dim:#8A7638;
+    --text:#E8E4D8; --muted:#8B8778; --gold:#D9B85C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);
+    font-family:'Syne',sans-serif;-webkit-font-smoothing:antialiased}
+
+  /* ===== Horní lišta ===== */
+  #topbar{position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;align-items:center;gap:8px;padding:8px 14px;flex-wrap:wrap;
+    background:linear-gradient(180deg,rgba(11,11,18,.97),rgba(11,11,18,.88));
+    border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+  #topbar h1{font-family:Georgia,serif;font-size:17px;font-weight:400;color:var(--gold);
+    letter-spacing:.05em;margin-right:6px;white-space:nowrap}
+  .btn{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.04em;
+    background:var(--panel);color:var(--text);border:1px solid var(--line);
+    border-radius:7px;padding:6px 10px;cursor:pointer;transition:border-color .15s,color .15s;white-space:nowrap}
+  .btn:hover{border-color:var(--edge);color:var(--gold)}
+  .btn:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{
+    outline:2px solid var(--edge);outline-offset:1px}
+  .btn.warn:hover{border-color:#B06A6A;color:#D08A8A}
+  select,#search{font-family:'DM Mono',monospace;font-size:10.5px;background:var(--panel);
+    color:var(--text);border:1px solid var(--line);border-radius:7px;padding:6px 8px}
+  #search{width:150px}
+  .sep{width:1px;height:22px;background:var(--line)}
+  .spacer{flex:1}
+
+  /* ===== Plátno ===== */
+  #viewport{position:absolute;inset:0;top:0;cursor:grab;overflow:hidden;
+    background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,169,78,.05),transparent 60%),var(--bg)}
+  #viewport.panning{cursor:grabbing}
+  #viewport.linking{cursor:crosshair}
+  #world{position:absolute;left:0;top:0;transform-origin:0 0}
+  #edges{position:absolute;left:0;top:0;overflow:visible}
+  #edges path.vis{fill:none;stroke:var(--edge);stroke-width:1.6;opacity:.55;pointer-events:none}
+  #edges path.vis.dim{stroke:var(--edge-dim);opacity:.35}
+  #edges path.vis.extra{stroke-dasharray:5 5;opacity:.7}
+  #edges path.hit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:pointer}
+
+  /* ===== Uzly ===== */
+  .node{position:absolute;min-width:140px;max-width:230px;padding:10px 13px;
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);
+    border-radius:10px;cursor:move;user-select:none;
+    box-shadow:0 4px 18px rgba(0,0,0,.45);transition:box-shadow .15s}
+  .node:hover{box-shadow:0 6px 24px rgba(201,169,78,.14)}
+  .node.selected{outline:2px solid var(--edge);outline-offset:2px}
+  .node.match{outline:2px dashed var(--gold);outline-offset:2px}
+  .node .tag{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  .node .name{font-weight:700;line-height:1.25}
+  .node .desc{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);
+    line-height:1.5;margin-top:4px}
+  .node .kids{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--edge);
+    margin-top:5px;display:none}
+  .node.collapsed .kids{display:block}
+  .node.root{min-width:200px;background:#181420;border:1px solid var(--edge-dim);text-align:center}
+  .node.root .name{font-family:Georgia,serif;font-weight:400;color:var(--gold);letter-spacing:.04em}
+
+  /* ===== Editační panel ===== */
+  #editor{position:fixed;top:60px;right:14px;bottom:14px;width:250px;z-index:25;
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+    padding:14px;display:none;flex-direction:column;gap:10px;overflow-y:auto}
+  #editor.open{display:flex}
+  #editor h2{font-family:Georgia,serif;font-weight:400;font-size:14px;color:var(--gold)}
+  #editor label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+  #editor input[type=text],#editor textarea{width:100%;background:#0D0D15;border:1px solid var(--line);
+    border-radius:7px;padding:7px 9px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px}
+  #editor textarea{font-family:'DM Mono',monospace;font-size:10px;min-height:64px;resize:vertical}
+  #swatches{display:flex;flex-wrap:wrap;gap:6px}
+  .swatch{width:24px;height:24px;border-radius:6px;cursor:pointer;border:2px solid transparent}
+  .swatch.active{border-color:#fff}
+  #fsRow{display:flex;align-items:center;gap:8px}
+  #fsRange{flex:1;accent-color:var(--gold)}
+  #fsVal{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);width:26px;text-align:right}
+  #editor .row{display:flex;gap:6px}
+  #editor .row .btn{flex:1;text-align:center}
+
+  /* ===== Nápověda + dialog ===== */
+  #hint{position:fixed;bottom:12px;left:16px;z-index:20;font-family:'DM Mono',monospace;
+    font-size:9px;color:var(--muted);letter-spacing:.05em;line-height:1.7;pointer-events:none}
+  #linkBanner{position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:35;
+    background:#1E1A0E;border:1px solid var(--edge);border-radius:8px;padding:8px 16px;
+    font-family:'DM Mono',monospace;font-size:10.5px;color:var(--gold);display:none}
+  #linkBanner.on{display:block}
+  #dialog{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;
+    background:rgba(5,5,10,.75);backdrop-filter:blur(4px)}
+  #dialog.open{display:flex}
+  #dialog .panel{width:min(640px,90vw);max-height:82vh;display:flex;flex-direction:column;
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:18px}
+  #dialog h2{font-family:Georgia,serif;font-weight:400;color:var(--gold);font-size:16px;margin-bottom:10px}
+  #dialog textarea{flex:1;min-height:280px;background:#080810;border:1px solid var(--line);
+    border-radius:8px;padding:12px;color:#9BC77A;font-family:'DM Mono',monospace;font-size:10px;resize:none}
+  #dialog .note{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin:8px 0}
+  #dialog .row{display:flex;gap:8px}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:760px){
+    #editor{width:220px}
+    #search{width:100px}
+  }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>Myšlenkové mapy</h1>
+  <select id="projectSel" title="Projekt"></select>
+  <button class="btn" id="btnNewProject">+ Nový projekt</button>
+  <button class="btn" id="btnRenameProject">Přejmenovat</button>
+  <button class="btn warn" id="btnDeleteProject">Smazat projekt</button>
+  <div class="sep"></div>
+  <button class="btn" id="btnAddNode">+ Uzel</button>
+  <button class="btn" id="btnUndo" title="Ctrl+Z">↶ Zpět</button>
+  <button class="btn" id="btnLayout">✦ Auto-layout</button>
+  <div class="sep"></div>
+  <button class="btn" id="btnCollapse">⊟ Sbalit</button>
+  <button class="btn" id="btnExpand">⊞ Rozbalit</button>
+  <button class="btn" id="btnFit">◎ Vycentrovat</button>
+  <div class="spacer"></div>
+  <input id="search" type="text" placeholder="hledat…">
+  <button class="btn" id="btnExport">⇅ Export / Import</button>
+</div>
+
+<div id="viewport">
+  <div id="world">
+    <svg id="edges"></svg>
+    <div id="nodes"></div>
+  </div>
+</div>
+
+<div id="linkBanner">Režim propojení — klikni na cílový uzel · Esc = zrušit</div>
+
+<div id="editor">
+  <h2>Uzel</h2>
+  <div>
+    <label for="edName">Název</label>
+    <input type="text" id="edName">
+  </div>
+  <div>
+    <label for="edTag">Štítek</label>
+    <input type="text" id="edTag">
+  </div>
+  <div>
+    <label for="edDesc">Popisek</label>
+    <textarea id="edDesc"></textarea>
+  </div>
+  <div>
+    <label>Barva</label>
+    <div id="swatches"></div>
+  </div>
+  <div>
+    <label for="fsRange">Velikost písma</label>
+    <div id="fsRow">
+      <input type="range" id="fsRange" min="10" max="26" step="1">
+      <span id="fsVal">13</span>
+    </div>
+  </div>
+  <div class="row">
+    <button class="btn" id="btnChild">+ Poduzel</button>
+    <button class="btn" id="btnLink">⟟ Propojit</button>
+  </div>
+  <div class="row">
+    <button class="btn warn" id="btnDeleteNode">✕ Smazat uzel</button>
+  </div>
+</div>
+
+<div id="hint">
+  klik = vybrat a upravit · dvojklik = sbalit/rozbalit · tažení = přesun<br>
+  Tab = nový poduzel · Delete = smazat · Ctrl+Z = zpět · klik na čárkovanou nitku = smazat propojení
+</div>
+
+<div id="dialog">
+  <div class="panel">
+    <h2>Export / Import JSON</h2>
+    <textarea id="dialogArea" spellcheck="false"></textarea>
+    <div class="note">Export: klikni do pole → označí se → zkopíruj. Import: vlož JSON a stiskni Importovat.</div>
+    <div class="row">
+      <button class="btn" id="btnImport">⇊ Importovat</button>
+      <button class="btn" id="btnCloseDialog">Zavřít</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   DATA — výchozí projekt "Život je hra"
+   ===================================================================== */
+
+var PALETTE = ["#D9B85C","#5B8C3E","#5B7FA6","#8B6FAE","#B06A6A",
+               "#C97B4A","#4AA69B","#A64A7B","#8B8778","#5B6B3E"];
+
+function defaultProject(){
+  var N = function(id,parent,color,tag,name,desc){
+    return {id:id,parent:parent,color:color,tag:tag,name:name,desc:desc,x:0,y:0,fs:13};
+  };
+  var G="#D9B85C", UI="#5B7FA6", OB="#5B8C3E", DS="#8B6FAE", DA="#B06A6A";
+  var nodes = [
+    N("root",null,G,"","ŽIVOT JE HRA","Gamifikovaný systém osobního rozvoje"),
+
+    N("ui","root",UI,"VĚTEV","📱 ROZHRANÍ","Obrazovky a komponenty aplikace"),
+    N("ui-nav","ui",UI,"Komponenta","Navigace","Levý sloupec · 5 položek + avatar hráče"),
+    N("ui-prehled","ui",UI,"Obrazovka","Přehled","Header · bar chart · streaky · elixíry · hora s vlajkou"),
+    N("ui-zapis","ui",UI,"Obrazovka","Zápis dne","Kalendář · checkboxy návyků · textové pole"),
+    N("ui-oblasti","ui",UI,"Obrazovka","Oblasti","Přepínač 6 oblastí + obsahový widget"),
+    N("ui-mentori","ui",UI,"Obrazovka","Mentoři","Dark panel · karty mentorů · týdenní zprávy"),
+    N("ui-motivace","ui",UI,"Obrazovka","Motivace","Questy · achievementy · odměny"),
+    N("ui-nastaveni","ui",UI,"Obrazovka","Nastavení","Profil · návyky · balíčky · export dat"),
+    N("ui-onboarding","ui",UI,"Flow","Onboarding","4 kroky · pro sdílení s rodinou a přáteli"),
+
+    N("obsah","root",OB,"VĚTEV","📦 OBSAH","Oblasti · návyky · mentoři · elixíry"),
+    N("ob-oblasti","obsah",OB,"Skupina","6 oblastí života","Každá oblast má návyky, mentora a widget"),
+
+    N("ob-zdravi","ob-oblasti",OB,"Oblast","Zdraví těla","Dvojklik rozbalí návyky"),
+    N("h-strava","ob-zdravi",OB,"Návyk","Strava","MIND / PREDIMED protokol"),
+    N("h-spanek","ob-zdravi",OB,"Návyk","Spánek","7–8 hodin · pravidelný režim"),
+    N("h-pust","ob-zdravi",OB,"Návyk","Přerušovaný půst","Časové okno stravování"),
+    N("h-sauna","ob-zdravi",OB,"Návyk","Sauna","Tepelná terapie"),
+    N("h-suplementy","ob-zdravi",OB,"Návyk","Suplementy","Denní protokol"),
+    N("h-masaz","ob-zdravi",OB,"Návyk","Masáž","Regenerace a nervový systém"),
+
+    N("ob-fyzicky","ob-oblasti",OB,"Oblast","Fyzický rozvoj","Dvojklik rozbalí návyky"),
+    N("h-beh","ob-fyzicky",OB,"Návyk","Běh / kardio","Outdoor pohyb · zóna 2"),
+    N("h-silovy","ob-fyzicky",OB,"Návyk","Silový trénink","Fitko · těžké váhy"),
+    N("h-yoga","ob-fyzicky",OB,"Návyk","Yoga","Mobilita · dech · energie"),
+    N("h-otuzovani","ob-fyzicky",OB,"Návyk","Otužování","Chladová expozice"),
+
+    N("ob-mentalni","ob-oblasti",OB,"Oblast","Mentální rozvoj","Dvojklik rozbalí návyky"),
+    N("h-studium","ob-mentalni",OB,"Návyk","Studijní blok","Feynman · spaced repetition · 3–5× týdně"),
+    N("h-cetba","ob-mentalni",OB,"Návyk","Aktivní četba","Retence · poznámky"),
+    N("h-lucidni","ob-mentalni",OB,"Návyk","Lucidní snění","5 fází progresivní praxe"),
+    N("h-pamet","ob-mentalni",OB,"Návyk","Paměť a vizualizace","Rutina před spaním"),
+    N("h-jazyky","ob-mentalni",OB,"Návyk","Jazyky","Imerzní metoda"),
+
+    N("ob-duchovni","ob-oblasti",OB,"Oblast","Duchovní rozvoj","Dvojklik rozbalí návyky"),
+    N("h-meditace","ob-duchovni",OB,"Návyk","Meditace","Denní praxe"),
+    N("h-cesta","ob-duchovni",OB,"Návyk","Vnitřní cesta","Somatická práce · Brandon Bays"),
+    N("h-ticho","ob-duchovni",OB,"Návyk","Ticho a příroda","Imerze · bez podnětů"),
+
+    N("ob-prace","ob-oblasti",OB,"Oblast","Práce a CEO","Dvojklik rozbalí návyky"),
+    N("h-deepwork","ob-prace",OB,"Návyk","Deep work blok","Fokus dny Po / Út / Čt"),
+    N("h-review","ob-prace",OB,"Návyk","Týdenní CEO review","Strategie · plán týdne"),
+    N("h-finance","ob-prace",OB,"Návyk","Finance — přehled","Portfolio · cash · net worth"),
+
+    N("ob-vztahy","ob-oblasti",OB,"Oblast","Vztahy a Rodina","Dvojklik rozbalí návyky"),
+    N("h-dcera","ob-vztahy",OB,"Návyk","Čas s dcerou","Plná přítomnost"),
+    N("h-partnerka","ob-vztahy",OB,"Návyk","Večer s partnerkou","Společný čas"),
+    N("h-vikend","ob-vztahy",OB,"Návyk","Rodinný víkend","So + Ne pro rodinu"),
+
+    N("ob-mentori","obsah",OB,"Skupina","Mentoři","Týdenní zprávy · každý mentor má svůj den"),
+    N("me-sadhguru","ob-mentori",OB,"Mentor","Sadhguru","Duchovní rozvoj · vnitřní inženýrství"),
+    N("me-pruvodkyne","ob-mentori",OB,"Mentor","Průvodkyně","Somatická cesta inspirovaná Brandon Bays"),
+    N("me-leo","ob-mentori",OB,"Mentor","Leo","Spartánský trenér · fyzický rozvoj"),
+    N("me-lara","ob-mentori",OB,"Mentor","Dr. Lara","Longevita a neurověda · zdraví těla"),
+    N("me-victor","ob-mentori",OB,"Mentor","Victor","Chladný CEO stratég · práce a finance"),
+    N("me-sofos","ob-mentori",OB,"Mentor","Sofos","Stoický průvodce rodinou a vztahy"),
+    N("ob-elixiry","obsah",OB,"Skupina","9 elixírů","Odemykají se kombinací návyků a streaků"),
+
+    N("design","root",DS,"VĚTEV","🎨 DESIGN SYSTEM","Jedna sada pravidel pro celou appku"),
+    N("ds-barvy","design",DS,"Tokeny","Barvy","Bazalková #2D5016 · béžová #F0EEE8 · zlatá"),
+    N("ds-typo","design",DS,"Tokeny","Typografie","Georgia serif (titul) · Syne · DM Mono"),
+    N("ds-komponenty","design",DS,"Tokeny","Komponenty","Karta · tlačítko · progress bar · spacing"),
+
+    N("data","root",DA,"VĚTEV","💾 DATA & LOGIKA","Datová vrstva před UI vrstvou"),
+    N("da-storage","data",DA,"Modul","localStorage","Sdílené klíče · JSON export/import"),
+    N("da-xp","data",DA,"Modul","XP logika","200 XP na level · 100 levelů za 10 let"),
+    N("da-streaky","data",DA,"Modul","Streak pravidla","Denní vs. týdenní návyky · záznam 1/0"),
+    N("da-ai","data",DA,"Modul","AI mentoři","Generování týdenních zpráv z dat hráče"),
+    N("da-export","data",DA,"Modul","Excel export","Jeden list na měsíc + roční souhrn")
+  ];
+  return {
+    nodes:nodes,
+    extraEdges:[],
+    collapsed:["ob-zdravi","ob-fyzicky","ob-mentalni","ob-duchovni","ob-prace","ob-vztahy"]
+  };
+}
+
+function blankProject(name){
+  return {
+    nodes:[{id:"root",parent:null,color:"#D9B85C",tag:"",name:name.toUpperCase(),
+            desc:"Dvojklik na uzel = sbalit · Tab = nový poduzel",x:0,y:0,fs:13}],
+    extraEdges:[], collapsed:[]
+  };
+}
+
+/* =====================================================================
+   PROJEKTY + PERZISTENCE
+   ===================================================================== */
+
+var LS_KEY = "zjh-mindmaps-v2";
+var store = null;      /* {projects:{name:state}, current:name} */
+var state = null;      /* aktivní projekt */
+
+function lsGet(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ return null; } }
+function lsSet(v){ try{ localStorage.setItem(LS_KEY, JSON.stringify(v)); }catch(e){} }
+
+function initStore(){
+  store = lsGet();
+  if(!store || !store.projects || !Object.keys(store.projects).length){
+    var def = defaultProject();
+    autoLayout(def);
+    store = {projects:{"Život je hra":def}, current:"Život je hra"};
+    lsSet(store);
+  }
+  if(!store.projects[store.current]){
+    store.current = Object.keys(store.projects)[0];
+  }
+  state = store.projects[store.current];
+}
+
+var saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    store.projects[store.current] = state;
+    lsSet(store);
+  }, 250);
+}
+
+/* =====================================================================
+   POMOCNÉ STRUKTURY
+   ===================================================================== */
+
+function byId(id){
+  for(var i=0;i<state.nodes.length;i++) if(state.nodes[i].id===id) return state.nodes[i];
+  return null;
+}
+function childrenOf(id){
+  return state.nodes.filter(function(n){ return n.parent===id; });
+}
+function descendants(id){
+  var out=[], stack=[id];
+  while(stack.length){
+    var cur = stack.pop();
+    childrenOf(cur).forEach(function(c){ out.push(c.id); stack.push(c.id); });
+  }
+  return out;
+}
+function isCollapsed(id){ return state.collapsed.indexOf(id)!==-1; }
+function isHidden(id){
+  var n = byId(id);
+  var p = n ? n.parent : null;
+  while(p){
+    if(isCollapsed(p)) return true;
+    var pn = byId(p);
+    p = pn ? pn.parent : null;
+  }
+  return false;
+}
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function uid(){
+  return "n"+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36);
+}
+
+/* =====================================================================
+   AUTO-LAYOUT — generický radiální strom
+   ===================================================================== */
+
+function autoLayout(st){
+  st = st || state;
+  var roots = st.nodes.filter(function(n){ return !n.parent; });
+  if(!roots.length) return;
+  var root = roots[0];
+  root.x = 0; root.y = 0;
+
+  function kids(id){ return st.nodes.filter(function(n){ return n.parent===id; }); }
+  function leaves(id){
+    var k = kids(id);
+    if(!k.length) return 1;
+    var s=0; k.forEach(function(c){ s+=leaves(c.id); });
+    return s;
+  }
+  function place(id, depth, a0, span){
+    var R = 300 + (depth-1)*300;
+    var mid = a0 + span/2;
+    var rad = mid*Math.PI/180;
+    var n = st.nodes.filter(function(x){return x.id===id;})[0];
+    n.x = Math.cos(rad)*R;
+    n.y = Math.sin(rad)*R;
+    var k = kids(id);
+    if(!k.length) return;
+    var total=0; k.forEach(function(c){ total+=leaves(c.id); });
+    var cursor=a0;
+    k.forEach(function(c){
+      var frac = leaves(c.id)/total;
+      place(c.id, depth+1, cursor, span*frac);
+      cursor += span*frac;
+    });
+  }
+  var branches = kids(root.id);
+  var total=0; branches.forEach(function(b){ total+=leaves(b.id); });
+  var cursor=-90;
+  branches.forEach(function(b){
+    var frac = total? leaves(b.id)/total : 1/branches.length;
+    place(b.id, 1, cursor, 360*frac);
+    cursor += 360*frac;
+  });
+}
+
+/* =====================================================================
+   UNDO
+   ===================================================================== */
+
+var undoStack = [];
+var skipFocusMark = false;
+function mark(){
+  var snap = JSON.stringify(state);
+  if(undoStack.length && undoStack[undoStack.length-1]===snap) return;
+  undoStack.push(snap);
+  if(undoStack.length>50) undoStack.shift();
+}
+function undo(){
+  if(!undoStack.length) return;
+  state = JSON.parse(undoStack.pop());
+  store.projects[store.current] = state;
+  selectedId = byId(selectedId) ? selectedId : null;
+  rebuildAll(); save();
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+
+var view = {x:0,y:0,scale:1};
+var selectedId = null;
+var linkFrom = null;
+var searchTerm = "";
+
+var worldEl = document.getElementById("world");
+var nodesEl = document.getElementById("nodes");
+var edgesEl = document.getElementById("edges");
+var viewport = document.getElementById("viewport");
+var nodeEls = {};
+
+function nodeHTML(n){
+  var kidCount = descendants(n.id).length;
+  return (n.tag ? '<div class="tag" style="color:'+esc(n.color)+'">'+esc(n.tag)+'</div>' : '') +
+    '<div class="name" style="font-size:'+(n.fs||13)+'px">'+esc(n.name)+'</div>' +
+    (n.desc ? '<div class="desc">'+esc(n.desc)+'</div>' : '') +
+    '<div class="kids">▸ '+kidCount+' skrytých · dvojklik rozbalí</div>';
+}
+
+function rebuildAll(){
+  nodesEl.innerHTML = "";
+  nodeEls = {};
+  state.nodes.forEach(function(n){
+    var el = document.createElement("div");
+    el.className = "node" + (n.parent ? "" : " root");
+    el.style.borderLeftColor = n.color || "#D9B85C";
+    el.innerHTML = nodeHTML(n);
+    nodesEl.appendChild(el);
+    nodeEls[n.id] = el;
+    attachNodeEvents(el, n.id);
+  });
+  render();
+  syncEditor();
+  renderProjects();
+}
+
+function updateNodeEl(id){
+  var n = byId(id), el = nodeEls[id];
+  if(!n || !el) return;
+  el.style.borderLeftColor = n.color || "#D9B85C";
+  el.innerHTML = nodeHTML(n);
+  render();
+}
+
+function render(){
+  worldEl.style.transform = "translate("+view.x+"px,"+view.y+"px) scale("+view.scale+")";
+  state.nodes.forEach(function(n){
+    var el = nodeEls[n.id];
+    if(!el) return;
+    var hide = isHidden(n.id);
+    el.style.display = hide ? "none" : "block";
+    el.classList.toggle("collapsed", isCollapsed(n.id) && descendants(n.id).length>0);
+    el.classList.toggle("selected", n.id===selectedId);
+    var m = searchTerm && !hide &&
+      ((n.name||"").toLowerCase().indexOf(searchTerm)!==-1 ||
+       (n.desc||"").toLowerCase().indexOf(searchTerm)!==-1);
+    el.classList.toggle("match", !!m);
+    if(!hide){
+      el.style.left = (n.x - el.offsetWidth/2) + "px";
+      el.style.top  = (n.y - el.offsetHeight/2) + "px";
+    }
+  });
+  drawEdges();
+}
+
+function edgePath(x1,y1,x2,y2){
+  var mx=(x1+x2)/2, my=(y1+y2)/2;
+  return 'M '+x1+' '+y1+' Q '+mx+' '+y1+' '+mx+' '+my+' T '+x2+' '+y2;
+}
+
+function drawEdges(){
+  var html = "";
+  state.nodes.forEach(function(n){
+    if(!n.parent) return;
+    if(isHidden(n.id) || isHidden(n.parent)) return;
+    var p = byId(n.parent);
+    if(!p) return;
+    var cls = (!p.parent) ? "vis" : "vis dim";
+    html += '<path class="'+cls+'" d="'+edgePath(p.x,p.y,n.x,n.y)+'"/>';
+  });
+  state.extraEdges.forEach(function(e,i){
+    var a=byId(e.from), b=byId(e.to);
+    if(!a||!b) return;
+    if(isHidden(a.id)||isHidden(b.id)) return;
+    var d = edgePath(a.x,a.y,b.x,b.y);
+    html += '<path class="vis extra" d="'+d+'"/>';
+    html += '<path class="hit" data-ei="'+i+'" d="'+d+'"><title>Klik = smazat propojení</title></path>';
+  });
+  edgesEl.innerHTML = html;
+}
+
+edgesEl.addEventListener("click", function(ev){
+  var t = ev.target.closest ? ev.target.closest("path.hit") : null;
+  if(!t) return;
+  var i = parseInt(t.getAttribute("data-ei"),10);
+  if(isNaN(i)) return;
+  mark();
+  state.extraEdges.splice(i,1);
+  drawEdges(); save();
+});
+
+/* =====================================================================
+   INTERAKCE — uzly
+   ===================================================================== */
+
+function attachNodeEvents(el, id){
+  var sx, sy, ox, oy, moved;
+  el.addEventListener("pointerdown", function(ev){
+    ev.stopPropagation();
+    var n = byId(id);
+    el.setPointerCapture(ev.pointerId);
+    sx=ev.clientX; sy=ev.clientY; ox=n.x; oy=n.y; moved=false;
+    var marked = false;
+    function mv(e2){
+      var dx=(e2.clientX-sx)/view.scale, dy=(e2.clientY-sy)/view.scale;
+      if(Math.abs(dx)+Math.abs(dy)>3){
+        if(!moved && !marked){ mark(); marked=true; }
+        moved=true;
+      }
+      if(moved){ n.x=ox+dx; n.y=oy+dy; render(); }
+    }
+    function up(){
+      el.removeEventListener("pointermove",mv);
+      el.removeEventListener("pointerup",up);
+      if(moved){ save(); return; }
+      /* klik bez tažení = výběr / propojení */
+      if(linkFrom && linkFrom!==id){
+        mark();
+        state.extraEdges.push({from:linkFrom,to:id});
+        setLinkMode(null);
+        drawEdges(); save();
+        return;
+      }
+      selectedId = id;
+      render(); syncEditor();
+    }
+    el.addEventListener("pointermove",mv);
+    el.addEventListener("pointerup",up);
+  });
+  el.addEventListener("dblclick", function(ev){
+    ev.stopPropagation();
+    if(!descendants(id).length) return;
+    var i = state.collapsed.indexOf(id);
+    if(i===-1) state.collapsed.push(id); else state.collapsed.splice(i,1);
+    render(); save();
+  });
+}
+
+/* posun plátna */
+(function(){
+  var sx,sy,ovx,ovy,active=false;
+  viewport.addEventListener("pointerdown", function(ev){
+    if(ev.target.closest(".node")) return;
+    if(ev.target.closest("path.hit")) return;
+    active=true; viewport.classList.add("panning");
+    sx=ev.clientX; sy=ev.clientY; ovx=view.x; ovy=view.y;
+    viewport.setPointerCapture(ev.pointerId);
+  });
+  viewport.addEventListener("pointermove", function(ev){
+    if(!active) return;
+    view.x=ovx+(ev.clientX-sx); view.y=ovy+(ev.clientY-sy);
+    worldEl.style.transform = "translate("+view.x+"px,"+view.y+"px) scale("+view.scale+")";
+  });
+  viewport.addEventListener("pointerup", function(ev){
+    if(active && Math.abs(ev.clientX-sx)<3 && Math.abs(ev.clientY-sy)<3){
+      selectedId=null; setLinkMode(null); render(); syncEditor();
+    }
+    active=false; viewport.classList.remove("panning");
+  });
+})();
+
+viewport.addEventListener("wheel", function(ev){
+  ev.preventDefault();
+  var factor = ev.deltaY<0 ? 1.1 : 0.9;
+  var ns = Math.min(2.4, Math.max(0.2, view.scale*factor));
+  var rect = viewport.getBoundingClientRect();
+  var cx=ev.clientX-rect.left, cy=ev.clientY-rect.top;
+  view.x = cx-(cx-view.x)*(ns/view.scale);
+  view.y = cy-(cy-view.y)*(ns/view.scale);
+  view.scale = ns;
+  worldEl.style.transform = "translate("+view.x+"px,"+view.y+"px) scale("+view.scale+")";
+},{passive:false});
+
+/* =====================================================================
+   MUTACE
+   ===================================================================== */
+
+function addChild(parentId){
+  var p = byId(parentId) || state.nodes.filter(function(n){return !n.parent;})[0];
+  if(!p) return;
+  mark();
+  var id = uid();
+  state.nodes.push({
+    id:id, parent:p.id, color:p.color, tag:"", name:"Nový uzel", desc:"",
+    x:p.x+240, y:p.y+(childrenOf(p.id).length*46-40), fs:13
+  });
+  /* rozbal rodiče aby byl nový uzel vidět */
+  var ci = state.collapsed.indexOf(p.id);
+  if(ci!==-1) state.collapsed.splice(ci,1);
+  selectedId = id;
+  rebuildAll(); save();
+  skipFocusMark = true;
+  var inp = document.getElementById("edName");
+  inp.focus(); inp.select();
+}
+
+function deleteNode(id){
+  var n = byId(id);
+  if(!n || !n.parent){ return; } /* kořen nemažeme */
+  var all = descendants(id); all.push(id);
+  mark();
+  state.nodes = state.nodes.filter(function(x){ return all.indexOf(x.id)===-1; });
+  state.extraEdges = state.extraEdges.filter(function(e){
+    return all.indexOf(e.from)===-1 && all.indexOf(e.to)===-1;
+  });
+  state.collapsed = state.collapsed.filter(function(c){ return all.indexOf(c)===-1; });
+  if(all.indexOf(selectedId)!==-1) selectedId = null;
+  rebuildAll(); save();
+}
+
+function setLinkMode(fromId){
+  linkFrom = fromId;
+  document.getElementById("linkBanner").classList.toggle("on", !!fromId);
+  viewport.classList.toggle("linking", !!fromId);
+}
+
+/* =====================================================================
+   EDITAČNÍ PANEL
+   ===================================================================== */
+
+var editorEl = document.getElementById("editor");
+var edName = document.getElementById("edName");
+var edTag  = document.getElementById("edTag");
+var edDesc = document.getElementById("edDesc");
+var fsRange= document.getElementById("fsRange");
+var fsVal  = document.getElementById("fsVal");
+var swatchesEl = document.getElementById("swatches");
+
+PALETTE.forEach(function(c){
+  var s = document.createElement("div");
+  s.className="swatch"; s.style.background=c; s.setAttribute("data-c",c);
+  s.title=c;
+  s.addEventListener("click", function(){
+    var n = byId(selectedId); if(!n) return;
+    mark(); n.color=c;
+    updateNodeEl(n.id); syncEditor(); save();
+  });
+  swatchesEl.appendChild(s);
+});
+
+function syncEditor(){
+  var n = byId(selectedId);
+  if(!n){ editorEl.classList.remove("open"); return; }
+  editorEl.classList.add("open");
+  edName.value = n.name||"";
+  edTag.value  = n.tag||"";
+  edDesc.value = n.desc||"";
+  fsRange.value = n.fs||13;
+  fsVal.textContent = n.fs||13;
+  var sws = swatchesEl.children;
+  for(var i=0;i<sws.length;i++){
+    sws[i].classList.toggle("active", sws[i].getAttribute("data-c")===n.color);
+  }
+  document.getElementById("btnDeleteNode").style.display = n.parent ? "block" : "none";
+}
+
+function bindField(inp, key){
+  inp.addEventListener("focus", function(){
+    if(skipFocusMark){ skipFocusMark=false; return; }
+    if(byId(selectedId)) mark();
+  });
+  inp.addEventListener("input", function(){
+    var n = byId(selectedId); if(!n) return;
+    n[key] = inp.value;
+    updateNodeEl(n.id); save();
+  });
+}
+bindField(edName,"name");
+bindField(edTag,"tag");
+bindField(edDesc,"desc");
+
+fsRange.addEventListener("focus", function(){ if(byId(selectedId)) mark(); });
+fsRange.addEventListener("input", function(){
+  var n = byId(selectedId); if(!n) return;
+  n.fs = parseInt(fsRange.value,10);
+  fsVal.textContent = n.fs;
+  updateNodeEl(n.id); save();
+});
+
+document.getElementById("btnChild").addEventListener("click", function(){
+  if(selectedId) addChild(selectedId);
+});
+document.getElementById("btnLink").addEventListener("click", function(){
+  if(selectedId) setLinkMode(selectedId);
+});
+document.getElementById("btnDeleteNode").addEventListener("click", function(){
+  if(selectedId && confirm("Smazat uzel včetně všech poduzlů?")) deleteNode(selectedId);
+});
+
+/* =====================================================================
+   PROJEKTY — UI
+   ===================================================================== */
+
+var projectSel = document.getElementById("projectSel");
+
+function renderProjects(){
+  projectSel.innerHTML = "";
+  Object.keys(store.projects).forEach(function(name){
+    var o = document.createElement("option");
+    o.value=name; o.textContent=name;
+    if(name===store.current) o.selected=true;
+    projectSel.appendChild(o);
+  });
+}
+
+projectSel.addEventListener("change", function(){
+  store.projects[store.current] = state;
+  store.current = projectSel.value;
+  state = store.projects[store.current];
+  selectedId=null; undoStack=[]; setLinkMode(null);
+  rebuildAll(); fitView(); lsSet(store);
+});
+
+document.getElementById("btnNewProject").addEventListener("click", function(){
+  var name = prompt("Název nového projektu:","Nový projekt");
+  if(!name) return;
+  name = name.trim();
+  if(!name || store.projects[name]){ alert("Projekt s tímto názvem už existuje."); return; }
+  store.projects[store.current] = state;
+  var p = blankProject(name);
+  autoLayout(p);
+  store.projects[name] = p;
+  store.current = name;
+  state = p;
+  selectedId=null; undoStack=[]; setLinkMode(null);
+  rebuildAll(); fitView(); lsSet(store);
+});
+
+document.getElementById("btnRenameProject").addEventListener("click", function(){
+  var name = prompt("Nový název projektu:", store.current);
+  if(!name) return;
+  name = name.trim();
+  if(!name || name===store.current) return;
+  if(store.projects[name]){ alert("Projekt s tímto názvem už existuje."); return; }
+  store.projects[name] = state;
+  delete store.projects[store.current];
+  store.current = name;
+  renderProjects(); lsSet(store);
+});
+
+document.getElementById("btnDeleteProject").addEventListener("click", function(){
+  if(!confirm("Opravdu smazat projekt „"+store.current+"“ včetně všech uzlů?")) return;
+  delete store.projects[store.current];
+  var names = Object.keys(store.projects);
+  if(!names.length){
+    var p = blankProject("Nový projekt");
+    autoLayout(p);
+    store.projects["Nový projekt"]=p;
+    names=["Nový projekt"];
+  }
+  store.current = names[0];
+  state = store.projects[store.current];
+  selectedId=null; undoStack=[]; setLinkMode(null);
+  rebuildAll(); fitView(); lsSet(store);
+});
+
+/* =====================================================================
+   TOPBAR — ostatní
+   ===================================================================== */
+
+function fitView(){
+  var r = viewport.getBoundingClientRect();
+  if(!r.width || !r.height) return;
+  var minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9,any=false;
+  state.nodes.forEach(function(n){
+    if(isHidden(n.id)) return;
+    any=true;
+    minX=Math.min(minX,n.x-130); maxX=Math.max(maxX,n.x+130);
+    minY=Math.min(minY,n.y-60);  maxY=Math.max(maxY,n.y+60);
+  });
+  if(!any) return;
+  var s = Math.min(r.width/(maxX-minX), r.height/(maxY-minY), 1.3)*0.92;
+  view.scale=s;
+  view.x = r.width/2-(minX+maxX)/2*s;
+  view.y = r.height/2-(minY+maxY)/2*s + 20;
+  render();
+}
+
+document.getElementById("btnAddNode").addEventListener("click", function(){
+  addChild(selectedId || (state.nodes.filter(function(n){return !n.parent;})[0]||{}).id);
+});
+document.getElementById("btnUndo").addEventListener("click", undo);
+document.getElementById("btnLayout").addEventListener("click", function(){
+  mark(); autoLayout(); render(); fitView(); save();
+});
+document.getElementById("btnCollapse").addEventListener("click", function(){
+  state.nodes.forEach(function(n){
+    if(n.parent && descendants(n.id).length && state.collapsed.indexOf(n.id)===-1){
+      var p = byId(n.parent);
+      if(!p.parent || (p.parent && !byId(p.parent).parent)) state.collapsed.push(n.id);
+    }
+  });
+  render(); fitView(); save();
+});
+document.getElementById("btnExpand").addEventListener("click", function(){
+  state.collapsed = [];
+  render(); fitView(); save();
+});
+document.getElementById("btnFit").addEventListener("click", fitView);
+
+/* hledání */
+var searchInp = document.getElementById("search");
+searchInp.addEventListener("input", function(){
+  searchTerm = searchInp.value.trim().toLowerCase();
+  render();
+});
+searchInp.addEventListener("keydown", function(ev){
+  if(ev.key!=="Enter" || !searchTerm) return;
+  var hit = state.nodes.filter(function(n){
+    return !isHidden(n.id) &&
+      ((n.name||"").toLowerCase().indexOf(searchTerm)!==-1 ||
+       (n.desc||"").toLowerCase().indexOf(searchTerm)!==-1);
+  })[0];
+  if(!hit) return;
+  var r = viewport.getBoundingClientRect();
+  view.x = r.width/2 - hit.x*view.scale;
+  view.y = r.height/2 - hit.y*view.scale;
+  selectedId = hit.id;
+  render(); syncEditor();
+});
+
+/* =====================================================================
+   EXPORT / IMPORT
+   ===================================================================== */
+
+var dialog = document.getElementById("dialog");
+var dialogArea = document.getElementById("dialogArea");
+
+document.getElementById("btnExport").addEventListener("click", function(){
+  dialogArea.value = JSON.stringify({
+    projekt: store.current,
+    verze: "mapa-editor-2.0",
+    nodes: state.nodes,
+    extraEdges: state.extraEdges,
+    collapsed: state.collapsed
+  }, null, 2);
+  dialog.classList.add("open");
+});
+dialogArea.addEventListener("click", function(){
+  if(dialogArea.value.indexOf('"verze"')!==-1) dialogArea.select();
+});
+document.getElementById("btnImport").addEventListener("click", function(){
+  var data;
+  try{ data = JSON.parse(dialogArea.value); }
+  catch(e){ alert("Neplatný JSON — zkontroluj vložený text."); return; }
+  if(!data || !Array.isArray(data.nodes) || !data.nodes.length){
+    alert("JSON neobsahuje pole nodes."); return;
+  }
+  mark();
+  state.nodes = data.nodes;
+  state.extraEdges = Array.isArray(data.extraEdges)? data.extraEdges : [];
+  state.collapsed = Array.isArray(data.collapsed)? data.collapsed : [];
+  selectedId=null;
+  rebuildAll(); fitView(); save();
+  dialog.classList.remove("open");
+});
+document.getElementById("btnCloseDialog").addEventListener("click", function(){
+  dialog.classList.remove("open");
+});
+dialog.addEventListener("click", function(ev){
+  if(ev.target===dialog) dialog.classList.remove("open");
+});
+
+/* =====================================================================
+   KLÁVESOVÉ ZKRATKY
+   ===================================================================== */
+
+document.addEventListener("keydown", function(ev){
+  var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  if(ev.key==="Escape"){
+    setLinkMode(null);
+    if(dialog.classList.contains("open")) dialog.classList.remove("open");
+    else if(!typing){ selectedId=null; render(); syncEditor(); }
+    if(typing) document.activeElement.blur();
+    return;
+  }
+  if(typing) return;
+  if(ev.key==="Tab"){
+    ev.preventDefault();
+    addChild(selectedId || (state.nodes.filter(function(n){return !n.parent;})[0]||{}).id);
+  }
+  if((ev.key==="Delete"||ev.key==="Backspace") && selectedId){
+    ev.preventDefault();
+    var n = byId(selectedId);
+    if(n && n.parent && confirm("Smazat uzel včetně všech poduzlů?")) deleteNode(selectedId);
+  }
+  if((ev.ctrlKey||ev.metaKey) && ev.key.toLowerCase()==="z"){
+    ev.preventDefault(); undo();
+  }
+});
+
+/* =====================================================================
+   START
+   ===================================================================== */
+
+initStore();
+rebuildAll();
+fitView();
+window.addEventListener("resize", fitView);
+</script>
+</body>
+</html>
