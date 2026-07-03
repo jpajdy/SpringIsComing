@@ -66,6 +66,12 @@
   .habit .hstreak.hot{color:var(--gold)}
   .badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--muted);
     border:1px solid var(--line);border-radius:5px;padding:2px 5px}
+  .hlvl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);font-weight:400;margin-top:3px}
+  .habit.lvls .hname{text-decoration:none}
+  .pills{display:flex;gap:5px}
+  .pill{width:30px;height:30px;border-radius:8px;border:2px solid var(--line);background:none;
+    color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer}
+  .pill.on{background:var(--gold);border-color:var(--gold);color:#0B0B12;font-weight:700}
 
   #noteBox{margin-top:4px}
   #noteBox label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
@@ -91,6 +97,36 @@
   .streakRow:last-child{border-bottom:none}
   .streakRow b{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold)}
 
+  /* oblasti × měsíce */
+  #areaChartWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  #areaChart{display:flex;gap:16px;min-width:min-content}
+  .ag{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .ag-cols{display:flex;align-items:flex-end;gap:3px;height:106px}
+  .ag-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+  .ag-val{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--gold);height:10px}
+  .ag-bar{width:11px;border-radius:3px 3px 0 0;opacity:.55}
+  .ag-bar.cur{opacity:1;box-shadow:0 0 8px rgba(201,169,78,.25)}
+  .ag-m{font-family:'DM Mono',monospace;font-size:7px;color:var(--muted)}
+  .ag-name{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted);letter-spacing:.04em;
+    display:flex;align-items:center;gap:5px;white-space:nowrap}
+  .ag-name .dot{width:7px;height:7px;border-radius:50%}
+  .tr{font-size:8px;color:var(--muted)}
+  .tr.up{color:#7BC96F}
+  .tr.dn{color:#D08A8A}
+
+  /* streaky s rekordy */
+  .spRow{padding:9px 0;border-bottom:1px solid rgba(42,42,58,.5)}
+  .spRow:last-child{border-bottom:none}
+  .spTop{display:flex;align-items:center;gap:8px;font-size:12px}
+  .spDot{width:8px;height:8px;border-radius:50%;flex:none;border:1.5px solid var(--line)}
+  .spDot.on{background:var(--gold);border-color:var(--gold)}
+  .spName{flex:1;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .spTop b{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold);font-size:10.5px;white-space:nowrap}
+  .spTop b.rekord{color:#0B0B12;background:var(--gold);border-radius:6px;padding:2px 7px}
+  .toRec{color:var(--muted);font-size:9px}
+  .spBar{height:4px;background:var(--panel);border-radius:99px;overflow:hidden;margin-top:6px}
+  .spBar div{height:100%;border-radius:99px;opacity:.85}
+
   /* ===== Nastavení ===== */
   .btn{font-family:'DM Mono',monospace;font-size:11px;background:var(--panel);color:var(--text);
     border:1px solid var(--line);border-radius:9px;padding:11px 14px;cursor:pointer;width:100%;margin-bottom:8px;text-align:left}
@@ -101,6 +137,10 @@
     border-radius:7px;padding:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px}
   .set-h select{background:#0D0D15;border:1px solid var(--line);border-radius:7px;padding:8px 5px;
     color:var(--text);font-family:'DM Mono',monospace;font-size:9.5px;max-width:86px}
+  .lvl-edit{display:flex;flex-direction:column;gap:5px;padding:6px 0 10px 12px;
+    border-left:2px solid var(--gold);margin-left:4px;border-bottom:1px solid rgba(42,42,58,.5)}
+  .lvl-edit input{background:#0D0D15;border:1px solid var(--line);border-radius:7px;
+    padding:7px 9px;color:var(--text);font-family:'DM Mono',monospace;font-size:10px}
   .set-h .del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:4px}
   #baseXp{width:100%;background:#0D0D15;border:1px solid var(--line);border-radius:9px;
     padding:11px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px}
@@ -164,8 +204,12 @@
       <div id="chart"></div>
     </div>
     <div class="card">
-      <h3>Nejdelší aktuální streaky</h3>
-      <div id="streaks"></div>
+      <h3>Oblasti v čase · % plnění po měsících</h3>
+      <div id="areaChartWrap"><div id="areaChart"></div></div>
+    </div>
+    <div class="card">
+      <h3>Streaky · 🔥 aktuální / 🏆 rekord</h3>
+      <div id="streaksPro"></div>
     </div>
   </section>
 
@@ -266,6 +310,11 @@ function load(){
   }else{
     state = {habits:defaultHabits(), records:{}, baseXp:0};
   }
+  /* migrace v1 -> v2: doplnit bodování */
+  state.habits.forEach(function(h){
+    if(h.scoring!=="levels") h.scoring = "binary";
+    if(!h.levels || typeof h.levels!=="object") h.levels = {};
+  });
 }
 var saveTimer=null;
 function save(){
@@ -303,14 +352,16 @@ var MONTHS = ["ledna","února","března","dubna","května","června","července"
    ===================================================================== */
 
 function rec(date){ return state.records[date] || {}; }
-function isDone(date, hid){ return !!rec(date)[hid]; }
-function toggle(date, hid){
+function val(date, hid){ return +rec(date)[hid] || 0; }
+function isDone(date, hid){ return val(date,hid) >= 1; }
+function setVal(date, hid, v){
   if(!state.records[date]) state.records[date]={};
-  if(state.records[date][hid]) delete state.records[date][hid];
-  else state.records[date][hid]=1;
+  if(v>0) state.records[date][hid]=v;
+  else delete state.records[date][hid];
   if(!Object.keys(state.records[date]).length) delete state.records[date];
   save();
 }
+function toggle(date, hid){ setVal(date, hid, isDone(date,hid)?0:1); }
 
 function habitStreak(h){
   if(h.type==="weekly") return weeklyStreak(h.id);
@@ -318,6 +369,27 @@ function habitStreak(h){
   if(!isDone(d,h.id)) d=shiftDate(d,-1); /* dnešek se nepočítá proti */
   while(isDone(d,h.id)){ s++; d=shiftDate(d,-1); }
   return s;
+}
+function longestStreak(h){
+  var dates = Object.keys(state.records).filter(function(d){
+    return d.charAt(0)!=="_" && isDone(d,h.id);
+  }).sort();
+  if(!dates.length) return 0;
+  if(h.type==="weekly"){
+    var weeks = {}; dates.forEach(function(d){ weeks[weekKey(d)]=1; });
+    var ws = Object.keys(weeks).sort(), best=1, cur=1;
+    for(var i=1;i<ws.length;i++){
+      cur = (weekKey(shiftDate(ws[i],-7))===ws[i-1]) ? cur+1 : 1;
+      if(cur>best) best=cur;
+    }
+    return best;
+  }
+  var best=1, cur=1;
+  for(var i=1;i<dates.length;i++){
+    cur = (shiftDate(dates[i],-1)===dates[i-1]) ? cur+1 : 1;
+    if(cur>best) best=cur;
+  }
+  return best;
 }
 function weekKey(iso){
   var d = fromISO(iso);
@@ -340,7 +412,7 @@ function totalXP(){
   var xp = state.baseXp||0;
   for(var date in state.records){
     for(var k in state.records[date]){
-      if(k.charAt(0)!=="_") xp++;
+      if(k.charAt(0)!=="_") xp += (+state.records[date][k]||0);
     }
   }
   return xp;
@@ -386,11 +458,21 @@ function renderEntry(){
       '<div class="head"><span class="dot" style="background:'+a.color+'"></span>'+
       '<h2>'+esc(a.name)+'</h2><span class="cnt">'+done+' / '+hs.length+'</span></div>';
     hs.forEach(function(h){
-      var on = isDone(selDate,h.id);
+      var v = val(selDate,h.id);
+      var on = v>=1;
       var st = habitStreak(h);
-      html += '<div class="habit'+(on?" done":"")+'" data-h="'+esc(h.id)+'">'+
-        '<div class="hcheck">✓</div>'+
-        '<div class="hname">'+esc(h.name)+'</div>'+
+      var mid;
+      if(h.scoring==="levels"){
+        mid = '<div class="hname">'+esc(h.name)+
+          (on && h.levels[v] ? '<div class="hlvl">'+esc(h.levels[v])+'</div>' : '')+'</div>'+
+          '<div class="pills">'+[1,2,3].map(function(L){
+            return '<button class="pill'+(v===L?" on":"")+'" data-lvl="'+L+'">'+L+'</button>';
+          }).join("")+'</div>';
+      }else{
+        mid = '<div class="hcheck">✓</div><div class="hname">'+esc(h.name)+'</div>';
+      }
+      html += '<div class="habit'+(on?" done":"")+(h.scoring==="levels"?" lvls":"")+'" data-h="'+esc(h.id)+'">'+
+        mid+
         (h.type==="weekly" ? '<span class="badge">TÝDNĚ</span>' : '')+
         '<div class="hstreak'+(st>=7?" hot":"")+'">'+(st>0 ? "🔥"+st : "")+'</div>'+
         '</div>';
@@ -405,7 +487,15 @@ function renderEntry(){
 habitListEl.addEventListener("click", function(ev){
   var row = ev.target.closest(".habit");
   if(!row) return;
-  toggle(selDate, row.getAttribute("data-h"));
+  var hid = row.getAttribute("data-h");
+  var pill = ev.target.closest(".pill");
+  if(pill){
+    var L = +pill.getAttribute("data-lvl");
+    setVal(selDate, hid, val(selDate,hid)===L ? 0 : L);
+  }else{
+    if(row.classList.contains("lvls")) return; /* úrovňový návyk jen přes pilulky */
+    toggle(selDate, hid);
+  }
   renderEntry();
 });
 
@@ -452,15 +542,95 @@ function renderOverview(){
   }
   document.getElementById("chart").innerHTML = chart;
 
+  renderAreaChart();
+  renderStreaksPro();
+}
+
+/* ---- Oblasti × měsíce: každá oblast skupina, sloupec za každý měsíc ---- */
+function monthList(){
+  var keys = Object.keys(state.records).sort();
+  var cur = todayISO().slice(0,7);
+  if(!keys.length) return [cur];
+  var out = [], ym = keys[0].slice(0,7);
+  while(ym <= cur){
+    out.push(ym);
+    var y = +ym.slice(0,4), m = +ym.slice(5,7);
+    m++; if(m>12){ m=1; y++; }
+    ym = y+"-"+p2(m);
+  }
+  return out.slice(-12); /* max 12 měsíců, ať se to vejde */
+}
+function daysElapsed(ym){
+  var today = todayISO();
+  if(ym === today.slice(0,7)) return +today.slice(8,10);
+  return new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
+}
+function areaMonthPct(areaId, ym){
+  var hs = state.habits.filter(function(h){ return h.area===areaId; });
+  if(!hs.length) return 0;
+  var done = 0;
+  for(var d in state.records){
+    if(d.slice(0,7)!==ym) continue;
+    hs.forEach(function(h){ if(isDone(d,h.id)) done++; });
+  }
+  return Math.round(done/(daysElapsed(ym)*hs.length)*100);
+}
+function renderAreaChart(){
+  var months = monthList();
+  var curYm = todayISO().slice(0,7);
+  var html = "";
+  AREAS.forEach(function(a){
+    var hs = state.habits.filter(function(h){ return h.area===a.id; });
+    if(!hs.length) return;
+    var pcts = months.map(function(ym){ return areaMonthPct(a.id, ym); });
+    /* trend: tento měsíc vs. minulý */
+    var trend = "";
+    if(pcts.length>=2){
+      var diff = pcts[pcts.length-1]-pcts[pcts.length-2];
+      trend = diff>0 ? '<span class="tr up">▲ +'+diff+' %</span>'
+            : diff<0 ? '<span class="tr dn">▼ '+diff+' %</span>'
+            : '<span class="tr">＝</span>';
+    }
+    html += '<div class="ag">'+
+      '<div class="ag-cols">'+months.map(function(ym,i){
+        var p = pcts[i];
+        var isCur = ym===curYm;
+        return '<div class="ag-col"><div class="ag-val">'+(isCur?p+"%":"")+'</div>'+
+          '<div class="ag-bar'+(isCur?" cur":"")+'" style="height:'+Math.max(3,p*0.72)+'px;background:'+a.color+'" '+
+          'title="'+ym+' · '+p+' %"></div>'+
+          '<div class="ag-m">'+(+ym.slice(5,7))+'</div></div>';
+      }).join("")+'</div>'+
+      '<div class="ag-name"><span class="dot" style="background:'+a.color+'"></span>'+
+      esc(a.name)+' '+trend+'</div>'+
+      '</div>';
+  });
+  document.getElementById("areaChart").innerHTML = html;
+}
+
+/* ---- Streaky: aktuální + rekord + progress k rekordu ---- */
+function renderStreaksPro(){
+  var today = todayISO();
   var rows = state.habits.map(function(h){
-    return {name:h.name, s:habitStreak(h), w:h.type==="weekly"};
-  }).filter(function(r){ return r.s>0; })
-    .sort(function(a,b){ return b.s-a.s; }).slice(0,8);
-  document.getElementById("streaks").innerHTML = rows.length
-    ? rows.map(function(r){
-        return '<div class="streakRow"><span>'+esc(r.name)+'</span><b>🔥 '+r.s+(r.w?" týdnů":" dní")+'</b></div>';
-      }).join("")
-    : '<div class="note">Zatím žádné streaky — dnes je den jedna. 🔥</div>';
+    return {h:h, cur:habitStreak(h), rec:longestStreak(h), today:isDone(today,h.id)};
+  }).sort(function(a,b){ return b.cur-a.cur || b.rec-a.rec; });
+  var html = rows.map(function(r){
+    var pct = r.rec ? Math.min(100, Math.round(r.cur/r.rec*100)) : 0;
+    var atRecord = r.cur>0 && r.cur>=r.rec;
+    var w = r.h.type==="weekly";
+    var right = atRecord
+      ? '<b class="rekord">🏆 REKORD '+r.cur+(w?" t":" d")+'!</b>'
+      : '<b>🔥 '+r.cur+' · 🏆 '+r.rec+(w?" týd.":" dní")+
+        (r.rec>r.cur&&r.cur>0 ? ' <span class="toRec">(zbývá '+(r.rec-r.cur+1)+')</span>' : '')+'</b>';
+    var area = AREAS.filter(function(a){return a.id===r.h.area;})[0];
+    var col = area ? area.color : "#D9B85C";
+    return '<div class="spRow">'+
+      '<div class="spTop"><span class="spDot'+(r.today?" on":"")+'" title="'+(r.today?"dnes splněno":"dnes zatím ne")+'"></span>'+
+      '<span class="spName">'+esc(r.h.name)+'</span>'+right+'</div>'+
+      '<div class="spBar"><div style="width:'+pct+'%;background:'+col+'"></div></div>'+
+      '</div>';
+  }).join("");
+  document.getElementById("streaksPro").innerHTML =
+    html || '<div class="note">Zatím žádné streaky — dnes je den jedna. 🔥</div>';
 }
 
 /* =====================================================================
@@ -489,16 +659,36 @@ function renderSettings(){
         '<option value="daily"'+(h.type==="daily"?" selected":"")+'>denní</option>'+
         '<option value="weekly"'+(h.type==="weekly"?" selected":"")+'>týdenní</option>'+
       '</select>'+
+      '<select data-f="scoring">'+
+        '<option value="binary"'+(h.scoring!=="levels"?" selected":"")+'>1 bod</option>'+
+        '<option value="levels"'+(h.scoring==="levels"?" selected":"")+'>úrovně 1–3</option>'+
+      '</select>'+
       '<button class="del" aria-label="Smazat">✕</button></div>';
+    if(h.scoring==="levels"){
+      html += '<div class="lvl-edit" data-i="'+i+'">'+[1,2,3].map(function(L){
+        return '<input type="text" placeholder="Úroveň '+L+' — popis (kolik bodů: '+L+')" '+
+          'value="'+esc(h.levels[L]||"")+'" data-lvl="'+L+'">';
+      }).join("")+'</div>';
+    }
   });
   document.getElementById("habitSettings").innerHTML = html;
 }
 
 document.getElementById("habitSettings").addEventListener("input", function(ev){
+  var lvlBox = ev.target.closest(".lvl-edit");
+  if(lvlBox){
+    var h2 = state.habits[+lvlBox.getAttribute("data-i")];
+    if(h2){ h2.levels[ev.target.getAttribute("data-lvl")] = ev.target.value; save(); }
+    return;
+  }
   var row = ev.target.closest(".set-h"); if(!row) return;
   var h = state.habits[+row.getAttribute("data-i")];
   var f = ev.target.getAttribute("data-f");
-  if(h && f){ h[f] = ev.target.value; save(); }
+  if(h && f){
+    h[f] = ev.target.value;
+    save();
+    if(f==="scoring") renderSettings(); /* zobrazit/skrýt editor úrovní */
+  }
 });
 document.getElementById("habitSettings").addEventListener("click", function(ev){
   if(!ev.target.classList.contains("del")) return;
@@ -540,7 +730,7 @@ document.getElementById("expCsv").addEventListener("click", function(){
   var lines = [head.join(";")];
   dates.forEach(function(d){
     var row = [d];
-    state.habits.forEach(function(h){ row.push(isDone(d,h.id)?1:0); });
+    state.habits.forEach(function(h){ row.push(val(d,h.id)); });
     row.push(dayPct(d));
     row.push('"'+String(rec(d)._note||"").replace(/"/g,'""')+'"');
     lines.push(row.join(";"));
