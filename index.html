@@ -120,6 +120,38 @@
   #chart .seg{width:100%}
   #chart .seg:last-child{border-radius:4px 4px 0 0}
 
+  /* ===== Oblasti ===== */
+  #areaChips{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    padding-bottom:8px;margin-bottom:10px;scrollbar-width:none}
+  #areaChips::-webkit-scrollbar{display:none}
+  .chip{flex:none;display:flex;align-items:center;gap:7px;padding:9px 13px;
+    background:var(--panel);border:1px solid var(--line);border-radius:99px;
+    font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .chip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .chip.on{color:var(--text);border-color:var(--edge);background:#16141C}
+  #areaLive{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .al-box{flex:1;min-width:96px;background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px}
+  .al-box .v{font-family:'DM Mono',monospace;font-size:16px;color:var(--gold)}
+  .al-box .l{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);margin-top:3px}
+  #areaFrameWrap{position:relative;border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;background:#050508;height:calc(100vh - 320px);min-height:420px}
+  #areaFrame{width:100%;height:100%;border:none;display:block;background:#050508}
+  #areaEmpty{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+    justify-content:center;gap:10px;text-align:center;padding:24px}
+  #areaEmpty.show{display:flex}
+  #areaEmpty .ae-icon{font-size:34px;color:var(--edge-dim)}
+  #areaEmpty .ae-t{font-family:Georgia,serif;font-size:16px;color:var(--gold)}
+  #areaEmpty .ae-s{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);
+    line-height:1.7;max-width:300px}
+
+  #workYearNav{display:flex;align-items:center;gap:8px}
+  #workYearNav b{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);font-weight:500}
+  .ybtn{background:var(--panel);border:1px solid var(--line);color:var(--text);
+    border-radius:7px;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:1}
+  .ybtn:disabled{opacity:.3;cursor:default}
+
   /* pracovní graf */
   #workChart{display:flex;gap:9px;min-width:min-content;align-items:flex-end}
   .wg{display:flex;flex-direction:column;align-items:center;gap:3px}
@@ -295,13 +327,30 @@
       <div id="areaLegend"></div>
     </div>
     <div class="card">
-      <h3>Práce · vyděláno Kč a hodiny po měsících</h3>
+      <h3 style="display:flex;align-items:center;justify-content:space-between">
+        <span>Práce · Kč a hodiny po měsících</span>
+        <span id="workYearNav"><button class="ybtn" id="wyPrev">‹</button><b id="wyLbl"></b><button class="ybtn" id="wyNext">›</button></span>
+      </h3>
       <div id="workChartWrap"><div id="workChart"></div></div>
       <div id="workMonth"></div>
     </div>
     <div class="card">
       <h3>Streaky · 🔥 aktuální / 🏆 rekord</h3>
       <div id="streaksPro"></div>
+    </div>
+  </section>
+
+  <!-- ============ OBLASTI ============ -->
+  <section class="view" id="view-oblasti">
+    <div id="areaChips"></div>
+    <div id="areaLive"></div>
+    <div id="areaFrameWrap">
+      <iframe id="areaFrame" title="Průvodce oblastí"></iframe>
+      <div id="areaEmpty">
+        <div class="ae-icon">✦</div>
+        <div class="ae-t">Průvodce této oblasti teprve vznikne</div>
+        <div class="ae-s">Obsahový widget vytvoříme v jedné z dalších sessions — jeden pořádně, dle osvědčeného principu.</div>
+      </div>
     </div>
   </section>
 
@@ -351,6 +400,7 @@
 <nav>
   <button data-v="zapis" class="on"><span class="ic">✓</span>Zápis</button>
   <button data-v="prehled"><span class="ic">◈</span>Přehled</button>
+  <button data-v="oblasti"><span class="ic">✦</span>Oblasti</button>
   <button data-v="nastaveni"><span class="ic">⚙</span>Nastavení</button>
 </nav>
 
@@ -420,6 +470,8 @@ function load(){
   });
   /* v3: projekty pro pracovní modul */
   if(!Array.isArray(state.projects)) state.projects = [];
+  /* v4: historická fakturace (měsíční souhrny, jen do statistik) */
+  if(!state.workHistory || typeof state.workHistory!=="object") state.workHistory = {};
 }
 var saveTimer=null;
 function save(){
@@ -886,6 +938,13 @@ function monthWork(ym){
       byFirm[f].kc += (+p.sazba||0);
     }
   });
+  var hh = state.workHistory[ym];
+  if(hh && ((+hh.kc||0)>0 || (+hh.h||0)>0)){
+    money += (+hh.kc||0); hours = Math.round((hours+(+hh.h||0))*100)/100;
+    var f2 = "📥 Historie";
+    if(!byFirm[f2]) byFirm[f2] = {h:0, kc:0};
+    byFirm[f2].h += (+hh.h||0); byFirm[f2].kc += (+hh.kc||0);
+  }
   return {hours:hours, money:money, byFirm:byFirm};
 }
 function projTotals(pid){
@@ -897,8 +956,27 @@ function projTotals(pid){
   var kc = p ? (p.typ==="hodinova" ? h*(+p.sazba||0) : (p.done ? (+p.sazba||0) : 0)) : 0;
   return {h:h, kc:kc};
 }
+var workYear = null; /* vybraný rok grafu; null = aktuální */
+function workYearBounds(){
+  var max = +todayISO().slice(0,4), min = max;
+  for(var ym in state.workHistory){
+    var v = state.workHistory[ym];
+    if((+v.kc||0)>0 || (+v.h||0)>0){ var y=+ym.slice(0,4); if(y<min) min=y; }
+  }
+  for(var d in state.records){
+    var wk = state.records[d]._work;
+    if(wk && wk.length){ var y2=+d.slice(0,4); if(y2<min) min=y2; }
+  }
+  return {min:min, max:max};
+}
 function renderWorkChart(){
-  var year = todayISO().slice(0,4);
+  if(workYear===null) workYear = +todayISO().slice(0,4);
+  var b = workYearBounds();
+  workYear = Math.min(b.max, Math.max(b.min, workYear));
+  document.getElementById("wyLbl").textContent = workYear;
+  document.getElementById("wyPrev").disabled = workYear<=b.min;
+  document.getElementById("wyNext").disabled = workYear>=b.max;
+  var year = String(workYear);
   var curYm = todayISO().slice(0,7);
   var data = [], maxM = 1;
   for(var m=1;m<=12;m++){
@@ -918,16 +996,24 @@ function renderWorkChart(){
       '<div class="wg-m">'+MN_SHORT[m-1]+'</div></div>';
   }
   document.getElementById("workChart").innerHTML = html;
+  var yKc = 0, yH = 0;
+  data.forEach(function(w){ yKc += w.money; yH += w.hours; });
+  var out = '<div class="streakRow"><span><b style="color:var(--text)">Rok '+year+' celkem</b></span>'+
+    '<b>'+(Math.round(yH*100)/100)+' h · '+fmtKc(yKc)+'</b></div>';
   /* aktuální měsíc po firmách — podklad pro fakturaci */
-  var cur = monthWork(curYm);
-  var rows = Object.keys(cur.byFirm).map(function(f){
-    var b = cur.byFirm[f];
-    return '<div class="streakRow"><span>'+esc(f)+'</span><b>'+b.h+' h · '+fmtKc(b.kc)+'</b></div>';
-  }).join("");
-  document.getElementById("workMonth").innerHTML =
-    '<div class="streakRow"><span><b style="color:var(--text)">Tento měsíc celkem</b></span>'+
-    '<b>'+cur.hours+' h · '+fmtKc(cur.money)+'</b></div>'+rows;
+  if(workYear === +todayISO().slice(0,4)){
+    var cur = monthWork(curYm);
+    var rows = Object.keys(cur.byFirm).map(function(f){
+      var b2 = cur.byFirm[f];
+      return '<div class="streakRow"><span>'+esc(f)+'</span><b>'+b2.h+' h · '+fmtKc(b2.kc)+'</b></div>';
+    }).join("");
+    out += '<div class="streakRow"><span><b style="color:var(--text)">Tento měsíc celkem</b></span>'+
+      '<b>'+cur.hours+' h · '+fmtKc(cur.money)+'</b></div>'+rows;
+  }
+  document.getElementById("workMonth").innerHTML = out;
 }
+document.getElementById("wyPrev").addEventListener("click", function(){ workYear--; renderWorkChart(); });
+document.getElementById("wyNext").addEventListener("click", function(){ workYear++; renderWorkChart(); });
 
 /* ---- Streaky: aktuální + rekord + progress k rekordu ---- */
 function renderStreaksPro(){
@@ -1041,7 +1127,8 @@ function download(name, text, mime){
 document.getElementById("expJson").addEventListener("click", function(){
   download("zivot-je-hra-zaloha-"+todayISO()+".json",
     JSON.stringify({verze:"tracker-1.0", exportováno:todayISO(),
-      habits:state.habits, records:state.records, baseXp:state.baseXp, projects:state.projects}, null, 2),
+      habits:state.habits, records:state.records, baseXp:state.baseXp, projects:state.projects,
+      workHistory:state.workHistory}, null, 2),
     "application/json");
   toast("Záloha stažena");
 });
@@ -1071,20 +1158,85 @@ impConfirm.addEventListener("click", function(){
   var data;
   try{ data = JSON.parse(importArea.value); }
   catch(e){ toast("Neplatný JSON"); return; }
-  if(!data || !Array.isArray(data.habits)){ toast("JSON neobsahuje habits"); return; }
-  if(!confirm("Import přepíše aktuální data v tomto zařízení. Pokračovat?")) return;
-  state.habits = data.habits;
-  state.records = data.records||{};
-  state.baseXp = data.baseXp||0;
-  if(Array.isArray(data.projects)) state.projects = data.projects;
-  state.habits.forEach(function(h){
-    if(h.scoring!=="levels") h.scoring="binary";
-    if(!h.levels || typeof h.levels!=="object") h.levels={};
-  });
+  var hasHabits = data && Array.isArray(data.habits);
+  var hasWork = data && data.workHistory && typeof data.workHistory==="object";
+  var hasProj = data && Array.isArray(data.projects);
+  if(!hasHabits && !hasWork && !hasProj){ toast("JSON neobsahuje známá data"); return; }
+  var msg = hasHabits ? "Import přepíše návyky a záznamy v tomto zařízení. Pokračovat?"
+                      : "Import doplní data (návyky a záznamy zůstanou beze změny). Pokračovat?";
+  if(!confirm(msg)) return;
+  if(hasHabits){
+    state.habits = data.habits;
+    state.records = data.records||{};
+    state.baseXp = data.baseXp||0;
+    state.habits.forEach(function(h){
+      if(h.scoring!=="levels") h.scoring="binary";
+      if(!h.levels || typeof h.levels!=="object") h.levels={};
+    });
+  }
+  if(hasProj) state.projects = data.projects;
+  if(hasWork){
+    for(var ym in data.workHistory) state.workHistory[ym] = data.workHistory[ym];
+  }
   save();
   importArea.value=""; importArea.classList.remove("show"); impConfirm.style.display="none";
   renderSettings(); renderEntry();
   toast("Data importována");
+});
+
+/* =====================================================================
+   OBLASTI — widgety + živé výsledky
+   ===================================================================== */
+
+var AREA_WIDGETS = {
+  zdravi:   "./oblast-zdravi.html",
+  duchovni: "./oblast-duchovni.html",
+  mentalni: "./oblast-mentalni.html"
+  /* fyzicky, prace, vztahy — widgety vzniknou v dalších sessions */
+};
+var selArea = "zdravi";
+
+function renderOblasti(){
+  document.getElementById("areaChips").innerHTML = AREAS.map(function(a){
+    return '<button class="chip'+(a.id===selArea?" on":"")+'" data-a="'+a.id+'">'+
+      '<i style="background:'+a.color+'"></i>'+esc(a.name)+'</button>';
+  }).join("");
+
+  /* živé výsledky oblasti z reálných dat */
+  var ym = todayISO().slice(0,7);
+  var prevYm = (function(){ var y=+ym.slice(0,4),m=+ym.slice(5,7)-1; if(m<1){m=12;y--;} return y+"-"+p2(m); })();
+  var pct = areaMonthPct(selArea, ym);
+  var diff = pct - areaMonthPct(selArea, prevYm);
+  var hs = state.habits.filter(function(h){ return h.area===selArea; });
+  var best = {s:0, name:"—"};
+  hs.forEach(function(h){
+    var s = habitStreak(h);
+    if(s>best.s) best = {s:s, name:h.name};
+  });
+  document.getElementById("areaLive").innerHTML =
+    '<div class="al-box"><div class="v">'+pct+' %</div><div class="l">tento měsíc</div></div>'+
+    '<div class="al-box"><div class="v" style="color:'+(diff>=0?"#7BC96F":"#D08A8A")+'">'+
+      (diff>=0?"▲ +":"▼ ")+diff+' %</div><div class="l">vs. minulý měsíc</div></div>'+
+    '<div class="al-box"><div class="v">🔥 '+best.s+'</div><div class="l">'+esc(best.name)+'</div></div>';
+
+  /* widget — načítat až při zobrazení (šetří data i baterii) */
+  var frame = document.getElementById("areaFrame");
+  var empty = document.getElementById("areaEmpty");
+  var url = AREA_WIDGETS[selArea];
+  if(url){
+    empty.classList.remove("show");
+    if(frame.getAttribute("src")!==url) frame.setAttribute("src",url);
+    frame.style.display="block";
+  }else{
+    frame.style.display="none";
+    frame.removeAttribute("src");
+    empty.classList.add("show");
+  }
+}
+document.getElementById("areaChips").addEventListener("click", function(ev){
+  var c = ev.target.closest(".chip"); if(!c) return;
+  selArea = c.getAttribute("data-a");
+  renderOblasti();
 });
 
 /* =====================================================================
@@ -1108,6 +1260,7 @@ document.querySelectorAll("nav button").forEach(function(b){
     document.querySelectorAll(".view").forEach(function(x){ x.classList.remove("on"); });
     document.getElementById("view-"+v).classList.add("on");
     if(v==="prehled") renderOverview();
+    if(v==="oblasti") renderOblasti();
     if(v==="nastaveni") renderSettings();
     if(v==="zapis") renderEntry();
   });

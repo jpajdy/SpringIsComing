@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duchovní rozvoj — Průvodce Vědomého Života</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #050508;
+  --deep: #0a0a10;
+  --surface: #111118;
+  --card: #16161f;
+  --border: #1e1e2a;
+  --border-light: #2a2a3a;
+  --gold: #c9a96e;
+  --gold-dim: #8a6e40;
+  --gold-pale: #f0d9a8;
+  --lotus: #9b6fa0;
+  --lotus-dim: #5c3d63;
+  --sacred: #4a7fa5;
+  --sacred-dim: #2a4f6a;
+  --earth: #6b8f6b;
+  --earth-dim: #3a5a3a;
+  --fire: #c4663e;
+  --fire-dim: #7a3520;
+  --silver: #a8b4c0;
+  --text: #d0cfc8;
+  --text-dim: #7a7870;
+  --text-muted: #4a4840;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-mono: "DM Mono", monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* STELLAR BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, #1a1030 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, #0a1a20 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, #100a1a 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.stars::before, .stars::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(201,169,110,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 65%, rgba(255,255,255,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 45%, rgba(201,169,110,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.1) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 10% 70%, rgba(201,169,110,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 90%, rgba(255,255,255,0.12) 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,0.18) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.08) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 85% 20%, rgba(201,169,110,0.35) 0%, transparent 100%);
+}
+
+/* LAYOUT */
+.page-wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* HEADER */
+.site-header {
+  padding: 60px 0 48px;
+  text-align: center;
+  position: relative;
+}
+.header-ornament {
+  font-size: 32px;
+  letter-spacing: 24px;
+  color: var(--gold-dim);
+  margin-bottom: 24px;
+  display: block;
+}
+.site-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 700;
+  color: var(--gold-pale);
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.site-subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(14px, 2vw, 18px);
+  color: var(--text-dim);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+.header-divider {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  margin: 32px auto 0;
+}
+
+/* BELIEF SELECTOR */
+.belief-selector {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin: 0 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+.belief-selector::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--lotus-dim), var(--gold-dim), var(--sacred-dim));
+}
+.belief-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 16px;
+}
+.belief-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.belief-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.belief-btn {
+  padding: 8px 18px;
+  border-radius: 24px;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.belief-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.belief-btn.active {
+  background: var(--gold-dim);
+  border-color: var(--gold-dim);
+  color: var(--void);
+  font-weight: 600;
+}
+.belief-btn[data-belief="spiritual"].active { background: var(--lotus-dim); border-color: var(--lotus); color: #fff; }
+.belief-btn[data-belief="religious"].active { background: var(--sacred-dim); border-color: var(--sacred); color: #fff; }
+.belief-btn[data-belief="mixed"].active { background: var(--gold-dim); border-color: var(--gold); color: var(--void); }
+
+/* BELIEF TAGS ON CARDS */
+.belief-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  vertical-align: middle;
+}
+.belief-tag.tag-universal { background: rgba(107,143,107,0.12); border-color: var(--earth-dim); color: var(--earth); }
+.belief-tag.tag-spiritual { background: rgba(155,111,160,0.12); border-color: var(--lotus-dim); color: var(--lotus); }
+.belief-tag.tag-religious { background: rgba(74,127,165,0.12); border-color: var(--sacred-dim); color: var(--sacred); }
+.belief-tag.tag-science { background: rgba(196,102,62,0.12); border-color: var(--fire-dim); color: var(--fire); }
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+.nav-tab {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.nav-tab:hover { color: var(--text); border-color: var(--border-light); }
+.nav-tab.active {
+  background: var(--surface);
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+.nav-tab .tab-icon { font-size: 16px; }
+
+/* SECTION */
+.section { display: none; }
+.section.active { display: block; }
+
+.section-intro {
+  background: linear-gradient(135deg, var(--surface), var(--card));
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 36px 40px;
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.section-intro::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.section-intro.color-gold::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.section-intro.color-lotus::before { background: linear-gradient(90deg, transparent, var(--lotus), transparent); }
+.section-intro.color-sacred::before { background: linear-gradient(90deg, transparent, var(--sacred), transparent); }
+.section-intro.color-earth::before { background: linear-gradient(90deg, transparent, var(--earth), transparent); }
+.section-intro.color-fire::before { background: linear-gradient(90deg, transparent, var(--fire), transparent); }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 12px;
+}
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  color: var(--gold-pale);
+  margin-bottom: 8px;
+  line-height: 1.15;
+}
+.section-tagline {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 17px;
+  margin-bottom: 20px;
+}
+.section-lead {
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 720px;
+}
+
+/* PERSPECTIVE BLOCK */
+.perspectives-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 24px 0 32px;
+}
+.perspective-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  position: relative;
+}
+.perspective-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 3px;
+  border-radius: 12px 0 0 12px;
+}
+.perspective-card.p-buddha::before { background: var(--gold); }
+.perspective-card.p-jesus::before { background: var(--sacred); }
+.perspective-card.p-sadhguru::before { background: var(--lotus); }
+.perspective-card.p-nova::before { background: var(--fire); }
+.perspective-card.p-brandon::before { background: var(--earth); }
+.perspective-avatar { font-size: 26px; margin-bottom: 8px; }
+.perspective-name { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+.perspective-quote { font-style: italic; font-size: 14px; color: var(--text); line-height: 1.6; }
+
+/* TIMELINE CARD */
+.timeline-section { margin-bottom: 32px; }
+.timeline-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  padding-left: 4px;
+}
+.timeline-grid {
+  display: grid;
+  gap: 6px;
+}
+.tl-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.tl-time {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1.3;
+}
+.tl-time:hover { border-color: var(--gold-dim); background: var(--card); }
+.tl-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tl-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.tl-header:hover { background: var(--card); }
+.tl-headline { font-size: 15px; color: var(--text); font-weight: 400; line-height: 1.4; }
+.tl-toggle { color: var(--gold-dim); font-size: 18px; line-height: 1; flex-shrink: 0; transition: transform 0.25s; }
+.tl-content.open .tl-toggle { transform: rotate(45deg); }
+.tl-body { display: none; padding: 0 16px 16px; }
+.tl-content.open .tl-body { display: block; }
+.tl-effect-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.tl-effect {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.tl-effect-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.tl-effect-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* DEEP DIVE CARDS */
+.deep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.deep-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.deep-card:hover { border-color: var(--border-light); }
+.deep-card-header {
+  padding: 18px 20px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.deep-card-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.deep-card-info { flex: 1; }
+.deep-card-title { font-size: 16px; color: var(--text); margin-bottom: 4px; font-weight: 400; }
+.deep-card-sub { font-size: 12px; color: var(--text-dim); font-style: italic; }
+.deep-card-toggle { color: var(--text-muted); font-size: 18px; transition: transform 0.25s; margin-top: 4px; }
+.deep-card.open .deep-card-toggle { transform: rotate(45deg); }
+.deep-card-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border); }
+.deep-card.open .deep-card-body { display: block; }
+.deep-card-body p { font-size: 14px; color: var(--text); line-height: 1.8; margin: 12px 0; }
+.deep-card-body h4 { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim); margin: 16px 0 8px; }
+.deep-card-body ul { list-style: none; padding: 0; }
+.deep-card-body ul li { padding: 5px 0 5px 16px; font-size: 13px; color: var(--text); line-height: 1.6; position: relative; }
+.deep-card-body ul li::before { content: "◦"; position: absolute; left: 0; color: var(--gold-dim); }
+
+/* PRINCIPLES BOX */
+.principles-box {
+  background: var(--card);
+  border: 1px solid var(--gold-dim);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin: 32px 0;
+  position: relative;
+}
+.principles-box::before {
+  content: "⬡";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--void);
+  padding: 0 12px;
+  color: var(--gold);
+  font-size: 20px;
+}
+.principles-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--gold-pale);
+  margin-bottom: 16px;
+  text-align: center;
+}
+.principles-list { display: grid; gap: 10px; }
+.principle-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.principle-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 500;
+  padding-top: 2px;
+}
+.principle-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+.principle-text strong { color: var(--gold-pale); font-weight: 500; }
+
+/* SUBCATEGORY NAV */
+.sub-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.sub-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sub-btn:hover { color: var(--text); border-color: var(--border-light); }
+.sub-btn.active { background: var(--surface); border-color: var(--gold-dim); color: var(--gold); }
+.sub-section { display: none; }
+.sub-section.active { display: block; }
+
+/* INFO CHIP */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.chip {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.chip-gold { border-color: var(--gold-dim); color: var(--gold); background: rgba(201,169,110,0.06); }
+.chip-lotus { border-color: var(--lotus-dim); color: var(--lotus); background: rgba(155,111,160,0.06); }
+.chip-earth { border-color: var(--earth-dim); color: var(--earth); background: rgba(107,143,107,0.06); }
+.chip-sacred { border-color: var(--sacred-dim); color: var(--sacred); background: rgba(74,127,165,0.06); }
+.chip-fire { border-color: var(--fire-dim); color: var(--fire); background: rgba(196,102,62,0.06); }
+
+/* BODY MAP SECTION */
+.body-map-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.body-map-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+.body-layers { display: grid; gap: 8px; }
+.body-layer {
+  display: grid;
+  grid-template-columns: 32px 120px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.body-layer-icon { font-size: 18px; text-align: center; }
+.body-layer-name { font-family: var(--font-mono); font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+.body-layer-desc { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* BLOCKQUOTE */
+.sacred-quote {
+  border-left: 3px solid var(--gold-dim);
+  padding: 14px 20px;
+  margin: 16px 0;
+  background: rgba(201,169,110,0.04);
+  border-radius: 0 8px 8px 0;
+}
+.sacred-quote p { font-style: italic; font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 6px; }
+.sacred-quote cite { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-dim); }
+
+/* HIDDEN FILTER */
+.belief-hidden { display: none !important; }
+
+/* FOOTER */
+.site-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+}
+.footer-text { font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); }
+
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 16px 60px; }
+  .section-intro { padding: 24px 20px; }
+  .belief-selector { padding: 20px 18px; }
+  .tl-row { grid-template-columns: 60px 1fr; gap: 8px; }
+  .body-layer { grid-template-columns: 28px 90px 1fr; gap: 8px; }
+  .perspectives-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="page-wrap">
+
+<!-- HEADER -->
+<header class="site-header">
+  <span class="header-ornament">✦ ✦ ✦</span>
+  <h1 class="site-title">Duchovní rozvoj</h1>
+  <p class="site-subtitle">Průvodce vědomého života · tělo · dech · ticho · přítomnost</p>
+  <div class="header-divider"></div>
+</header>
+
+<!-- BELIEF SELECTOR -->
+<div class="belief-selector">
+  <div class="belief-title">— Váš pohled na svět —</div>
+  <p class="belief-desc">Vyberte přístup, který vám rezonuje. Obsah se přizpůsobí vašemu světonázoru — každý návyk bude zobrazovat relevantní zdroje a komentáře.</p>
+  <div class="belief-options">
+    <button class="belief-btn active" data-belief="all" onclick="setBelief('all')">🌐 Vše (plný obsah)</button>
+    <button class="belief-btn" data-belief="science" onclick="setBelief('science')">🔬 Vědecký / Ateistický</button>
+    <button class="belief-btn" data-belief="spiritual" onclick="setBelief('spiritual')">🌸 Spirituální (nekonfesní)</button>
+    <button class="belief-btn" data-belief="religious" onclick="setBelief('religious')">✝️ Náboženský (teistický)</button>
+    <button class="belief-btn" data-belief="mixed" onclick="setBelief('mixed')">⚖️ Smíšený</button>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" data-tab="meditace" onclick="setTab('meditace')"><span class="tab-icon">🧘</span> Meditace</button>
+  <button class="nav-tab" data-tab="yoga" onclick="setTab('yoga')"><span class="tab-icon">🌿</span> Jóga</button>
+  <button class="nav-tab" data-tab="ejakulace" onclick="setTab('ejakulace')"><span class="tab-icon">🔥</span> Sexuální energie</button>
+  <button class="nav-tab" data-tab="modlitby" onclick="setTab('modlitby')"><span class="tab-icon">🙏</span> Modlitby</button>
+  <button class="nav-tab" data-tab="denni" onclick="setTab('denni')"><span class="tab-icon">👁️</span> Denní praxe</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: MEDITACE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="section active" id="tab-meditace">
+
+  <div class="section-intro color-gold">
+    <div class="section-label">Oblast · Duchovní rozvoj</div>
+    <h2 class="section-heading">Meditace</h2>
+    <p class="section-tagline">„Ticho není absence zvuku — je to přítomnost sebe sama."</p>
+    <p class="section-lead">
+      Meditace není relaxace. Je to trénink vědomí — schopnosti být přítomen bez reakce. 
+      Na molekulární úrovni mění strukturu mozku, na spirituální úrovni rozpouští hranice ega.
+      Tyto dvě cesty — věda a tradice — dospívají ke stejnému: <em>klid jako základní stav, ne jako výjimka.</em>
+    </p>
+    <div style="margin-top:16px;">
+      <span class="belief-tag tag-universal">🌐 Universální</span>
+      <span class="belief-tag tag-science">🔬 Věda: neuroscience</span>
+      <span class="belief-tag tag-spiritual">🌸 Buddhismus / Vedanta</span>
+      <span class="belief-tag tag-religious">✝️ Kontemplativní křesťanství</span>
+    </div>
+  </div>
+
+  <!-- PERSPECTIVES -->
+  <div class="perspectives-row">
+    <div class="perspective-card p-buddha">
+      <div class="perspective-avatar">☸️</div>
+      <div class="perspective-name">Gautama Buddha · Vipassanā</div>
+      <div class="perspective-quote">„Anicca — vše je pomíjivé. Sleduj dech, sleduj vznikání a zanikání — a uvidíš, že není nic, za co by stálo trpět. Tím zanikne utrpení."</div>
+    </div>
+    <div class="perspective-card p-sadhguru">
+      <div class="perspective-avatar">🌸</div>
+      <div class="perspective-name">Sadhguru · Isha Yoga</div>
+      <div class="perspective-quote">„Meditace neznamená dělat něco zvláštního. Znamená přestat dělat to, co neustále děláš — přestat být obětí vlastní mysli. Jsi kreátor svého vnitřního klimatu."</div>
+    </div>
+    <div class="perspective-card p-jesus">
+      <div class="perspective-avatar">✝️</div>
+      <div class="perspective-name">Ježíš · Kontemplace</div>
+      <div class="perspective-quote">„Království Boží je uvnitř vás." (Lk 17:21) Hesychastická tradice — <em>hesychia</em> (ticho srdce) jako cesta k přímému setkání s Bohem. Modlitba srdce: „Pane Ježíši Kriste, smiluj se nade mnou."</div>
+    </div>
+    <div class="perspective-card p-nova">
+      <div class="perspective-avatar">🔬</div>
+      <div class="perspective-name">Dr. Nova · Neuroscience</div>
+      <div class="perspective-quote">„Default Mode Network — síť, která tvoří váš vnitřní monolog — se při meditaci doslova přepojuje. Každá minuta tréninku pozornosti je minutou rekonstrukce prefrontálního kortexu."</div>
+    </div>
+    <div class="perspective-card p-brandon">
+      <div class="perspective-avatar">🌊</div>
+      <div class="perspective-name">Brandon / Učitelka · Somatic</div>
+      <div class="perspective-quote">„Tělo uchovává vše co mysl odmítla zpracovat. Meditace bez somatického uvědomění je jen další vrstva kontroly. Jdi do těla — tam jsou odpovědi."</div>
+    </div>
+  </div>
+
+  <!-- SUB-NAV: 2 typy meditace -->
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="setSub('meditace','energie')" data-sub="meditace-energie">🔮 Energie & Tělo</button>
+    <button class="sub-btn" onclick="setSub('meditace','dech')" data-sub="meditace-dech">🌬️ Dech & Čistá mysl</button>
+  </div>
+
+  <!-- SUB: ENERGIE -->
+  <div class="sub-section active" id="sub-meditace-energie">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:20px;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--lotus);margin-bottom:14px;">Meditace Energie & Tělo — Směr: Dovnitř</div>
+      <p style="font-size:15px;color:var(--text);line-height:1.8;margin-bottom:14px;">
+        Tato praxe se obrací celou pozorností do <strong style="color:var(--gold-pale)">vnitřního prostoru těla</strong>. Člověk se učí vnímat energie kolem těla a v těle, sledovat individuální orgány a jejich funkci. Vědomí se rozšiřuje do čaker, prodýchává je zdola nahoru a obráceně. Sledují se dráhy a pohyby energie — <em>prána</em> v józe, <em>čchi</em> v taoistické medicíně, <em>ki</em> v japonské tradici.
+      </p>
+      <p style="font-size:15px;color:var(--text);line-height:1.8;">
+        Neurologicky: interoception — kapacita vnímat vnitřní stav těla — se posiluje přesně tímto typem meditace (Island cortex, anterior insula). U chronicky "kamenných" lidí je insula podaktivní — tělo nevysílá signály nebo je mozek ignoruje. Meditace energie inzulu <strong style="color:var(--gold-pale)">reaktivuje</strong>.
+      </p>
+    </div>
+
+    <div class="body-map-card">
+      <div class="body-map-title">— Vrstvy vědomí v těle —</div>
+      <div class="body-layers">
+        <div class="body-layer">
+          <div class="body-layer-icon">🔴</div>
+          <div class="body-layer-name">Muladhara</div>
+          <div class="body-layer-desc">Kořenová čakra — kostrč, perineum. Pocit bezpečí, uzemnění. Dýchání dolů do pánevního dna. Aktivace při blokádě: tíha, strach, nestabilita.</div>
+        </div>
+        <div class="body-layer">
+          <div class="body-layer-icon">🟠</div>
+          <div class="body-layer-name">Svadhishthana</div>
+          <div class="body-layer-desc">Sakrální — spodní břicho. Sexuální a kreativní energie, emoce. Blokáda: rigidita, neschopnost prožívat radost nebo potěšení.</div>
+        </div>
+        <div class="body-layer">
+          <div class="body-layer-icon">🟡</div>
+          <div class="body-layer-name">Manipura</div>
+          <div class="body-layer-desc">Solární plexus. Osobní moc, vůle, trávení energie. Blokáda: nízká sebedůvěra, úzkost v žaludku, přehlcení emocemi.</div>
+        </div>
+        <div class="body-layer">
+          <div class="body-layer-icon">💚</div>
+          <div class="body-layer-name">Anahata</div>
+          <div class="body-layer-desc">Srdeční čakra. Láska, soucit, propojení. Centrum zpracování emocí. Blokáda se fyzicky projevuje jako sevřenost na hrudi.</div>
+        </div>
+        <div class="body-layer">
+          <div class="body-layer-icon">💙</div>
+          <div class="body-layer-name">Vishuddha</div>
+          <div class="body-layer-desc">Krční. Komunikace, autenticita, vyjadřování pravdy. Blokáda: bolest krku, neschopnost říct co cítím.</div>
+        </div>
+        <div class="body-layer">
+          <div class="body-layer-icon">🔵</div>
+          <div class="body-layer-name">Ajna</div>
+          <div class="body-layer-desc">Třetí oko — střed čela. Intuice, vhled, vnitřní vidění. Aktivace: spontánní obrazy a vhledy v meditaci.</div>
+        </div>
+        <div class="body-layer">
+          <div class="body-layer-icon">🟣</div>
+          <div class="body-layer-name">Sahasrara</div>
+          <div class="body-layer-desc">Korunní — temeno hlavy. Přesah, jednota s celkem, tiché vědomí. Velmi hluboká praxe — nevnucovat, přijít samo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-intro color-lotus" style="margin-bottom:20px;">
+      <div class="section-label">Věda za tím · Interoception & Insula</div>
+      <p class="section-lead" style="font-size:14px;">
+        Studie Farb et al. (Social Cognitive Affective Neuroscience, 2013) ukázala, že 8týdenní MBSR program 
+        <strong>zvětšuje kortikální tloušťku pravé přední insuly</strong> — oblasti zodpovědné za vnímání těla. 
+        U lidí s alexithymií (neschopnost číst vlastní emoce a tělesné signály — přesně "kamenný stav") je insula 
+        chronicky tlumená. Energetická meditace je jednou z nejpřímějších cest k její reaktivaci — 
+        spolu se somatickou terapií (Somatic Experiencing, TRE).
+      </p>
+    </div>
+
+    <!-- TIMELINE ENERGIE -->
+    <div class="timeline-section">
+      <div class="timeline-title">— Časová osa praxe · exponenciální, ne lineární —</div>
+      <div class="timeline-grid">
+
+        <div class="tl-row">
+          <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">10<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Tělo si uvědomí samo sebe — první kontakt s energetickým polem</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Věda</div><div class="tl-effect-value">Aktivace parasympatiku — vagus nerve. HRV (heart rate variability) stoupá v průměru o 8–12% (Bertisch 2016). Kortizol začíná klesat.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Tělo</div><div class="tl-effect-value">Pocit tepla nebo mravenčení v rukou, chodidlech — rozšíření krevního řečiště. Může přijít záškub nebo pohyb.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Tradice</div><div class="tl-effect-value">Sadhguru: "Prvních 10 minut jsi jen zklidňoval mentální zvyky. Teprve teď začíná vnitřní ticho."</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">30<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Vědomí proniká do hlubších vrstev — první pohyby energie v těle</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Neurologie</div><div class="tl-effect-value">DMN (Default Mode Network) se začíná odpojovat. Alfa vlny dominují. Gamma vlny se začínají objevovat u zkušenějších — to jsou vlny "vhledu".</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Energie</div><div class="tl-effect-value">Pohyby prány v těle — pocit stoupání energie od pánevního dna, nebo tlak v čelním laloku. Teplo v solárním plexu.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Podvědomí</div><div class="tl-effect-value">Začínají vyvstávat obrazy, vzpomínky, emoce bez zjevné příčiny — tělo zpracovává uložená data.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">60<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Hluboká interoception — hranice těla se rozplývají</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Stav vědomí</div><div class="tl-effect-value">Theta vlny (4–8 Hz) — stav snového vědomí při bdělosti. Přístup k hlubokému podvědomí. Hypnagogické obrazy.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Bloky & Tělo</div><div class="tl-effect-value">Emocionální uvolnění — pláč, smích, chvění, teplo. Toto NENÍ problém — je to výsledek. Tělo uvolňuje chronicky zadržovanou energii.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Sadhguru</div><div class="tl-effect-value">"Na 60 minutách začíná vědomí opouštět svůj obvyklý hraniční prostor. Prána cirkuluje mimo fyzické tělo — toto je skutečná praxe."</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">120<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Rozpouštění vrstev — přístup k jádrové traumatické paměti</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Hloubka</div><div class="tl-effect-value">Vipassana (S.N. Goenka): sankháry — hluboká mentální formace uložená v těle jako fyzická tenze. Na 2h se dostáváme k vrstvám, které nebyly zpracovány roky.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Fyziologie</div><div class="tl-effect-value">Prolaktin a melatonin stoupají. Oxytocin — "hormon propojení" — je uvolňován. Imunitní aktivita NK buněk stoupá o 10–15%.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Zkušenost</div><div class="tl-effect-value">Pocit nekonečného prostoru vědomí. Tělo je vnímáno jako hustá energie, ne jako fyzická hmota. Čas ztrácí lineárnost.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">180<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Samádhi stavy — za hranicí myslícího já</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Tradice</div><div class="tl-effect-value">Savikalpa samádhi — stav kdy mysl je přítomna, ale já mizí. Nirvikalpa samádhi (vzácné) — úplná absence subjektu. Mystické jednoty všech tradic jsou popisy tohoto stavu.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Neurologie</div><div class="tl-effect-value">Newberg & D'Aquili (neurotheologie): při hlubokých meditačních stavech se aktivita parietálního laloku (zodpovědného za hranici "já/ne-já") dramaticky klesá.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">⚠️ Poznámka</div><div class="tl-effect-value">Tento stav není cílem — je průchodem. Po návratu je integrace klíčová: psaní deníku, pohyb, příroda. Nezůstávat v abstrakci.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB: DECH & ČISTÁ MYSL -->
+  <div class="sub-section" id="sub-meditace-dech">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:20px;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--sacred);margin-bottom:14px;">Meditace Dech & Čistá Mysl — Samatha / Vipassanā</div>
+      <p style="font-size:15px;color:var(--text);line-height:1.8;margin-bottom:14px;">
+        Člověk dýchá a vydechuje. <strong style="color:var(--gold-pale)">Soustředí se pouze na dech.</strong> Myšlenky přicházejí — jsou pozorovány a nechány odejít. Praktikant se nijak nezabývá jejich obsahem — je pouze svědkem. 
+        Po desítkách minut mysl zticha. Hluboké vědomí přichází — <em>čhitta</em> (čistá mysl v sánskrtu) se projevuje. 
+        Podvědomé výjevy přicházejí a odcházejí — jsou nechány jít bez lpění.
+      </p>
+      <div class="chip-row">
+        <span class="chip chip-sacred">🌬️ Anapanasati</span>
+        <span class="chip chip-gold">☸️ Vipassanā</span>
+        <span class="chip chip-lotus">🌸 Samatha</span>
+        <span class="chip chip-fire">🔬 Default Mode Network</span>
+      </div>
+    </div>
+
+    <div class="timeline-section">
+      <div class="timeline-title">— Hloubka mysli · Exponenciální, ne lineární —</div>
+      <div class="timeline-grid">
+
+        <div class="tl-row">
+          <div class="tl-time">10<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Mysl se vzpouzí — prvních 5–8 minut jsou čistý mentální hluk</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <p style="font-size:13px;color:var(--text);line-height:1.7;">Průměrný člověk má 6 200 myšlenek denně (Tseng & Poppenk, Nature Comm. 2020). Prvních 8 minut sedíte v tomto proudu. To není selhání — to je přesně to, s čím trénujete. Uvědomění si myšlenky a návrat k dechu je jako jedno opakování v posilovně: každý návrat posiluje prefrontální kortex.</p>
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Věda</div><div class="tl-effect-value">ACh (acetylcholin) a norepinefrin — neurotransmitery pozornosti — začínají stabilizovat. Locus coeruleus se uklidňuje.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Tradice</div><div class="tl-effect-value">Buddha nazval toto "mysl opice" (kapicitta) — neurčitá, neustále skákající. Praxe není ji zastavit silou, ale pozorovat bez reakce.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">30<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Myšlenky se zpomalují — prostor mezi nimi se rozrůstá</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Neurologie</div><div class="tl-effect-value">DMN (Default Mode Network — síť vnitřního monologu) začíná ustupovat. Alfa vlny 8–12 Hz dominují. Mysl vstupuje do "základního pozorovacího stavu".</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Zkušenost</div><div class="tl-effect-value">Přichází první "okna ticha" — mohou trvat sekundy, pak minuty. Dech se spontánně zhlubuje. Tělo upadá do klidu.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Podvědomí</div><div class="tl-effect-value">Začínají se vynořovat "zbytky dne" — fragmenty situací, obličeje, scény. Nechávat je procházet — nejde o obsah, jde o proces uvolňování.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">60<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Hluboké ticho — vědomí bez obsahu, ale přítomné</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Theta stav</div><div class="tl-effect-value">Theta vlny (4–8 Hz) — stav hlubokého klidu při bdělosti. Totožný se stavem těsně před spaním nebo po probuzení. Přístup k podvědomému materiálu.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Výjevy</div><div class="tl-effect-value">Hluboké podvědomé obrazy, symbolická sdělení, pocity ze vzdálené minulosti. Není nutné je analyzovat — pouhé nechání průchodu = léčba.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Jesus · Hesychia</div><div class="tl-effect-value">Hésychasté (Jan Klimakos, Grigorij Palamas): "Ticho mysli je branou k Bohu." V tomto tichu se modlitba srdce stává spontánní — bez slov.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">120+<br>min</div>
+          <div class="tl-content">
+            <div class="tl-header" onclick="toggleTl(this.parentElement)">
+              <div class="tl-headline">Za myslí — přítomnost bez pozorovatele</div>
+              <span class="tl-toggle">+</span>
+            </div>
+            <div class="tl-body">
+              <div class="tl-effect-grid">
+                <div class="tl-effect"><div class="tl-effect-label">Stav</div><div class="tl-effect-value">Čhitta — čistá mysl — je odhalena jako přirozený základ. Myšlenky se do ní rodí a v ní zanikají — jako vlny v oceánu. Ty jsi oceán, ne vlna.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Zkušenost</div><div class="tl-effect-value">Zrušení prožívající subjektu — "já medituje" zmizí. Zbyde jen vědomí, bez komentáře. Toto zažil Buddha pod Bodhi stromem — mokša, vysvobození.</div></div>
+                <div class="tl-effect"><div class="tl-effect-label">Integrace</div><div class="tl-effect-value">Po takové meditaci: klid v pohybu, odolnost vůči provokaci, laskavost jako samozřejmý stav. Neodtrhávat se od lidí — přinést to zpět do života.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINCIPY MEDITACE -->
+  <div class="principles-box">
+    <div class="principles-title">Zásady meditační praxe — klíč k exponenciálnímu postupu</div>
+    <div class="principles-list">
+      <div class="principle-item">
+        <div class="principle-num">01</div>
+        <div class="principle-text"><strong>Pravidelnost nad délkou.</strong> 20 minut denně je silnější než 3 hodiny jednou týdně. Mozek posiluje neurální dráhy opakováním, ne intenzitou.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">02</div>
+        <div class="principle-text"><strong>Nezápasit s myšlenkami.</strong> Odpor k myšlenkám je sám myšlenka. Pozoruješ — to je vše. Každý návrat = jeden rep. Počet repů určuje pokrok.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">03</div>
+        <div class="principle-text"><strong>Fyzická pozice jako základ.</strong> Páteř vzpřímená — energie cirkuluje. Ležení = spánek. Sed s rovnou páteří (podložka pod kostrčí) = vědomý stav.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">04</div>
+        <div class="principle-text"><strong>Neinterpretovat výjevy.</strong> Obrazy, symboly, emoce v meditaci jsou neutrální data. Jejich analýza patří do deníku po meditaci — ne do meditace samotné.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">05</div>
+        <div class="principle-text"><strong>Exponenciální přechod nastává mezi 20–40 minutami.</strong> Pod 20 minutami jste zpravidla jen v "odreagování". Nad 20 minutami začíná skutečná práce s vědomím.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">06</div>
+        <div class="principle-text"><strong>Somatická integrace.</strong> Po meditaci: 5 minut vědomého pohybu nebo chůze. Pomáhá zakotvit zjemněné vědomí do těla — zabraňuje "disociaci od reality".</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">07</div>
+        <div class="principle-text"><strong>Deník po meditaci.</strong> 3–5 minutový zápis bezprostředně po sezení. Mozek zpracovává ještě 10–15 minut po meditaci — deník zachytí to, co by jinak zmizelo.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: YOGA -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="section" id="tab-yoga">
+
+  <div class="section-intro color-lotus">
+    <div class="section-label">Oblast · Duchovní rozvoj</div>
+    <h2 class="section-heading">Jóga</h2>
+    <p class="section-tagline">„Bez těla nelze vstoupit do chrámu. Jóga je chrám, který nosíš v sobě."</p>
+    <p class="section-lead">
+      Jóga není cvičení. Je to systém pro <em>přípravu těla jako nástroje vědomí.</em> 
+      Dokud jsou svaly zkrácené, fascie zadržuje bloky a dýchání je povrchní — duchovní postup naráží na fyziologické limity. 
+      Tělo musí být "vyždímáno" — toxiny uvolněny, nervový systém zklidněn, páteř uvolněna — 
+      <strong style="color:var(--gold-pale)">aby přes ni mohla energie volně proudit.</strong>
+    </p>
+    <div style="margin-top:16px;">
+      <span class="belief-tag tag-universal">🌐 Universální</span>
+      <span class="belief-tag tag-science">🔬 Věda: fascia, NS, kortizol</span>
+      <span class="belief-tag tag-spiritual">🌸 Hatha · Kundalini · Yin</span>
+    </div>
+  </div>
+
+  <div class="perspectives-row">
+    <div class="perspective-card p-sadhguru">
+      <div class="perspective-avatar">🌸</div>
+      <div class="perspective-name">Sadhguru · Hatha Jóga</div>
+      <div class="perspective-quote">„Hatha jóga není o flexibilitě nebo zdraví — je o přípravě těla jako nádoby pro vyšší vědomí. Asana = 'byt v rovnováze se zemí'. Pokud tělo bojuje, mysl nemůže být ticho."</div>
+    </div>
+    <div class="perspective-card p-jesus">
+      <div class="perspective-avatar">✝️</div>
+      <div class="perspective-name">Tělo jako chrám · Pavel</div>
+      <div class="perspective-quote">„Nebo nevíte, že vaše tělo je chrámem Ducha Svatého?" (1Kor 6:19). Péče o tělo jako o posvátný prostor — nikoliv askeze z nenávisti, ale úcta a kultivace.</div>
+    </div>
+    <div class="perspective-card p-nova">
+      <div class="perspective-avatar">🔬</div>
+      <div class="perspective-name">Dr. Nova · Fascia & NS</div>
+      <div class="perspective-quote">„Fascie je největší smyslový orgán těla — více nervových zakončení než kůže. Chronický stres ji ztuhuje do 'armoringu' (Reich). Jóga mechanicky i neurálně tuto fixaci uvolňuje."</div>
+    </div>
+    <div class="perspective-card p-brandon">
+      <div class="perspective-avatar">🌊</div>
+      <div class="perspective-name">Brandon · Somatika</div>
+      <div class="perspective-quote">„Tradiční Yin jóga a TRE (Trauma Release Exercises) pracují na stejném principu: uvolnění chronické svalové tenze kde je uloženo trauma. Tělo ví jak se léčit — jen mu dejte prostředí."</div>
+    </div>
+  </div>
+
+  <div class="timeline-section">
+    <div class="timeline-title">— Transformace těla & vědomí v čase —</div>
+    <div class="timeline-grid">
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>den</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Nervový systém dostane signál: "Je bezpečno uvolnit se"</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Okamžitý efekt</div><div class="tl-effect-value">Kortizol klesá do 20 minut praxe (West, 2004). Oxytocin stoupá. Parasympatikus se aktivuje — srdce zpomaluje, trávení se spouští.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Fascia</div><div class="tl-effect-value">Myelofibroblasty (buňky fascie) začínají uvolňovat chronická napětí. Yin jóga (3–5 min výdrž v poloze) dosahuje hloubky fascie, kterou dynamická praxe nedosáhne.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Energie</div><div class="tl-effect-value">Prána se pohybuje volněji do oblastí kde byla zablokovaná. Pocity tepla, mravenčení, někdy emoční uvolnění (pláč, smích) — normální a žádoucí.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>týden</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Dech se prohlubuje — první strukturální změny ve fasciích</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Dýchání</div><div class="tl-effect-value">Bránice se uvolňuje — průměrný člověk dýchá pouze do horní třetiny plic. Po 1 týdnu jógy se bránicové dýchání spontánně aktivuje i mimo praxe.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Spánek</div><div class="tl-effect-value">Kvalita spánku se zlepšuje statisticky po 7–10 dnech (Harvard, Khalsa 2004). REM fáze se prodlužuje.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Emoce</div><div class="tl-effect-value">Reaktivita klesá. Stejné podněty vyvolávají slabší automatické reakce. Prefrontální kortex začíná "brzdit" amygdalu.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>měsíc</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Tělo začíná měnit svůj "defaultní tonus" — armoring se hroutí</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Sval & Fascia</div><div class="tl-effect-value">Fasciální uvolnění vyžaduje 21–30 dnů opakované praxe. Po tomto období chroniké tenze (trapéz, kyčelní flexory, psoas) začínají strukturálně ustupovat.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Psoas muscle</div><div class="tl-effect-value">Psoas — "sval duše" (liz Koch). Jde od bederní páteře k stehenní kosti — přímé anatomické spojení se sympatickým nervovým systémem. Chronická úzkost = chronicky zkrácený psoas. Jóga ho uvolňuje = uvolnění základní existenciální tenze.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Vědomí</div><div class="tl-effect-value">Meditace se prohlubuje. Tělo přestalo být překážkou — stalo se cestou. Energie cirkuluje přirozeněji.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>rok</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Postava, dýchání a emoční regulace se trvale transformují</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Postava</div><div class="tl-effect-value">Lordóza, kyfóza, skolióza — jógou korigovatelné pokud nejsou strukturální. Páteř se vzpřimuje jako přirozený stav, ne úsilím.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Neurologie</div><div class="tl-effect-value">Vagotonie — permanentně zvýšený parasympatický tonus. HRV (měřítko zdraví NS) stoupá o 15–25% v průměru po 12 měsících pravidelné praxe.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Duchovno</div><div class="tl-effect-value">Sadhguru: "Hatha jóga není o výkonu. Je o tom stát se mistrem vlastního fyzického systému — pak se vnitřní cesta otevírá přirozeně."</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">5<br>let</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Biologický věk těla klesá — tělo jako disciplinovaný nástroj vědomí</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Stárnutí</div><div class="tl-effect-value">Telomery: Ross (Int J Yoga, 2010) — pravidelní jógaři mají telomery statisticky delší než nepraktikující vrstevníci. Biologický věk 3–7 let nižší.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Mozek</div><div class="tl-effect-value">Kortikální tloušťka — prefrontální kortex, insula, somatosenzorický kortex — zachována nebo zvětšena. BDNF produkce zvýšena.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Energie</div><div class="tl-effect-value">Kundalini: u zkušených praktiků se spontánně aktivuje vzestupná energie páteří. Toto není metafora — senzace, teplo, světlo, rozšíření vědomí jsou hlášeny konzistentně.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">10<br>let</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Tělo a mysl jako jeden systém — jóga přestala být praxí a stala se bytím</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Integrace</div><div class="tl-effect-value">Asana, pranayama, meditace, vztah k potravinám, spánek, komunikace — vše se sjednotí. Jóga přestala být "cvičení ráno" — je způsobem pohybu v každém momentu.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Svědci</div><div class="tl-effect-value">Iyengar praktikoval až do 95 let. T.K.V. Desikachar, Pattabhi Jois — těla v 80+ byla pružnější a zdravější než průměrná 40letá. Data existují — jóga zpomaluje biologické stárnutí dokumentovatelně.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Duchovno</div><div class="tl-effect-value">Jnána (moudrost získaná praxí, ne studiem) se stává přirozenou součástí vnímání. Ego se nestratí — zmenší na funkční nástroj místo dominantní identity.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="deep-grid">
+    <div class="deep-card" onclick="toggleDeep(this)">
+      <div class="deep-card-header">
+        <div class="deep-card-icon">🌬️</div>
+        <div class="deep-card-info">
+          <div class="deep-card-title">Pranayama — dechová praxe</div>
+          <div class="deep-card-sub">Nadi Shodhana · Kapalabhati · Bhramari · Kumbhaka</div>
+        </div>
+        <div class="deep-card-toggle">+</div>
+      </div>
+      <div class="deep-card-body">
+        <h4>Nadi Shodhana (střídavé dýchání)</h4>
+        <p>Střídavé dýchání nosními dírkami aktivuje alternativně levou a pravou mozkovou hemisféru. Pravá nosní dírka = aktivace sympatiku + levé hemisféry. Levá nosní dírka = parasympatikus + pravá hemisféra. Po 10 minutách nastupuje synchronizace obou hemisfér — stav podobný meditaci.</p>
+        <h4>Kumbhaka — zadržení dechu</h4>
+        <p>Zadržení dechu po nádechu (antara kumbhaka) zvyšuje CO₂ v krvi → rozšíření mozkových cév → zvýšená perfúze → jasnost myšlení. Wim Hof metoda pracuje na podobném principu. Tibetský Tummo — vnitřní teplo — je taktéž kumbhaka praxe.</p>
+        <h4>Kapalabhati</h4>
+        <p>Rychlé aktivní výdechy (1–2/sekunda). Masíruje orgány břicha, čistí dutiny, aktivuje sympatikus a zvyšuje kyslíkovou saturaci. 10 minut kapalabhati = efekt aerobní aktivity na metabolismus.</p>
+      </div>
+    </div>
+
+    <div class="deep-card" onclick="toggleDeep(this)">
+      <div class="deep-card-header">
+        <div class="deep-card-icon">🔱</div>
+        <div class="deep-card-info">
+          <div class="deep-card-title">Yin jóga — hluboké fascii a podvědomí</div>
+          <div class="deep-card-sub">3–5 minut v poloze · emoční uvolnění · psoas</div>
+        </div>
+        <div class="deep-card-toggle">+</div>
+      </div>
+      <div class="deep-card-body">
+        <p>Yin jóga pracuje s fasciální sítí — pojivovou tkání která obaluje každý sval, kost a orgán. Fascie při chronickém stresu tuhne a zkracuje. Yin polohy trvají 3–5 minut — to je minimum nutné pro fasciální restrukturaci (viskózní creep).</p>
+        <h4>Emocionální uvolnění v Yin</h4>
+        <p>Kyčelní otevírače (Pigeon pose, Dragon, Shoelace) — kyčle ukládají emocionální trauma (Reich, Lowen). Při dlouhém držení těchto poloh přicházejí spontánní emoce. Brandon/somatická tradice: "Tělo uvolňuje co mysl zamkla." Nechte přijít — nechte odejít.</p>
+        <h4>Vědecký základ</h4>
+        <p>Schleip (Fascia Research, 2012): fascie má autonomní kontraktilitu — stahuje se nezávisle na svalech. Je hustě inervována proprioceptory a interoceptory. Zdravá fascie = zdravé vnímání těla = zdravé emoce.</p>
+      </div>
+    </div>
+
+    <div class="deep-card" onclick="toggleDeep(this)">
+      <div class="deep-card-header">
+        <div class="deep-card-icon">⚡</div>
+        <div class="deep-card-info">
+          <div class="deep-card-title">Kundalini — energie páteře</div>
+          <div class="deep-card-sub">Věda, tradice a zkušenost</div>
+        </div>
+        <div class="deep-card-toggle">+</div>
+      </div>
+      <div class="deep-card-body">
+        <p>Kundalini šakti — v tantrickém systému energie stočená v kořenové čakře. Při probuzení stoupá páteří sushumnou (centrálním energetickým kanálem) přes čakry nahoru. Toto probuzení může být spontánní nebo indukovatelné praxí.</p>
+        <h4>Vědecké paralely</h4>
+        <p>Stanislav Grof (Holotropic Breathwork) dokumentoval stovky případů "energetického probuzení" s konzistentní fenomenologií. Lee Sannella (Kundalini Experience, 1976): neurologická mapa kundalini probuzení odpovídá postupné aktivaci parasympatického nervového systému od sakrální oblasti nahoru.</p>
+        <h4>Přípravné podmínky</h4>
+        <p>Jóga, pranayama a meditace po dobu 1–5 let připravují tělo. Čistota stravy, sexuální disciplína (brahmacharya) a emocionální zralost jsou předpokladem bezpečného probuzení.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: SEXUÁLNÍ ENERGIE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="section" id="tab-ejakulace">
+
+  <div class="section-intro color-fire">
+    <div class="section-label">Oblast · Duchovní rozvoj</div>
+    <h2 class="section-heading">Sexuální energie & Retence</h2>
+    <p class="section-tagline">„Sexuální energie je tvůrčí síla vesmíru — stejná energie tvoří dítě, báseň, nebo osvícení."</p>
+    <p class="section-lead">
+      Sexuální energie — <em>ojas, jing, prána</em> — je v každé tradici považována za nejhutnější a nejelektrichost formu vitální energie v těle. 
+      Ejakulace ji vyčerpává. Retence — vědomá práce se sexuální energií bez vypouštění — ji přetváří (brahmacharya, karezza, taoistická praxe) 
+      a přesměrovává do tvůrčích, spirituálních a fyzických procesů.
+      <strong style="color:var(--gold-pale)"> Nejde o potlačení. Jde o transmutaci.</strong>
+    </p>
+    <div style="margin-top:16px;">
+      <span class="belief-tag tag-science">🔬 Testosteron, dopamin, energie</span>
+      <span class="belief-tag tag-spiritual">🌸 Brahmacharya · Tao · Tantrika</span>
+      <span class="belief-tag tag-universal">🌐 Universální · Atletika · Kreativita</span>
+    </div>
+  </div>
+
+  <div class="perspectives-row">
+    <div class="perspective-card p-sadhguru">
+      <div class="perspective-avatar">🌸</div>
+      <div class="perspective-name">Sadhguru · Brahmacharya</div>
+      <div class="perspective-quote">„Brahmacharya neznamená celibát — znamená pohyb v Brahmě (vědomí). Sexuální energie je ta nejsilnější energie v systému. Pokud ji dokážeš dirigovat nahoru — změní se v ojas, v zářivost."</div>
+    </div>
+    <div class="perspective-card p-jesus">
+      <div class="perspective-avatar">✝️</div>
+      <div class="perspective-name">Pavel · Čistota</div>
+      <div class="perspective-quote">„Všechno smím, ale ne vše je prospěšné." (1Kor 6:12). Kontemplativní křesťanská tradice — sexuální energie sublimována do modlitby, umění a služby. Sv. Augustin, Jan od Kříže — mystické tradice pracují s pohlavní energií jako se spirituálním palivem.</div>
+    </div>
+    <div class="perspective-card p-nova">
+      <div class="perspective-avatar">🔬</div>
+      <div class="perspective-name">Dr. Nova · Endokrinologie</div>
+      <div class="perspective-quote">„Testosteron po ejakulaci klesá 48–72h. Prolaktin stoupá. Dopaminové receptory D2 se desenzitizují. Po retenci 7 dní testosteron stoupá o 45% (Lin, 2003 — Chinese med study). Mechanismus existuje — ne mytologie."</div>
+    </div>
+    <div class="perspective-card p-brandon">
+      <div class="perspective-avatar">🌊</div>
+      <div class="perspective-name">Brandon · Somatika</div>
+      <div class="perspective-quote">„Sexuální energie je vitální energie — Eros. Orgasmická energie (Reichova terminologie) je tatáž energie, která udržuje tělo naživu. Chronická sexuální suprese i chronická promiskuita ji narušují — vědomá praxe ji kultivuje."</div>
+    </div>
+  </div>
+
+  <div class="timeline-section">
+    <div class="timeline-title">— Efekty retence & vědomé práce se sexuální energií —</div>
+    <div class="timeline-grid">
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>den</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Po ejakulaci: prolaktin, únava, ztráta motivace; po retenci: kumulace vitální energie</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Hormonálně</div><div class="tl-effect-value">Post-ejakulační: prolaktin stoupá o 400% (Kruger 2002) → útlum, pocit splnění ale i ztráty. Testosteron klesá 12–24h. Spermatogenní faktory (NGF, Zn, Se) jsou fyzicky ztraceny.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Energie</div><div class="tl-effect-value">Taoistická medicína: ejakulace = vydání "jing" (esence). Muž má fixní zásobu — každé vydání ji snižuje. Žena má jiný metabolismus — její energie se vydáváním neztrácí stejně.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Retence D1</div><div class="tl-effect-value">Androgen receptory se resenzitizují. Mozek začíná reagovat na nižší dopaminové podněty. Pokud energie není vypuštěna, začíná cirkulovat výše v těle.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>týden</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Testosteron na vrcholu — 7. den peak (Lin et al., čínská studie)</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Testosteron</div><div class="tl-effect-value">Čínská studie 2003 (publikovaná v Journal of Zhejiang Univ Sci): na 7. den retence testosteron stoupá o cca 45% nad baseline. Den 8+ klesá zpět. Peak v 7. dni je konzistentní nález.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Energie & Drive</div><div class="tl-effect-value">Zvýšená motivace, ambice, fyzická síla, hlasová hloubka, magnetismus. Atleté starověku (řečtí olympionici) praktikovali abstinenci před výkony — ne pověra, mechanismus.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Dopamin</div><div class="tl-effect-value">Resenzitizace D1 receptorů — svět začíná být opět "zajímavý". Příroda, hudba, rozhovor — radost z malých věcí se vrací. Toto je opak NoFap "flatline".</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>měsíc</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Energie se přesměrovává — kreativita, spiritualita, fyzická kondice</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Ojas</div><div class="tl-effect-value">Áyurvéda: ojas — "zář vitality" — se kumuluje. Projevuje se jasnou pokožkou, jasnýma očima, klidnou silou, magnetickým aurou. Vyžaduje 30+ dnů bez výdeje a zdravou stravu.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Meditace</div><div class="tl-effect-value">Sadhguru: "Brahmacharya je předpokladem pro hlubší meditativní stavy. Energie místo aby se pohybovala dolů — stoupá. Toto je základní mechanismus kundalini."</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Tělo</div><div class="tl-effect-value">Lepší regenerace tkání, hustší kosti (zinek, selen ze spermatu zůstávají v těle), silnější hlas, lepší svalový tonus bez změny tréninku.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>rok</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Transmutace energie — Ojas jako světelný základ bytí</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Tradice</div><div class="tl-effect-value">Hindský jogín s roční praxí brahmacharya je považován za "dvakrát narozeného" — sexuální energie jako druhý zrod vědomí. Nikde to není zadarmo — vyžaduje disciplínu, vztah, jasný záměr.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Partnerská praxe</div><div class="tl-effect-value">Karezza (Alice Bunker Stockham, 1896) a taoistický milostný akt bez ejakulace: výměna energie mezi partnery bez výdeje — hluboký orgasmus bez post-coitální deprese. Vztah jako duchová praxe.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">⚠️ Realismus</div><div class="tl-effect-value">Absolutní retence po celý rok je pro většinu lidí kontraproduktivní. Cíl je vědomost — ne potlačení. Frekvence 1–2x měsíčně s vědomou praxí je realistický a udržitelný protokol.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="principles-box">
+    <div class="principles-title">Zásady vědomé práce se sexuální energií</div>
+    <div class="principles-list">
+      <div class="principle-item">
+        <div class="principle-num">01</div>
+        <div class="principle-text"><strong>Transmutace, ne potlačení.</strong> Energie potlačená bez přesměrování se vrátí se silou. Jóga, tvoření, fyzická práce, modlitba — to jsou kanály transmutace.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">02</div>
+        <div class="principle-text"><strong>7. den je přirozený peak.</strong> Testosteronový vrchol nastává 7. den — sportovní výkony, prezentace, kreativní projekty dobře naplánovat do tohoto okna.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">03</div>
+        <div class="principle-text"><strong>Strava jako základ.</strong> Zinek (dýňová semínka, ústřice, maso), selen, vitamín D₃, cholesterol (základ testosteronu) — bez výživové podpory je retence oslabená.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">04</div>
+        <div class="principle-text"><strong>Sexuální energie není nepřítel.</strong> Je to vaše síla. Vědomý vztah s ní — ať v páru nebo v celibátu — je moudrost. Stud nebo nenávist k ní ji uvězňuje.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: MODLITBY -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="section" id="tab-modlitby">
+
+  <div class="section-intro color-sacred">
+    <div class="section-label">Oblast · Duchovní rozvoj</div>
+    <h2 class="section-heading">Modlitba</h2>
+    <p class="section-tagline">„Modlitba není volání do prázdna — je to probuzení živého vztahu."</p>
+    <p class="section-lead">
+      Modlitba jako <em>přátelství s Bohem</em> — ne seznam žádostí, ale živý dialog. 
+      Ne co chci, ale <strong style="color:var(--gold-pale)">vděk, láska, a přítomnost.</strong> 
+      Tato forma modlitby — kontemplace, thánkfulness, metta — má neurovědně dokumentované efekty totožné s hlubokými meditačními stavy. 
+      A spirituálně: otevírá dimenzionální prostor, který je mimo dosah samotné mysli.
+    </p>
+    <div style="margin-top:16px;">
+      <span class="belief-tag tag-religious">✝️ Křesťanská kontemplace</span>
+      <span class="belief-tag tag-spiritual">🌸 Metta · Gratitude</span>
+      <span class="belief-tag tag-science">🔬 Neurologie vděčnosti</span>
+    </div>
+  </div>
+
+  <div class="perspectives-row">
+    <div class="perspective-card p-jesus">
+      <div class="perspective-avatar">✝️</div>
+      <div class="perspective-name">Ježíš · Vztah s Otcem</div>
+      <div class="perspective-quote">„Abba, Otče" (Mk 14:36) — Ježíš oslovoval Boha jako intimní rodinný člen. Modlitba v Getsemane není žádost o záchranu — je to odevzdání se v důvěře. „Ne má vůle, ale tvá se staň." Toto je vrchol modlitby.</div>
+    </div>
+    <div class="perspective-card p-sadhguru">
+      <div class="perspective-avatar">🌸</div>
+      <div class="perspective-name">Sadhguru · Oddanost</div>
+      <div class="perspective-quote">„Bhakti — oddanost — je nejrychlejší cesta protože ego se v ní zcela vzdá. Modlitba není komunikace s někým venku — je to rozpuštění vnitřní bariéry mezi tebou a existencí."</div>
+    </div>
+    <div class="perspective-card p-nova">
+      <div class="perspective-avatar">🔬</div>
+      <div class="perspective-name">Dr. Nova · Neurologie vděčnosti</div>
+      <div class="perspective-quote">„Modlitba vděku aktivuje ventrální striatum a medial PFC (Kyeong 2017) — stejné oblasti jako altruismus a láska. Oxytocin se uvolňuje. Kortizol klesá. 5 minut denní vděčnosti mění morfologii mozku za 8 týdnů."</div>
+    </div>
+    <div class="perspective-card p-brandon">
+      <div class="perspective-avatar">🌊</div>
+      <div class="perspective-name">Brandon · Srdce</div>
+      <div class="perspective-quote">„HeartMath Institute: koherence srdce — stav, kdy srdeční rytmus se stane pravidelně harmonický — nastupuje nejrychleji při pocitu vděku nebo lásky. To je fyzická manifestace modlitby srdce."</div>
+    </div>
+  </div>
+
+  <div class="deep-grid">
+    <div class="deep-card" onclick="toggleDeep(this)">
+      <div class="deep-card-header">
+        <div class="deep-card-icon">🌅</div>
+        <div class="deep-card-info">
+          <div class="deep-card-title">Ranní modlitba — naladění dne</div>
+          <div class="deep-card-sub">Vděk · Záměr · Přítomnost</div>
+        </div>
+        <div class="deep-card-toggle">+</div>
+      </div>
+      <div class="deep-card-body">
+        <p>Ranní modlitba před vstáváním nebo ihned po — v hypnagogickém stavu (mezi spánkem a bděním) je mozek v alfa/theta stavu. Vědomí je permeabilní — modlitba "jde hlouběji".</p>
+        <h4>Struktura ranní modlitby (10–15 minut)</h4>
+        <ul>
+          <li>2 minuty: ticho a vědomí přítomnosti — "Jsem tady. Jsem živý."</li>
+          <li>3 minuty: vděk za konkrétní věci — ne abstraktně, ale konkrétně (jméno člověka, pocit, situace)</li>
+          <li>3 minuty: záměr dne — ne seznam úkolů, ale "jaký člověk chci být"</li>
+          <li>3 minuty: posílání lásky — lidem v životě, světu, sobě</li>
+          <li>2 minuty: ticho — nechat odpověď přijít</li>
+        </ul>
+        <p>Ježíš: "Ale ty, když se modlíš, vejdi do svého pokojíku, zavři za sebou dveře a modli se k svému Otci, který je v skrytu." (Mt 6:6) — kontemplativní praxe, ne performance.</p>
+      </div>
+    </div>
+
+    <div class="deep-card" onclick="toggleDeep(this)">
+      <div class="deep-card-header">
+        <div class="deep-card-icon">💛</div>
+        <div class="deep-card-info">
+          <div class="deep-card-title">Mettá — buddhist. modlitba lásky</div>
+          <div class="deep-card-sub">Loving-kindness · vědecky podložená</div>
+        </div>
+        <div class="deep-card-toggle">+</div>
+      </div>
+      <div class="deep-card-body">
+        <p>Mettá bhávana — meditace láskyplné laskavosti — není modlitba v křesťanském smyslu, ale dosahuje totožného neurálního stavu. Začíná od sebe, rozšiřuje se na blízké, na neutrální, na "nepřátele", na všechny bytosti.</p>
+        <h4>Praxe mettá</h4>
+        <ul>
+          <li>"Kéž jsem šťasten/á. Kéž jsem zdravý/á. Kéž jsem v bezpečí. Kéž žiji lehce."</li>
+          <li>Totéž pro blízkého — konkrétní tvář, konkrétní jméno</li>
+          <li>Totéž pro neutrálního člověka (prodavač, soused)</li>
+          <li>Totéž pro obtížnou osobu — nejtěžší a nejléčivější krok</li>
+          <li>Totéž pro všechny bytosti bez výjimky</li>
+        </ul>
+        <h4>Neurologie</h4>
+        <p>Hofmann (2011, Emotion): 6 týdnů mettá → staticky signifikantní nárůst pozitivní emocionality, soucitu, spokojenosti. fMRI: aktivace insula a ACC (anterior cingulate cortex) — regiony soucitu a sebepřijetí.</p>
+      </div>
+    </div>
+
+    <div class="deep-card" onclick="toggleDeep(this)">
+      <div class="deep-card-header">
+        <div class="deep-card-icon">🙏</div>
+        <div class="deep-card-info">
+          <div class="deep-card-title">Modlitba srdce — hesychasmus</div>
+          <div class="deep-card-sub">Ježíšova modlitba · kontinuální praxe</div>
+        </div>
+        <div class="deep-card-toggle">+</div>
+      </div>
+      <div class="deep-card-body">
+        <p>Hesychastická tradice (Jan Klimakos, 6.–7. st.; Grigorij Palamas, 14. st.) — "Pane Ježíši Kriste, Synu Boží, smiluj se nade mnou hříšným." Opakovaná rytmicky — s dechem, s tepem srdce — až se stane spontánní.</p>
+        <h4>Technika</h4>
+        <p>Nádech: "Pane Ježíši Kriste, Synu Boží—" Výdech: "—smiluj se nade mnou hříšným." Pozornost ve středu hrudníku (ne v hlavě). Brzy se modlitba dechem stane autonomní — "modlitba sama sebe modlí" (Ignatius Brjancaninov).</p>
+        <h4>Výsledek</h4>
+        <p>Mnichové Athosu praktikují tuto modlitbu desítky let. Neurobiologicky: mantra-like opakování deaktivuje DMN, aktivuje insulární kortex — přesně stejný mechanismus jako meditace. Duchovně: tzv. "Boží přítomnost" — stav ne-oddělenosti.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-section">
+    <div class="timeline-title">— Transformace skrze modlitbu v čase —</div>
+    <div class="timeline-grid">
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>den</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Okamžitý posun vědomí — ANS se uklidňuje, srdce koheruje</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">HeartMath</div><div class="tl-effect-value">Pocit vděku nebo lásky (upřímný, ne mechanický) do 90 sekund spouští srdeční koherenci. HRV se harmonizuje. Tělo vstupuje do regenerativního stavu.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Neurologie</div><div class="tl-effect-value">Oxytocin + serotonin. Amygdala se uklidňuje. Kortizol klesá. Toto není placebo — je to dokumentovatelná fyziologická kaskáda.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>měsíc</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Vděčnost se stává výchozím nastavením mysli</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Psychologie</div><div class="tl-effect-value">Emmons & McCullough (JPSP, 2003): 8 týdnů denního zápisníku vděčnosti → 25% vyšší životní spokojenost, 23% méně stresu, lepší imunita, více pohybu.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Vztahy</div><div class="tl-effect-value">Schopnost vidět dobro v druhých roste. Odpouštění přichází přirozeněji. Láska přestává být podmíněná.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">1<br>rok</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Bůh přestane být abstrakcí — vztah se stane živým</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Zkušenost</div><div class="tl-effect-value">Synchronicita, "odpovědi" v realitě, pocit vedení — tyto zkušenosti se opakují s frekvencí korespondující s hloubkou praxe. Nejde o náhodu — jde o rozšíření vnímání.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Tradice</div><div class="tl-effect-value">Terezie z Ávily ("Hrad nitra") popisuje 7 obydlí duše — každé hlubší. Po roce praxe vstupujete do 3.–4. obydlí: modlitba klidu, počátek kontemplace.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-time" onclick="toggleTl(this.nextElementSibling)">5<br>let</div>
+        <div class="tl-content">
+          <div class="tl-header" onclick="toggleTl(this.parentElement)">
+            <div class="tl-headline">Unia mystica — mystické sjednocení</div>
+            <span class="tl-toggle">+</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-effect-grid">
+              <div class="tl-effect"><div class="tl-effect-label">Tradice</div><div class="tl-effect-value">Jan od Kříže: "Temná noc duše" (krize čistění) předchází "duchovnímu zasnoubení". Terezie: 7. obydlí = unia mystica — trvalá přítomnost Boha jako živá zkušenost, ne okamžik.</div></div>
+              <div class="tl-effect"><div class="tl-effect-label">Věda</div><div class="tl-effect-value">Newberg (neurotheologie): lidé s 5+ letou hlubokou modlitební praxí ukazují trvale modifikované neurální sítě — stejné jako u hlubokých meditujících. Mystická zkušenost má neurologický substrát.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="principles-box">
+    <div class="principles-title">Principy živé modlitby — vztah, ne rituál</div>
+    <div class="principles-list">
+      <div class="principle-item">
+        <div class="principle-num">01</div>
+        <div class="principle-text"><strong>Vděk před žádostí.</strong> Začínat vždy tím co je — ne tím co chci. Vděčnost otvírá srdce. Žádost ze srdce otevřeného je jiná než žádost ze srdce uzavřeného.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">02</div>
+        <div class="principle-text"><strong>Modlitba jako naslouchání.</strong> 50% modlitby = mluvit. 50% = ticho a naslouchat. Odpovědi přicházejí jako vnitřní vědomí, intuice, "hlas" v tichu.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">03</div>
+        <div class="principle-text"><strong>Konkrétnost nad abstrakcí.</strong> "Bože, miluji tě" je méně živé než "Děkuji za konkrétní situaci ze včerejška — za Marka, za slunce, za ten rozhovor."</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">04</div>
+        <div class="principle-text"><strong>Posílání lásky jako praxe.</strong> Vizualizovat konkrétní lidi — odesílat jim světlo, péči, přání dobra. HeartMath: toto generuje srdeční koherenci nezávisle na víře.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">05</div>
+        <div class="principle-text"><strong>Bez výkonu, bez zásluh.</strong> Modlitba není transakce. Bůh/Existence/Vědomí není systém odměn. Je to živý vztah — a v živém vztahu jedete bez účetnictví.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: DENNÍ PRAXE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="section" id="tab-denni">
+
+  <div class="section-intro color-earth">
+    <div class="section-label">Oblast · Duchovní rozvoj</div>
+    <h2 class="section-heading">Denní praxe vědomí</h2>
+    <p class="section-tagline">„Každý krok je meditace. Každý dech je modlitba. Každý pohled je dar."</p>
+    <p class="section-lead">
+      Denní praxe vědomí přenáší meditaci do pohybu. Dva druhy: 
+      <strong style="color:var(--gold-pale)">Označování těla</strong> — sledování každého pohybu s přesností (zvedám levou nohu — dopadá — zvedám pravou) a 
+      <strong style="color:var(--gold-pale)">Vnímání přítomnosti smysly</strong> — plně přítomné přijímání reality skrze zrak, sluch, hmat, čich, chuť.
+      Toto jsou nástroje ze Satipaṭṭhāna Sutty — Buddhova přímá instrukce pro praxi vědomí v běžném životě.
+    </p>
+    <div style="margin-top:16px;">
+      <span class="belief-tag tag-universal">🌐 Universální</span>
+      <span class="belief-tag tag-spiritual">🌸 Satipaṭṭhāna · Zen</span>
+      <span class="belief-tag tag-science">🔬 Interoception · ACT</span>
+      <span class="belief-tag tag-religious">✝️ Bratrské umění přítomnosti</span>
+    </div>
+  </div>
+
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="setSub('denni','telo')" data-sub="denni-telo">🦶 Označování těla</button>
+    <button class="sub-btn" onclick="setSub('denni','smysly')" data-sub="denni-smysly">👁️ Přítomnost smysly</button>
+  </div>
+
+  <!-- SUB: TĚLO -->
+  <div class="sub-section active" id="sub-denni-telo">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:20px;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--earth);margin-bottom:14px;">Označování těla · Kāyanupassanā</div>
+      <p style="font-size:15px;color:var(--text);line-height:1.8;margin-bottom:12px;">
+        Praxe pochází ze Satipaṭṭhāna Sutty (Majjhima Nikāya 10) — Buddhovy přímé instrukce o "Čtyřech základnách vědomí". Kāyanupassanā = pozorování těla v těle. 
+        Při chůzi, jídle, hygieně — každý pohyb je sledován a potichu označován.
+      </p>
+      <div class="sacred-quote">
+        <p>„A jak, mniši, prodlévá mnich sleduje tělo v těle? Jde-li mnich vpřed nebo zpět — je si plně vědom toho, co dělá. Dívá-li se vpřed nebo do stran — je si plně vědom."</p>
+        <cite>— Satipaṭṭhāna Sutta, MN 10</cite>
+      </div>
+    </div>
+
+    <div class="deep-grid">
+      <div class="deep-card" onclick="toggleDeep(this)">
+        <div class="deep-card-header">
+          <div class="deep-card-icon">🦶</div>
+          <div class="deep-card-info">
+            <div class="deep-card-title">Meditace chůze</div>
+            <div class="deep-card-sub">Krok po kroku · plná přítomnost</div>
+          </div>
+          <div class="deep-card-toggle">+</div>
+        </div>
+        <div class="deep-card-body">
+          <h4>Technika — 3 fáze označování</h4>
+          <p><strong>Základní (začátečník):</strong> "zvedám — pohybuji — kladu". Každý krok je rozložen na tyto tři fáze a každá je tiše pojmenována. Chůze se dramaticky zpomalí — jde se asi 10× pomaleji než normálně.</p>
+          <p><strong>Rozšířená (střední):</strong> "zvedám — pohybuji dopředu — kladu — přenáším váhu — zvedám druhé". Vědomí sleduje přesný kontakt chodidla s podložkou — tlak, teplo, měkkost, tvrdost.</p>
+          <p><strong>Hluboká (pokročilá):</strong> Záměr pohybu je sledován před pohybem samotným. "záměr zvednout — zvedání — záměr pohybovat — pohyb — záměr klást — kladení." Toto odhalí mezeru mezi záměrem a akcí — prostor vědomí.</p>
+          <h4>Proč funguje</h4>
+          <p>Proprioceptivní uvědomění posiluje insulární kortex a cerebellum. Motorická konvergence s prefrontálním kortexem — "chůze vědomím" vytváří neurální integraci normálně automatizovaných procesů. Toto je přesný opak "autopilota".</p>
+        </div>
+      </div>
+
+      <div class="deep-card" onclick="toggleDeep(this)">
+        <div class="deep-card-header">
+          <div class="deep-card-icon">🍽️</div>
+          <div class="deep-card-info">
+            <div class="deep-card-title">Vědomé jedení</div>
+            <div class="deep-card-sub">Sadhguru · Plná přítomnost s jídlem</div>
+          </div>
+          <div class="deep-card-toggle">+</div>
+        </div>
+        <div class="deep-card-body">
+          <p>Sadhguru: "Jídlo je transformace živé energie. Pokud jíte s vědomím — tělo absorbuje jídlo na úrovni energie, nejen chemie. Pokud jíte rozptýleně — metabolismus je narušen a vědomí přítomnosti jídla chybí."</p>
+          <h4>Praxe</h4>
+          <ul>
+            <li>Před jídlem: 30s ticha. Vědomé přijetí jídla — vděk za to, co přichází.</li>
+            <li>První tři sousta: plná pozornost — textura, teplota, chuť, vůně. Bez telefonu, bez konverzace.</li>
+            <li>Označování: "žvýkám — pociťuji sladkost — polykapo — těžkost v krku"</li>
+            <li>Sadhguru: jídlo 50% syrové (aby "prana" nebyla zničena vařením) + ash gourd — výjimečný čistič systému</li>
+          </ul>
+          <h4>Věda</h4>
+          <p>Mindful eating snižuje kalorický příjem o 10–20% bez diety (Arch 2013). Saturační hormony (leptin, ghrelin) jsou lépe čteny. Trávení se zlepšuje — parasympatikus aktivovaný přítomností zvyšuje enzymatickou produkci.</p>
+        </div>
+      </div>
+
+      <div class="deep-card" onclick="toggleDeep(this)">
+        <div class="deep-card-header">
+          <div class="deep-card-icon">🛁</div>
+          <div class="deep-card-info">
+            <div class="deep-card-title">Vědomá hygiena & rituály</div>
+            <div class="deep-card-sub">Označování denních rituálů</div>
+          </div>
+          <div class="deep-card-toggle">+</div>
+        </div>
+        <div class="deep-card-body">
+          <p>Čištění zubů, sprcha, oblékání — automatizované akce prováděné v autopilotu. Vědomá hygiena je přesný opak: každá akce označena, pociťována, přijata.</p>
+          <h4>Praxe ve sprše</h4>
+          <ul>
+            <li>"Cítím teplotu vody — dopadá na ramena — stéká po zádech"</li>
+            <li>Studená sprcha: označování reakce těla — "chlad — ztuhnutí — dech se mění — teplo vrací"</li>
+            <li>Závěr sprchy: 30 sekund tiché přítomnosti — vědomí čistého těla jako počáteční stav dne</li>
+          </ul>
+          <h4>Zen paralela</h4>
+          <p>Myí misek (Oryoki) v Zen klášterech je rituál prováděný s absolutní přesností a vědomím. Každý pohyb je praxí. Thich Nhat Hanh: "Nespěchejte. Každý čin je životem samotným."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUB: SMYSLY -->
+  <div class="sub-section" id="sub-denni-smysly">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:20px;">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--earth);margin-bottom:14px;">Vnímání přítomnosti · Smyslová praxe</div>
+      <p style="font-size:15px;color:var(--text);line-height:1.8;">
+        Smyslová přítomnost je praxe plného otevření každého ze smyslů v každém okamžiku. Mysl nás trhá z přítomnosti do minulosti nebo budoucnosti. 
+        Smysly jsou vždy v přítomnosti — vždy teď. <strong style="color:var(--gold-pale)">Ukotvit se ve smyslech = ukotvit se v teď.</strong>
+      </p>
+    </div>
+
+    <div class="deep-grid">
+      <div class="deep-card" onclick="toggleDeep(this)">
+        <div class="deep-card-header">
+          <div class="deep-card-icon">👁️</div>
+          <div class="deep-card-info">
+            <div class="deep-card-title">Zrak — vědomé vidění</div>
+            <div class="deep-card-sub">Soft eyes · Periferální vědomí</div>
+          </div>
+          <div class="deep-card-toggle">+</div>
+        </div>
+        <div class="deep-card-body">
+          <p>"Zde prochází tento člověk — má na sobě modré tričko — tváří se unaveně — kráčí mírně doleva..." Vědomý popis viděného, bez hodnocení.</p>
+          <h4>Soft eyes (měkký pohled)</h4>
+          <p>Periferální vidění aktivuje více parasympatiku než fokální vidění. Zen archery, somatic therapy, equine-assisted therapy — všechny pracují s "soft eyes". Rozšíření periferálního vědomí = rozšíření vědomí celkově.</p>
+          <ul>
+            <li>Zastavte se a podívejte na oblohu 30 sekund — opravdu vidět, ne "dívat se"</li>
+            <li>Sledujte pohyb světla — ráno vs. večer, záclony, stíny</li>
+            <li>Každý den si všimnout jedné krásné věci — detailu, který by jinak přešel</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deep-card" onclick="toggleDeep(this)">
+        <div class="deep-card-header">
+          <div class="deep-card-icon">👂</div>
+          <div class="deep-card-info">
+            <div class="deep-card-title">Sluch — vědomé naslouchání</div>
+            <div class="deep-card-sub">360° zvuk · Vrstvení prostoru</div>
+          </div>
+          <div class="deep-card-toggle">+</div>
+        </div>
+        <div class="deep-card-body">
+          <p>"Zpívají ptáci — vzdálené auto — kroky venku — ticho za tím vším..." Sluch mapuje prostor kolem nás — vrstvení zvuků odhaluje celý ekosystém přítomnosti.</p>
+          <h4>Praxe sluchové přítomnosti</h4>
+          <ul>
+            <li>5 minut denně: zavřené oči, mapování zvuků od nejbližšího k nejdálnějšímu</li>
+            <li>V přírodě: oddělit ptáky, vítr, vodu, hmyz — každý zvuk jako plná přítomnost</li>
+            <li>V rozhovoru: plné naslouchání bez formulování odpovědi. Toto je největší dar který můžete dát druhému člověku.</li>
+          </ul>
+          <h4>Ticho jako základ</h4>
+          <p>Rumi: "Ticho je jazyk Boha." Před každou modlitbou, před každou meditací — 30 sekund absolutního naslouchání ticha. Tam kde se zvuk zastavuje, začíná vědomí samo.</p>
+        </div>
+      </div>
+
+      <div class="deep-card" onclick="toggleDeep(this)">
+        <div class="deep-card-header">
+          <div class="deep-card-icon">✋</div>
+          <div class="deep-card-info">
+            <div class="deep-card-title">Hmat, čich & chuť</div>
+            <div class="deep-card-sub">Přímý kontakt s realitou</div>
+          </div>
+          <div class="deep-card-toggle">+</div>
+        </div>
+        <div class="deep-card-body">
+          <h4>Hmat</h4>
+          <p>Textura, teplota, tlak — hmat je nejprimitivnější a nejevolutnější smysl. Vědomý dotek předmětu (šálek kávy, klika dveří, kůra stromu) přichytí vědomí k přítomnosti okamžitě.</p>
+          <ul>
+            <li>Zemi pod nohama — bosé stání v trávě nebo na zemi 5 minut = grounding (uzemňování)</li>
+            <li>Studená voda na ruce — vědomé pociťování teploty, tlaku, vlhkosti</li>
+          </ul>
+          <h4>Čich</h4>
+          <p>Čichový bulb je anatomicky nejblíže limbickému systému — emocím a paměti. Vědomý čich (ranní káva, les, déšť, jídlo) přímou cestou aktivuje emocionální přítomnost bez analytické filtrace.</p>
+          <h4>5-4-3-2-1 technika</h4>
+          <p>Terapeutická technika pro akutní dissociaci nebo paniku: 5 věcí co vidíte, 4 co slyšíte, 3 co cítíte (hmatem), 2 co čicháte, 1 co chutná. Smysly přivedou vědomí zpět do těla okamžitě.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="perspectives-row">
+      <div class="perspective-card p-buddha">
+        <div class="perspective-avatar">☸️</div>
+        <div class="perspective-name">Buddha · Satipaṭṭhāna</div>
+        <div class="perspective-quote">„Jde-li mnich vpřed nebo zpět, stojí nebo sedí, usíná nebo probouzí, mluví nebo mlčí — je si plně vědom." Přítomnost není okamžik — je to způsob bytí.</div>
+      </div>
+      <div class="perspective-card p-jesus">
+        <div class="perspective-avatar">✝️</div>
+        <div class="perspective-name">Ježíš · Přítomnost</div>
+        <div class="perspective-quote">„Pohleďte na polní lilie, jak rostou: nepracují ani nepředou." (Mt 6:28) — pozornost jako forma kontemplace. Stvoření jako živá epifanie Boha — vědomé vidění světa jako modlitba.</div>
+      </div>
+      <div class="perspective-card p-sadhguru">
+        <div class="perspective-avatar">🌸</div>
+        <div class="perspective-name">Sadhguru · Vědomí</div>
+        <div class="perspective-quote">„Pokud jsi plně přítomen v tomto okamžiku — nemáš problém. Všechny problémy existují buď v minulosti nebo v budoucnosti. Přítomný okamžik je vždy dobře."</div>
+      </div>
+      <div class="perspective-card p-brandon">
+        <div class="perspective-avatar">🌊</div>
+        <div class="perspective-name">Brandon · Tělo v přítomnosti</div>
+        <div class="perspective-quote">„Tělo je vždy v přítomnosti. Mysl je vždy jinde. Vrátit vědomí do těla skrze smysly je nejrychlejší cesta zpět domů — ze stresu, z úzkosti, z odtažitosti."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="principles-box">
+    <div class="principles-title">Zásady denní praxe vědomí — integrace do každodenního života</div>
+    <div class="principles-list">
+      <div class="principle-item">
+        <div class="principle-num">01</div>
+        <div class="principle-text"><strong>Začněte malými okny.</strong> 5 minut vědomé chůze je více než žádná praxe. Pravidelnost malých okamžiků přináší více než příležitostné hodiny.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">02</div>
+        <div class="principle-text"><strong>Ukotvovací body dne.</strong> Vyberte 3–5 každodenních aktivit jako "smyslové kotvy": ranní sprcha, snídaně, přechod mezi místnostmi, večerní chůze. Ty se stanou automatickými výzvami k přítomnosti.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">03</div>
+        <div class="principle-text"><strong>Označování bez hodnocení.</strong> "Myslím" — ne "mám špatné myšlenky". "Cítím zlost" — ne "jsem zlý člověk". Označování je neutrální pozorování, ne soud.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">04</div>
+        <div class="principle-text"><strong>Smysly jsou vždy v přítomnosti.</strong> Kdykoliv se ztratíte v myšlenkách — jeden hluboký vědomý dech + jedno smyslové pozorování. To stačí k návratu.</div>
+      </div>
+      <div class="principle-item">
+        <div class="principle-num">05</div>
+        <div class="principle-text"><strong>Technologie jako přerušovač.</strong> Telefon je největší narušitel přítomnosti. Nastavte "vědomé telefon okamžiky" — první dotek obrazovky = 3 vědomé dechy. Toto změní vztah s telefonem.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-text">Duchovní rozvoj · průvodce · tělo · dech · ticho · přítomnost</div>
+</footer>
+
+</div><!-- .page-wrap -->
+
+<script>
+// ── TAB NAVIGATION ──
+function setTab(id) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector('[data-tab="' + id + '"]').classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ── SUB NAVIGATION ──
+function setSub(tabId, subId) {
+  const fullId = tabId + '-' + subId;
+  // deactivate all sub buttons in this tab
+  document.querySelectorAll('[data-sub^="' + tabId + '-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[id^="sub-' + tabId + '-"]').forEach(s => s.classList.remove('active'));
+  document.querySelector('[data-sub="' + fullId + '"]').classList.add('active');
+  document.getElementById('sub-' + fullId).classList.add('active');
+}
+
+// ── TIMELINE TOGGLE ──
+function toggleTl(el) {
+  el.classList.toggle('open');
+}
+
+// ── DEEP CARD TOGGLE ──
+function toggleDeep(card) {
+  card.classList.toggle('open');
+}
+
+// ── BELIEF FILTER ──
+const beliefMap = {
+  all: [],
+  science: ['tag-science', 'tag-universal'],
+  spiritual: ['tag-spiritual', 'tag-universal'],
+  religious: ['tag-religious', 'tag-universal'],
+  mixed: ['tag-spiritual', 'tag-religious', 'tag-universal', 'tag-science']
+};
+
+function setBelief(belief) {
+  // Update buttons
+  document.querySelectorAll('.belief-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.belief === belief);
+  });
+
+  // Show/hide perspective cards
+  if (belief === 'all') {
+    document.querySelectorAll('.perspective-card').forEach(c => c.style.display = '');
+    return;
+  }
+
+  const allowedTags = beliefMap[belief];
+  const cardMap = {
+    'p-buddha': ['tag-spiritual', 'tag-universal'],
+    'p-jesus': ['tag-religious', 'tag-universal'],
+    'p-sadhguru': ['tag-spiritual', 'tag-universal'],
+    'p-nova': ['tag-science', 'tag-universal'],
+    'p-brandon': ['tag-science', 'tag-spiritual', 'tag-universal']
+  };
+
+  document.querySelectorAll('.perspective-card').forEach(card => {
+    const classes = Array.from(card.classList);
+    const typeClass = classes.find(c => c.startsWith('p-'));
+    const tags = cardMap[typeClass] || [];
+    const visible = tags.some(t => allowedTags.includes(t));
+    card.style.display = visible ? '' : 'none';
+  });
+}
+
+// ── INIT: Open first timeline items ──
+document.addEventListener('DOMContentLoaded', function() {
+  // Auto-open first tl on each section for UX hint
+});
+</script>
+</body>
+</html>

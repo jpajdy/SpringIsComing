@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentální rozvoj — Systém</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050508;
+    --bg2: #0a0a10;
+    --bg3: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #d0cfc8;
+    --muted: #7a7870;
+    --accent1: #9b6fa0;
+    --accent2: #4a7fa5;
+    --accent3: #c9a96e;
+    --accent4: #6b8f6b;
+    --accent5: #c4663e;
+    --accent6: #a8b4c0;
+    --font-head: 'Playfair Display', 'Syne', serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-head);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .nav {
+    display: flex;
+    gap: 0;
+    padding: 0 20px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    padding: 14px 18px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+  .nav-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 7px;
+    vertical-align: middle;
+  }
+
+  .page { display: none; padding: 24px 20px 60px; max-width: 720px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  .hero {
+    padding: 28px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .hero-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .hero-title {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .hero-sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--border2); }
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .card-sub { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .card-body { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.75; }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .impact-cell {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .impact-time {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 5px;
+  }
+  .impact-val {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .timeline-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    align-items: stretch;
+  }
+  .tl-item {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 10px 10px 12px;
+  }
+  .tl-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 4px;
+  }
+  .tl-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .rules-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+  .rule-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .rule-row:last-child { border-bottom: none; }
+  .rule-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 18px;
+    padding-top: 1px;
+  }
+
+  .bonus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .bonus-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .bonus-icon { font-size: 16px; }
+  .bonus-title { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+  .bonus-desc { font-family: var(--font-mono); font-size: 10px; color: var(--muted); line-height: 1.5; }
+
+  .phase-list { margin-top: 14px; }
+  .phase-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-item:last-child { border-bottom: none; }
+  .phase-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+    background: var(--bg3);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  .phase-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .phase-desc { font-family: var(--font-mono); font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  .freq-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .freq-btn {
+    padding: 6px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .freq-btn.active, .freq-btn:hover {
+    background: var(--bg2);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .elixir-card {
+    background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .elixir-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .elixir-body {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  .elixir-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .etag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    background: var(--bg3);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    opacity: 0.8;
+  }
+
+  .combo-box {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .combo-box strong { color: var(--accent3); font-weight: 500; }
+
+  @media (max-width: 500px) {
+    .impact-grid { grid-template-columns: repeat(3, 1fr); }
+    .bonus-grid { grid-template-columns: 1fr; }
+    .timeline-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav" id="mainNav">
+  <button class="nav-btn active" onclick="showPage('studium')" style="--accent: #9b6fa0">
+    <span class="nav-dot" style="background:#9b6fa0"></span>Studium
+  </button>
+  <button class="nav-btn" onclick="showPage('knihy')" style="--accent: #4a7fa5">
+    <span class="nav-dot" style="background:#4a7fa5"></span>Knihy
+  </button>
+  <button class="nav-btn" onclick="showPage('psyche')" style="--accent: #6b8f6b">
+    <span class="nav-dot" style="background:#6b8f6b"></span>Psychika
+  </button>
+  <button class="nav-btn" onclick="showPage('lucid')" style="--accent: #c9a96e">
+    <span class="nav-dot" style="background:#c9a96e"></span>Lucidní deník
+  </button>
+  <button class="nav-btn" onclick="showPage('memoria')" style="--accent: #c4663e">
+    <span class="nav-dot" style="background:#c4663e"></span>Memorování
+  </button>
+  <button class="nav-btn" onclick="showPage('jazyky')" style="--accent: #a8b4c0">
+    <span class="nav-dot" style="background:#a8b4c0"></span>Jazyky
+  </button>
+</div>
+
+<!-- STUDIUM -->
+<div id="page-studium" class="page active" style="--accent: #9b6fa0">
+  <div class="hero">
+    <div class="hero-label">Oblast 01 — Mentální rozvoj</div>
+    <div class="hero-title">Studium<br><span style="color: var(--accent)">jako disciplína</span></div>
+    <div class="hero-sub">Mozek je sval. Každá sezení tě přetváří na neurologické úrovni — tvoří se nové synapse, posilují se stávající spoje. 3–5× týdně stačí k transformaci za rok.</div>
+  </div>
+
+  <div class="section-title">Jak studovat — pravidla sezení</div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background: rgba(155,109,255,0.12); color: var(--accent)">🧠</div>
+      <div>
+        <div class="card-title">Struktura jednoho sezení</div>
+        <div class="card-sub">40–90 minut / optimální blok</div>
+      </div>
+    </div>
+    <div class="rules-box">
+      <div class="rule-row"><span class="rule-num">01</span><span>Aktivace (5 min) — zapsat si CO chceš dnes vstřebat, PROČ je to důležité. Mozek se "namíří" jako laser.</span></div>
+      <div class="rule-row"><span class="rule-num">02</span><span>Hluboké čtení / studium bez rušení (25–40 min) — telefon mimo dosah, žádné notifikace. Toto je Pomodoro pro mozek.</span></div>
+      <div class="rule-row"><span class="rule-num">03</span><span>Zpracování (10–15 min) — zapsání vlastními slovy (Feynmanova technika). Nesouhlasíš-li s autorem — zapiš proč. Aktivní odpor = hluboké zapamatování.</span></div>
+      <div class="rule-row"><span class="rule-num">04</span><span>Spaced repetition — každé nové téma propoj s tím co víš. Mind-mapa, vlastní analogie, skici.</span></div>
+      <div class="rule-row"><span class="rule-num">05</span><span>Záměrné přestávky — po 90 min VŽDY přestávka min. 20 min. Mozek konsoliduje v klidovém režimu (default mode network).</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Dopad v čase — 3× týdně</div>
+  <div class="impact-grid">
+    <div class="impact-cell"><div class="impact-time">1 týden</div><div class="impact-val" style="color: rgba(155,109,255,0.7)">Rytmus a první vzorce</div></div>
+    <div class="impact-cell"><div class="impact-time">1 měsíc</div><div class="impact-val" style="color: rgba(155,109,255,0.85)">Návyk zakotven, nová synapt. síť</div></div>
+    <div class="impact-cell"><div class="impact-time">6 měsíců</div><div class="impact-val" style="color: var(--accent)">Viditelný přehled, jiné myšlení</div></div>
+    <div class="impact-cell"><div class="impact-time">1 rok</div><div class="impact-val" style="color: var(--accent)">Odborná hloubka v 1–2 oborech</div></div>
+    <div class="impact-cell"><div class="impact-time">5 let</div><div class="impact-val" style="color: #fff; font-weight: 800">Složený úrok inteligence. Jiný člověk.</div></div>
+  </div>
+
+  <div class="section-title">Bonusy a výhody</div>
+  <div class="bonus-grid">
+    <div class="bonus-item"><div class="bonus-icon">⚡</div><div><div class="bonus-title">Série 7+ dní</div><div class="bonus-desc">Dopaminový bonus — mozek začíná studium asociovat s odměnou. Série se nerozbíjí bez vědomého záměru.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🔗</div><div><div class="bonus-title">Mezioborové propojení</div><div class="bonus-desc">Studuješ-li 2 různé obory současně → mozek tvoří neobvyklé conexe = kreativita a inovace.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🎯</div><div><div class="bonus-title">Feynman pass</div><div class="bonus-desc">Dokážeš vysvětlit téma dítěti? +50% zapamatování oproti pasivnímu čtení (studie Karpicke, 2011).</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🌙</div><div><div class="bonus-title">Noční konsolidace</div><div class="bonus-desc">Studium 2h před spaním → spánek přepíše krátkodobou paměť do dlouhodobé. Neplýtvej tím na sociály.</div></div></div>
+  </div>
+</div>
+
+<!-- KNIHY -->
+<div id="page-knihy" class="page" style="--accent: #4a7fa5">
+  <div class="hero">
+    <div class="hero-label">Oblast 02 — Mentální rozvoj</div>
+    <div class="hero-title">Čtení knih<br><span style="color: var(--accent)">5 let práce za měsíc</span></div>
+    <div class="hero-sub">Každá kniha je kondenzovaná dekáda života někoho jiného. Čteš-li 1 knihu měsíčně, za rok máš 12 perspektiv, které by trvalo 60+ let prožít. Knihy jsou zlato — neexistuje efektivnější forma předávání hloubky.</div>
+  </div>
+
+  <div class="section-title">Systém čtení — jak vstřebávat maximum</div>
+  <div class="card">
+    <div class="rules-box">
+      <div class="rule-row"><span class="rule-num">01</span><span>Čti aktivně — tužka v ruce. Podtrhuj, piš na okraj "PROČ?" nebo "NESOUHLASÍM". Pasivní čtení = 20% retence, aktivní = 70%+.</span></div>
+      <div class="rule-row"><span class="rule-num">02</span><span>Jedno klíčové insight na kapitolu. Ne výpisky všeho — jeden věta která ti změnila něco. Pak ji žij.</span></div>
+      <div class="rule-row"><span class="rule-num">03</span><span>Nekončíš knihu u posledního slova. Týden po přečtení napsat 3 věci, které si pamatuješ BEZ otevření. To co si pamatuješ = to co ti zůstane.</span></div>
+      <div class="rule-row"><span class="rule-num">04</span><span>Témata na rok dopředu. Studuješ-li oblast — čti 3–4 knihy ze stejné oblasti najednou. Mozek tvoří koherentní strukturu, ne izolované záblesky.</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Dopad podle počtu knih ročně</div>
+  <div class="card">
+    <div style="display:flex; flex-direction: column; gap: 10px;">
+      <div style="display:flex; align-items:center; gap: 12px;">
+        <div style="font-family: var(--font-mono); font-size:11px; color: var(--muted); min-width: 70px">6 knih/rok</div>
+        <div style="flex:1; height:8px; background: var(--bg3); border-radius:4px; overflow:hidden"><div style="width:20%; height:100%; background: rgba(79,196,207,0.4); border-radius:4px"></div></div>
+        <div style="font-family: var(--font-mono); font-size:10px; color: var(--muted)">Top 10% populace</div>
+      </div>
+      <div style="display:flex; align-items:center; gap: 12px;">
+        <div style="font-family: var(--font-mono); font-size:11px; color: var(--muted); min-width: 70px">12 knih/rok</div>
+        <div style="flex:1; height:8px; background: var(--bg3); border-radius:4px; overflow:hidden"><div style="width:42%; height:100%; background: rgba(79,196,207,0.6); border-radius:4px"></div></div>
+        <div style="font-family: var(--font-mono); font-size:10px; color: var(--muted)">Znalostní skok, jiné otázky</div>
+      </div>
+      <div style="display:flex; align-items:center; gap: 12px;">
+        <div style="font-family: var(--font-mono); font-size:11px; color: var(--muted); min-width: 70px">24 knih/rok</div>
+        <div style="flex:1; height:8px; background: var(--bg3); border-radius:4px; overflow:hidden"><div style="width:68%; height:100%; background: rgba(79,196,207,0.8); border-radius:4px"></div></div>
+        <div style="font-family: var(--font-mono); font-size:10px; color: var(--muted)">Přestavba myšlení, nová identita</div>
+      </div>
+      <div style="display:flex; align-items:center; gap: 12px;">
+        <div style="font-family: var(--font-mono); font-size:11px; color: var(--muted); min-width: 70px">52 knih/rok</div>
+        <div style="flex:1; height:8px; background: var(--bg3); border-radius:4px; overflow:hidden"><div style="width:100%; height:100%; background: var(--accent); border-radius:4px"></div></div>
+        <div style="font-family: var(--font-mono); font-size:10px; color: var(--accent)">Elon Musk territory. Jiná liga.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Fotografická paměť jako návyk</div>
+  <div class="card">
+    <div class="card-body">Výzkumy (Foer, 2011 — Moonwalking with Einstein; Dresler et al., 2017 — Nature Neuroscience) potvrzují: fotografická paměť NENÍ vrozený talent. Je to technika. Mistři paměti ze soutěží mají průměrné IQ — používají prostorové zakódování (Method of Loci, paměťové paláce). Klíčové: každá informace dostane smyslový obraz + emoci + prostor v mysli. Mozek neukládá fakta — ukládá příběhy a prostory.</div>
+    <div class="elixir-tags">
+      <span class="etag">Method of Loci</span><span class="etag">Spaced repetition</span><span class="etag">Emoční kotvy</span><span class="etag">Vizuální encoding</span>
+    </div>
+  </div>
+
+  <div class="section-title">Výhody a milníky</div>
+  <div class="bonus-grid">
+    <div class="bonus-item"><div class="bonus-icon">📖</div><div><div class="bonus-title">10 knih přečteno</div><div class="bonus-desc">Odemykáš schopnost vidět vzorce napříč obory. Začínáš "číst mezi řádky" reality.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🏛️</div><div><div class="bonus-title">Paměťový palác</div><div class="bonus-desc">Po 30 dnech praxe Method of Loci → retence se zvyšuje 4–6× oproti pasivnímu čtení (Dresler, 2017).</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🌐</div><div><div class="bonus-title">25 knih — různé obory</div><div class="bonus-desc">Mozek začne tvořit vlastní syntézy. Toto je zdroj originálního myšlení.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">♾️</div><div><div class="bonus-title">Neomezená kapacita</div><div class="bonus-desc">Mozek má ~2.5 petabyte kapacity (Salk Institute, 2016). Nikdy nebudeš "plný". Jen netrénovaný.</div></div></div>
+  </div>
+</div>
+
+<!-- PSYCHIKA -->
+<div id="page-psyche" class="page" style="--accent: #6b8f6b">
+  <div class="hero">
+    <div class="hero-label">Oblast 03 — Psychické zdraví</div>
+    <div class="hero-title">Příroda · Ticho<br><span style="color: var(--accent)">Regenerace jako věda</span></div>
+    <div class="hero-sub">Toto je nejpodceňovanější část výkonu. Bez skutečného odpočinku není růst — jen vyhoření. Odpočinek je aktivní biologický proces, ne absence práce.</div>
+  </div>
+
+  <div class="freq-toggle" id="psycheToggle">
+    <button class="freq-btn active" onclick="setPsycheView('priroda')">🌲 Příroda</button>
+    <button class="freq-btn" onclick="setPsycheView('ticho')">🔇 Ticho & odpočinek</button>
+    <button class="freq-btn" onclick="setPsycheView('masaze')">💆 Masáže & relaxace</button>
+    <button class="freq-btn" onclick="setPsycheView('combo')">✨ Kombinace</button>
+  </div>
+
+  <div id="psyche-priroda">
+    <div class="elixir-card">
+      <div class="elixir-title">🌲 Příroda jako elixír</div>
+      <div class="elixir-body">Příroda není jen "hezké prostředí". Je to biologický reset, který evoluci trvalo 300 000 let vyladit. Výzkum (Kaplan & Kaplan, ART Theory) potvrzuje: příroda obnovuje directed attention — schopnost soustředit se záměrně. Studie University of Michigan (Berman, 2008): 20 minutová procházka v přírodě = 20% nárůst kognitivního výkonu.<br><br><strong style="color: var(--accent)">Spirituální rozměr —</strong> v mnoha tradicích (šintoismus, keltská spiritualita, Sadhguru) je příroda živá sít energie. Stromy jsou živé bytosti s vlastní inteligencí — japonský koncept Shinrin-yoku (lesní koupel) snižuje kortizol o 15–20%, zvyšuje NK buňky imunity. Tvoje "aura" — energetické pole kolem těla — se v přírodě synchronizuje se zemskou frekvencí (Schumannova rezonance, 7.83 Hz). Chůze naboso = přímé uzemnění, elektrony ze země neutralizují volné radikály.</div>
+      <div class="elixir-tags"><span class="etag">Kortizol −15%</span><span class="etag">Kognice +20%</span><span class="etag">Shinrin-yoku</span><span class="etag">Uzemnění</span><span class="etag">Schumannova rezonance</span></div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-item"><div class="tl-label">1× týdně</div><div class="tl-text">Stress response se snižuje. Spánek se prohlubuje. Pocit prostoru v hlavě.</div></div>
+      <div class="tl-item"><div class="tl-label">2× týdně</div><div class="tl-text">Kumulativní efekt. Mysl se přirozeně uklidňuje bez meditace. Kreativita roste.</div></div>
+      <div class="tl-item"><div class="tl-label">Denně 20 min</div><div class="tl-text">Trvalá změna kortizolového profilu. Jiný člověk za 3 měsíce.</div></div>
+    </div>
+  </div>
+
+  <div id="psyche-ticho" style="display:none">
+    <div class="elixir-card">
+      <div class="elixir-title">🔇 Ticho & odpočinek jako věda</div>
+      <div class="elixir-body">Ticho není prázdnota — je to nejintenzivnější podnět pro neurogenezi. Výzkum Duke University (Imke Kirste, 2013): 2 hodiny ticha denně stimulovaly tvorbu nových neuronů v hippocampu — oblasti zodpovědné za paměť a emoce. Paradox: mozek v klidu (default mode network) zpracovává neřešené problémy, integruje zkušenosti, tvoří identitu.<br><br><strong style="color: var(--accent)">Nenahraditelný odpočinek —</strong> moderní svět zaplňuje každý prázdný moment stimulem. Výsledek: amygdala (centrum strachu a stresu) je chronicky přetížena, prefrontální kortex (rozhodování, sebekontrola) oslaben. Ticho přetočí tenhle poměr. Není potřeba meditovat — stačí být. Sedět. Dívat se z okna bez telefonu. Nic nedělat.</div>
+      <div class="elixir-tags"><span class="etag">Neurogeneze</span><span class="etag">DMN aktivace</span><span class="etag">Amygdala reset</span><span class="etag">Hippocampus</span></div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-item"><div class="tl-label">1× týdně</div><div class="tl-text">Mentální prostor. Přirozeně rostou kreativní myšlenky. Lepší rozhodování.</div></div>
+      <div class="tl-item"><div class="tl-label">2× týdně</div><div class="tl-text">Snění a intuice sílí. Mozek začíná sám řešit problémy, které jsi mu nedal prostor.</div></div>
+    </div>
+  </div>
+
+  <div id="psyche-masaze" style="display:none">
+    <div class="elixir-card">
+      <div class="elixir-title">💆 Masáže, sauna & relaxace</div>
+      <div class="elixir-body">Masáž není luxus — je to medicína. Meta-analýza (Moyer, 2004): pravidelná masáž snižuje kortizol o 31%, zvyšuje serotonin o 28% a dopamin o 31%. Dotek aktivuje oxytocinový systém — pocit bezpečí na úrovni nervové soustavy, ne jen emocí.<br><br><strong style="color: var(--accent)">Saunaterapie —</strong> finský výzkum (Kuopio, 2018): 4–7× sauny týdně snižuje riziko demence o 66%, kardiovaskulárních onemocnění o 63%. Heat shock proteins (HSP) opravují poškozené proteiny v buňkách. Sauna = hormonální trénink (GH spike), detox potem, hluboká svalová relaxace. Po sauně se spí jinak — hlubší REM, více pomalých vln (SWS).</div>
+      <div class="elixir-tags"><span class="etag">Kortizol −31%</span><span class="etag">Serotonin +28%</span><span class="etag">Heat Shock Proteins</span><span class="etag">GH spike</span><span class="etag">Demence −66%</span></div>
+    </div>
+    <div class="timeline-row">
+      <div class="tl-item"><div class="tl-label">1× týdně</div><div class="tl-text">Tělo si pamatuje jak je uvolněné. Baseline napětí klesá. Spánek se zlepšuje.</div></div>
+      <div class="tl-item"><div class="tl-label">2× týdně</div><div class="tl-text">Kumulativní hormonální a kardiovaskulární benefity. Výraznější efekty na kognici.</div></div>
+    </div>
+  </div>
+
+  <div id="psyche-combo" style="display:none">
+    <div class="combo-box">
+      <strong>Maximální kombinace odpočinku</strong> — tyto aktivity se navzájem zesilují:<br><br>
+      🌲 <strong>Příroda + ticho</strong> = forest bathing v plné verzi. Všechny smysly na přírodu, žádný telefon, žádná muzika. Toto je nejčistší forma odpočinku jaká existuje.<br><br>
+      💆 <strong>Sauna + masáž</strong> = komplexní fyzický reset. Sauna jako první (otevře tkáně, uvolní fascie), masáž jako druhá (prohloubí efekt). Kortizol padá na minimum.<br><br>
+      🌲💆 <strong>Příroda + masáž venku</strong> = vzácná kombinace. Pokud dostupné — outdoor masáže v přírodě jsou synergické na úrovni nervového systému.<br><br>
+      <strong style="color: var(--accent3)">Zlaté pravidlo:</strong> žádný telefon, žádné plánování, žádná "produktivita". Odpočinek má hodnotu jen tehdy, když je skutečný. Poloopočinek = žádný odpočinek.
+    </div>
+    <div class="timeline-row" style="margin-top: 14px">
+      <div class="tl-item"><div class="tl-label">1 den/týden</div><div class="tl-text">Tělo a mysl se kompletně resetují. Produktivita zbývajících 6 dní roste o 30–40%.</div></div>
+      <div class="tl-item"><div class="tl-label">2 dny/týden</div><div class="tl-text">Chronický stres mizí. Nervový systém přechází do dorsal vagal rest mode. Jiná kvalita bytí.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LUCIDNÍ -->
+<div id="page-lucid" class="page" style="--accent: #c9a96e">
+  <div class="hero">
+    <div class="hero-label">Oblast 04 — Vědomí</div>
+    <div class="hero-title">Lucidní snění<br><span style="color: var(--accent)">Vědomí bez těla</span></div>
+    <div class="hero-sub">Lucidní snění je stav, kdy víš že sníš a můžeš vědomě jednat. Výzkumy (LaBerge, Stanford; Hobson, Harvard) potvrzují: při lucidním snu jsou aktivní stejné oblasti mozku jako při bdělém vědomí. Je to trénink vědomí samotného.</div>
+  </div>
+
+  <div class="section-title">Fáze vývoje — lucidní cesta</div>
+  <div class="phase-list">
+    <div class="phase-item"><div class="phase-num">1</div><div><div class="phase-title">Snový deník — základ základů</div><div class="phase-desc">Hned po probuzení, před pohybem, zapsat vše co si pamatuješ — i pocity, barvy, fragmenty. Za 2–3 týdny si začneš pamatovat 3–5 snů za noc. Mozek se učí: sny jsou důležité → začne je ukládat lépe. Toto je nultá podmínka všeho ostatního. Bez deníku nic jiného nefunguje.</div></div></div>
+    <div class="phase-item"><div class="phase-num">2</div><div><div class="phase-title">Reality checks — trénink vědomí</div><div class="phase-desc">10–15× denně si polož otázku: "Sním teď?" Zkontroluj ruce (ve snu mají jiný počet prstů), zkus číst text dvakrát (ve snu se mění). Tento návyk se přenáší do snu — a právě tam se spustí první lucidní moment. WILD a MILD jsou pokročilé techniky na FAZE 3.</div></div></div>
+    <div class="phase-item"><div class="phase-num">3</div><div><div class="phase-title">První lucidní sny — kontrola vědomí</div><div class="phase-desc">Průměrný novic dosáhne prvního lucidního snu za 3–4 týdny praxe. Klíč: při uvědomění se nestresovat. Chytit pevný objekt ve snu, říct "Jasnost" nebo třít ruce. Sny se začínají prodlužovat — z 30 sekund na minuty. Jde o to naučit se zůstat v snu vědomě.</div></div></div>
+    <div class="phase-item"><div class="phase-num">4</div><div><div class="phase-title">Vědomé prozkoumávání — dítě v neomezeném světě</div><div class="phase-desc">S praxí se sny stávají stejně živými jako realita — chutě, textury, bolest. LaBerge's studie: pokročilí dreamers mají ve snech identické smyslové zpracování jako v realitě. Tady začíná skutečná hra — létání, tvoření prostředí, setkání s aspekty vlastní psychiky. Jung by řekl: přímý kontakt s nevědomím.</div></div></div>
+    <div class="phase-item"><div class="phase-num">5</div><div><div class="phase-title">Sebepoznání & duchovno — hlubší vrstvy</div><div class="phase-desc">Na pokročilé úrovni lucidní sny přinášejí přístupy které bdělý stav neumožňuje: konfrontace stínů (Jung), rozpuštění ega (zen mistři popisují totožné stavy), transcendentní zkušenosti. Tibetská kniha mrtvých (Bardo Thodol) popisuje techniky identické s WILD — vědomý přechod mezi stavy vědomí. Sny nejsou odpočinek. Jsou druhý život.</div></div></div>
+  </div>
+
+  <div class="section-title">Dopad v čase</div>
+  <div class="impact-grid">
+    <div class="impact-cell"><div class="impact-time">1 týden</div><div class="impact-val" style="color: rgba(245,166,35,0.7)">3–5 snů zapamatováno / noc</div></div>
+    <div class="impact-cell"><div class="impact-time">1 měsíc</div><div class="impact-val" style="color: rgba(245,166,35,0.85)">1–3 lucidní sny. Paměť skokem.</div></div>
+    <div class="impact-cell"><div class="impact-time">6 měsíců</div><div class="impact-val" style="color: var(--accent)">Vědomé průzkumy. Řešení problémů ve snu.</div></div>
+    <div class="impact-cell"><div class="impact-time">1 rok</div><div class="impact-val" style="color: var(--accent)">Pravidelná praxe. Přístup k nevědomí.</div></div>
+    <div class="impact-cell"><div class="impact-time">5 let</div><div class="impact-val" style="color: #fff; font-weight: 800">Druhý život. Vědomí na jiné úrovni.</div></div>
+  </div>
+</div>
+
+<!-- MEMOROVÁNÍ -->
+<div id="page-memoria" class="page" style="--accent: #c4663e">
+  <div class="hero">
+    <div class="hero-label">Oblast 05 — Paměť & vizualizace</div>
+    <div class="hero-title">Memorování<br><span style="color: var(--accent)">Trénink paměti jako sval</span></div>
+    <div class="hero-sub">Paměť není kapacita — je to technika. Mistři paměti (Josh Foer, Dominic O'Brien) začínali jako průměrní a trénováním dosáhli absolutních rekordů. Denní praxe před spaním je nejefektivnější okno — mozek pak konsoliduje v noci.</div>
+  </div>
+
+  <div class="section-title">Denní praxe — 15 minut před spaním</div>
+  <div class="card">
+    <div class="rules-box">
+      <div class="rule-row"><span class="rule-num">01</span><span>Projdi den zpětně (mental replay) — od večera k ránu. Tato technika (doporučována Sadhgurou jako "dying every night") čistí denní paměťové stopy a posiluje epizodickou paměť. Výzkum: snižuje ruminaci o 40%.</span></div>
+      <div class="rule-row"><span class="rule-num">02</span><span>Method of Loci — každý den si "umísti" 5–10 nových informací do svého paměťového paláce. Procházíš ho vizuálně, zapojuješ emoce a absurdno. Absurdní obrazy se pamatují 10× lépe (von Restorff efekt).</span></div>
+      <div class="rule-row"><span class="rule-num">03</span><span>Vizualizace záměrů — 5 minut vizualizace toho co chceš zítra dokázat. Výzkum (Pascual-Leone, Harvard): vivid mental imagery aktivuje stejné motorické neurony jako fyzický trénink. Sportovci to dělají — ty máš taky.</span></div>
+      <div class="rule-row"><span class="rule-num">04</span><span>Spaced repetition software (Anki) — 10 minut denně. Tento systém zaručuje, že info se opakuje přesně v okamžik, kdy ho mozek chce zapomenout. Nejefektivnější učební technologie jaká existuje.</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Dopad v čase</div>
+  <div class="impact-grid">
+    <div class="impact-cell"><div class="impact-time">1 týden</div><div class="impact-val" style="color: rgba(240,98,146,0.7)">První paměťový palác. Technika se usazuje.</div></div>
+    <div class="impact-cell"><div class="impact-time">1 měsíc</div><div class="impact-val" style="color: rgba(240,98,146,0.85)">Paměť se prokazatelně zlepšuje. Snáze vybavuješ jména, fakta.</div></div>
+    <div class="impact-cell"><div class="impact-time">6 měsíců</div><div class="impact-val" style="color: var(--accent)">Systematická znalostní databáze v hlavě. Jiná sebedůvěra.</div></div>
+    <div class="impact-cell"><div class="impact-time">1 rok</div><div class="impact-val" style="color: var(--accent)">Fotografická retence. Přednášíš bez poznámek. Jazyky rychleji.</div></div>
+    <div class="impact-cell"><div class="impact-time">5 let</div><div class="impact-val" style="color: #fff; font-weight: 800">Paměťový palác = multidimenzionální znalostní mapa.</div></div>
+  </div>
+
+  <div class="section-title">Proč vizualizace mění mozek</div>
+  <div class="card">
+    <div class="card-body">Výzkum Harvardské lékařské školy (Pascual-Leone): pianisté kteří jen vizualizovali cvičení vykazovali STEJNÉ kortikální změny jako ti co fyzicky cvičili. Mozek nerozlišuje živou zkušenost od živé vizualizace. Toto je klíč: každá vivid vizualizace je neurální trénink. Vizualizuj paměťový palác každý den → fyzicky posiluje hippocampální sítě. Za 6 měsíců máš jiný mozek.</div>
+    <div class="elixir-tags"><span class="etag">Neuroplasticita</span><span class="etag">Hippocampus</span><span class="etag">Mental imagery = fyzický trénink</span></div>
+  </div>
+</div>
+
+<!-- JAZYKY -->
+<div id="page-jazyky" class="page" style="--accent: #a8b4c0">
+  <div class="hero">
+    <div class="hero-label">Oblast 06 — Jazyky</div>
+    <div class="hero-title">Učení jazyků<br><span style="color: var(--accent)">Mozek se přetváří</span></div>
+    <div class="hero-sub">Bilingvní mozky mají hustší šedou hmotu, větší hippocampus a výrazně nižší riziko demence (Craik & Bialystok, 2010). Jazyk není jen komunikace — je to nový operační systém pro myšlení. Každý nový jazyk ti dává přístup k jiné vrstvě reality.</div>
+  </div>
+
+  <div class="section-title">Systém učení — co funguje (a co ne)</div>
+  <div class="card">
+    <div class="rules-box">
+      <div class="rule-row"><span class="rule-num">01</span><span>Immersion first — 80% input (čtení, poslech, filmy), 20% output (mluvení, psaní). Mozek se učí jazyky jako dítě — absorpcí, ne gramatikou. Krashen's Input Hypothesis: comprehensible input na i+1 úrovni je nejrychlejší cesta.</span></div>
+      <div class="rule-row"><span class="rule-num">02</span><span>Anki + frekvenční slovník — 1000 nejpoužívanějších slov = 85% běžné konverzace. Nejprve mastery základu, pak expanze. Ne gramatika — slovní zásoba a zvyk ji slyšet v kontextu.</span></div>
+      <div class="rule-row"><span class="rule-num">03</span><span>Shadowing (Arguelles technika) — posloucháš nativního mluvčího a zároveň opakuješ nahlas s minimálním zpožděním. Aktivuje motorické programy pro výslovnost. Výsledek: přirozená intonace za týdny, ne roky.</span></div>
+      <div class="rule-row"><span class="rule-num">04</span><span>Denní minimum — 20 minut konsistentně > 3 hodiny jednou týdně. Jazyk je sval. Atrofuje bez aktivace. Ale 20 minut denně za rok = 120 hodin — na B2 úroveň u příbuzného jazyka stačí.</span></div>
+      <div class="rule-row"><span class="rule-num">05</span><span>Emoční zapojení — slova spojená s emocemi se pamatují 3× lépe. Uč se nová slova v kontextu příběhu, ne z listů. Filmové dialogy, humorné situace, provokativní věty. Amygdala je tvůj spojenec.</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Dopad v čase — 20 min/den</div>
+  <div class="impact-grid">
+    <div class="impact-cell"><div class="impact-time">1 týden</div><div class="impact-val" style="color: rgba(126,184,255,0.7)">Mozek přepíná. Nové fonetické vzory.</div></div>
+    <div class="impact-cell"><div class="impact-time">1 měsíc</div><div class="impact-val" style="color: rgba(126,184,255,0.85)">300–500 slov. Základní situace. Kortikální změny viditelné na MRI.</div></div>
+    <div class="impact-cell"><div class="impact-time">6 měsíců</div><div class="impact-val" style="color: var(--accent)">A2–B1. Rozumíš filmům. Jiný pohled na svět skrze jazyk.</div></div>
+    <div class="impact-cell"><div class="impact-time">1 rok</div><div class="impact-val" style="color: var(--accent)">B1–B2. Myslíš v jazyce. Sny v jazyce (signál fluency).</div></div>
+    <div class="impact-cell"><div class="impact-time">5 let</div><div class="impact-val" style="color: #fff; font-weight: 800">2–3 jazyky. Hustší šedá hmota. Demence o 4–5 let opožděna.</div></div>
+  </div>
+
+  <div class="section-title">Výhody a milníky</div>
+  <div class="bonus-grid">
+    <div class="bonus-item"><div class="bonus-icon">🧠</div><div><div class="bonus-title">Executive function boost</div><div class="bonus-desc">Bilingvní mozek neustále potlačuje jeden jazyk — tím trénuje inhibiční kontrolu = lepší rozhodování a focus v životě.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🌍</div><div><div class="bonus-title">Kulturní dekódování</div><div class="bonus-desc">Každý jazyk má koncepty bez překladu (japonské "ma", německý "Weltschmerz") — nový jazyk = nové myšlenkové kategorie.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">🏆</div><div><div class="bonus-title">Sny v jazyce</div><div class="bonus-desc">Poprvé sníš v cizím jazyce = přelomový milestone. Mozek ho zpracovává jako mateřský. Fluentní emoční přístup.</div></div></div>
+    <div class="bonus-item"><div class="bonus-icon">♾️</div><div><div class="bonus-title">Třetí jazyk je snazší</div><div class="bonus-desc">Po druhém jazyce se mozek naučí jak se učí jazyky — třetí jde o 30–40% rychleji. Meta-učení nastoupí.</div></div></div>
+  </div>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const map = ['studium','knihy','psyche','lucid','memoria','jazyky'];
+    document.querySelectorAll('.nav-btn')[map.indexOf(id)].classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function setPsycheView(view) {
+    ['priroda','ticho','masaze','combo'].forEach(v => {
+      document.getElementById('psyche-' + v).style.display = (v === view) ? 'block' : 'none';
+    });
+    document.querySelectorAll('#psycheToggle .freq-btn').forEach((b,i) => {
+      b.classList.toggle('active', ['priroda','ticho','masaze','combo'][i] === view);
+    });
+  }
+</script>
+</body>
+</html>
