@@ -8,6 +8,7 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ahoj">
 <title>Život je hra — Zápis dne</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -66,6 +67,7 @@
   .habit .hstreak.hot{color:var(--gold)}
   .badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--muted);
     border:1px solid var(--line);border-radius:5px;padding:2px 5px}
+  .badge.ok{color:var(--gold);border-color:var(--edge-dim)}
   .hlvl{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);font-weight:400;margin-top:3px}
   .habit.lvls .hname{text-decoration:none}
   .pills{display:flex;gap:5px}
@@ -248,6 +250,8 @@
   .lvl-edit input{background:#0D0D15;border:1px solid var(--line);border-radius:7px;
     padding:7px 9px;color:var(--text);font-family:'DM Mono',monospace;font-size:10px}
   .set-h .del{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:4px}
+  .set-h input[type=number]{background:#0D0D15;border:1px solid var(--line);border-radius:7px;
+    padding:8px 5px;color:var(--text);font-family:'DM Mono',monospace;font-size:10px}
   #baseXp{width:100%;background:#0D0D15;border:1px solid var(--line);border-radius:9px;
     padding:11px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px}
   .note{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);line-height:1.7;margin-top:8px}
@@ -467,6 +471,7 @@ function load(){
   state.habits.forEach(function(h){
     if(h.scoring!=="levels") h.scoring = "binary";
     if(!h.levels || typeof h.levels!=="object") h.levels = {};
+    h.weeklyTarget = Math.max(1, +h.weeklyTarget||1);
   });
   /* v3: projekty pro pracovní modul */
   if(!Array.isArray(state.projects)) state.projects = [];
@@ -521,7 +526,7 @@ function setVal(date, hid, v){
 function toggle(date, hid){ setVal(date, hid, isDone(date,hid)?0:1); }
 
 function habitStreak(h){
-  if(h.type==="weekly") return weeklyStreak(h.id);
+  if(h.type==="weekly") return weeklyStreak(h);
   var s=0, d=todayISO();
   if(!isDone(d,h.id)) d=shiftDate(d,-1); /* dnešek se nepočítá proti */
   while(isDone(d,h.id)){ s++; d=shiftDate(d,-1); }
@@ -533,8 +538,11 @@ function longestStreak(h){
   }).sort();
   if(!dates.length) return 0;
   if(h.type==="weekly"){
-    var weeks = {}; dates.forEach(function(d){ weeks[weekKey(d)]=1; });
-    var ws = Object.keys(weeks).sort(), best=1, cur=1;
+    var target = Math.max(1, +h.weeklyTarget||1);
+    var counts = weekCounts(h.id);
+    var ws = Object.keys(counts).filter(function(w){ return counts[w]>=target; }).sort();
+    if(!ws.length) return 0;
+    var best=1, cur=1;
     for(var i=1;i<ws.length;i++){
       cur = (weekKey(shiftDate(ws[i],-7))===ws[i-1]) ? cur+1 : 1;
       if(cur>best) best=cur;
@@ -554,14 +562,22 @@ function weekKey(iso){
   d.setDate(d.getDate()-day);
   return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
 }
-function weeklyStreak(hid){
-  var doneWeeks = {};
+function weekCounts(hid){
+  var counts = {};
   for(var date in state.records){
-    if(state.records[date][hid]) doneWeeks[weekKey(date)]=1;
+    if(state.records[date][hid]) counts[weekKey(date)] = (counts[weekKey(date)]||0)+1;
   }
+  return counts;
+}
+function thisWeekCount(hid){
+  return weekCounts(hid)[weekKey(todayISO())]||0;
+}
+function weeklyStreak(h){
+  var target = Math.max(1, +h.weeklyTarget||1);
+  var counts = weekCounts(h.id);
   var s=0, wk = weekKey(todayISO());
-  if(!doneWeeks[wk]){ wk = weekKey(shiftDate(wk,-7)); } /* tento týden ještě může přijít */
-  while(doneWeeks[wk]){ s++; wk = weekKey(shiftDate(wk,-7)); }
+  if((counts[wk]||0) < target){ wk = weekKey(shiftDate(wk,-7)); } /* tento týden ještě běží */
+  while((counts[wk]||0) >= target){ s++; wk = weekKey(shiftDate(wk,-7)); }
   return s;
 }
 
@@ -630,7 +646,7 @@ function renderEntry(){
       }
       html += '<div class="habit'+(on?" done":"")+(h.scoring==="levels"?" lvls":"")+'" data-h="'+esc(h.id)+'">'+
         mid+
-        (h.type==="weekly" ? '<span class="badge">TÝDNĚ</span>' : '')+
+        (h.type==="weekly" ? '<span class="badge'+(thisWeekCount(h.id)>=(+h.weeklyTarget||1)?" ok":"")+'">TÝDNĚ '+thisWeekCount(h.id)+'/'+(+h.weeklyTarget||1)+'</span>' : '')+
         '<div class="hstreak'+(st>=7?" hot":"")+'">'+(st>0 ? "🔥"+st : "")+'</div>'+
         '</div>';
     });
@@ -785,7 +801,7 @@ projModal.addEventListener("click", function(ev){
   if(ev.target===projModal){ projModal.classList.remove("open"); renderWheel(); renderWorkList(); }
 });
 document.getElementById("projAdd").addEventListener("click", function(){
-  state.projects.push({id:"p"+Date.now().toString(36), name:"Nový projekt", firma:"",
+  state.projects.push({id:"p"+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36), name:"Nový projekt", firma:"",
     typ:"hodinova", sazba:0, done:false, doneDate:null});
   save(); renderProj();
 });
@@ -1067,6 +1083,8 @@ function renderSettings(){
         '<option value="daily"'+(h.type==="daily"?" selected":"")+'>denní</option>'+
         '<option value="weekly"'+(h.type==="weekly"?" selected":"")+'>týdenní</option>'+
       '</select>'+
+      (h.type==="weekly" ? '<input type="number" data-f="weeklyTarget" value="'+(+h.weeklyTarget||1)+
+        '" min="1" max="7" step="1" title="Kolikrát za týden" style="width:52px">' : '')+
       '<select data-f="scoring">'+
         '<option value="binary"'+(h.scoring!=="levels"?" selected":"")+'>1 bod</option>'+
         '<option value="levels"'+(h.scoring==="levels"?" selected":"")+'>úrovně 1–3</option>'+
@@ -1093,9 +1111,9 @@ document.getElementById("habitSettings").addEventListener("input", function(ev){
   var h = state.habits[+row.getAttribute("data-i")];
   var f = ev.target.getAttribute("data-f");
   if(h && f){
-    h[f] = ev.target.value;
+    h[f] = (f==="weeklyTarget") ? Math.min(7, Math.max(1, +ev.target.value||1)) : ev.target.value;
     save();
-    if(f==="scoring") renderSettings(); /* zobrazit/skrýt editor úrovní */
+    if(f==="scoring" || f==="type") renderSettings(); /* zobrazit/skrýt editor úrovní a ×/týden */
   }
 });
 document.getElementById("habitSettings").addEventListener("click", function(ev){
@@ -1108,7 +1126,7 @@ document.getElementById("habitSettings").addEventListener("click", function(ev){
   }
 });
 document.getElementById("addHabit").addEventListener("click", function(){
-  state.habits.push({id:"h"+Date.now().toString(36), area:"zdravi", name:"Nový návyk", type:"daily"});
+  state.habits.push({id:"h"+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36), area:"zdravi", name:"Nový návyk", type:"daily", scoring:"binary", levels:{}, weeklyTarget:1});
   save(); renderSettings();
 });
 
