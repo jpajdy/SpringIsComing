@@ -1,5 +1,5 @@
 /* Život je hra — service worker v1 */
-var CACHE = "zjh-pwa-v7";
+var CACHE = "zjh-pwa-v9";
 var SHELL = ["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./mapa.html","./oblast-zdravi.html","./oblast-duchovni.html","./oblast-mentalni.html"];
 
 self.addEventListener("install", function(e){
