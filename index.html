@@ -176,14 +176,14 @@
   .chakra-photo{background-repeat:no-repeat}
   /* klikací kruh přímo na světýlku — malý viditelný prstenec, větší hit-area */
   .chakra-dot{position:absolute;transform:translate(-50%,-50%);
-    width:26px;height:26px;padding:0;border:none;background:transparent;cursor:pointer;
+    width:20px;height:20px;padding:0;border:none;background:transparent;cursor:pointer;
     display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
-  .chakra-dot::before{content:"";width:15px;height:15px;border-radius:50%;
-    border:2px solid var(--dc);background:rgba(255,255,255,.12);
-    box-shadow:0 0 6px var(--dc);transition:transform .15s, box-shadow .15s}
-  .chakra-dot:active::before{transform:scale(.9)}
-  .chakra-dot.on::before{transform:scale(1.35);background:var(--dc);
-    box-shadow:0 0 12px var(--dc),0 0 0 3px rgba(255,255,255,.5)}
+  .chakra-dot::before{content:"";width:8px;height:8px;border-radius:50%;
+    border:1.5px solid var(--dc);background:rgba(255,255,255,.15);
+    box-shadow:0 0 4px var(--dc);transition:transform .15s, box-shadow .15s}
+  .chakra-dot:active::before{transform:scale(.85)}
+  .chakra-dot.on::before{transform:scale(1.7);background:var(--dc);
+    box-shadow:0 0 9px var(--dc),0 0 0 2px rgba(255,255,255,.6)}
   .chakra-cap{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
   .chakra-cap b{color:var(--gold)}
   .chakra-pt:active{opacity:.85}
@@ -385,7 +385,7 @@
 
 <header>
   <h1>Mapa sebe</h1>
-  <div class="sub">Zápis dne · verze 22</div>
+  <div class="sub">Zápis dne · verze 23</div>
 </header>
 
 <main>
@@ -1324,7 +1324,7 @@ function nextAvatarLevel(L){
 }
 
 /* svislé pozice čaker na postavě (% výšky) — zarovnáno na světýlka */
-var CHAKRA_Y = { duchovni:26.5, mentalita:31.5, autentic:37, laska:43.5, osobnost:50.5, radost:57.5, zaklad:61 };
+var CHAKRA_Y = { duchovni:26, mentalita:31, autentic:37, laska:43, osobnost:50.5, radost:58, zaklad:62.5 };
 
 function renderChakraBody(){
   var el = document.getElementById("chakraBody");
@@ -1341,7 +1341,7 @@ function renderChakraBody(){
     var yp = CHAKRA_Y[c.area];
     var on = (openChakraArea===c.area);
     return '<button class="chakra-dot'+(on?" on":"")+'" data-a="'+c.area+'" title="'+esc((AREAS.filter(function(a){return a.id===c.area;})[0]||{}).name||"")+'" '+
-      'style="left:50%;top:'+yp+'%;--dc:'+c.color+'"></button>';
+      'style="left:54%;top:'+yp+'%;--dc:'+c.color+'"></button>';
   }).join("");
 
   var photo =
