@@ -63,6 +63,8 @@
     display:flex;align-items:center;justify-content:center;font-size:15px;color:transparent;transition:all .15s}
   .habit.done .hcheck{background:var(--gold);border-color:var(--gold);color:#FBFAF6}
   .habit .hname{flex:1;font-size:13.5px;font-weight:700}
+  .hstar{color:var(--gold);font-size:12px;margin-right:5px;vertical-align:1px}
+  .hmotiv{font-size:12px;font-style:italic;color:var(--muted);padding:2px 6px 9px 44px;margin-top:-4px}
   .habit.done .hname{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(139,135,120,.5)}
   .habit .hstreak{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
   .habit .hstreak.hot{color:var(--gold)}
@@ -185,6 +187,45 @@
   .chakra-dot.on::before{transform:scale(1.7);background:var(--dc);
     box-shadow:0 0 9px var(--dc),0 0 0 2px rgba(255,255,255,.6)}
   .chakra-cap{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+  /* citát dne — kurzívou mezi levelem a postavou */
+  .citat-dne{text-align:center;font-style:italic;color:var(--text);font-size:14.5px;line-height:1.55;
+    padding:2px 18px 6px;margin:-2px 0 2px}
+  .citat-dne .cit-arch{display:block;font-style:normal;font-size:11px;color:var(--gold);margin-top:5px;letter-spacing:.04em}
+  /* elixíry */
+  #elixiry{margin-top:18px}
+  .elx-title{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 2px 10px}
+  .elx-grid{display:flex;flex-direction:column;gap:8px}
+  .elx{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:12px;
+    background:#FFFFFF;border:1px solid var(--line);transition:opacity .2s}
+  .elx.on{border-color:var(--edge);box-shadow:0 0 0 1px var(--edge) inset, 0 2px 10px rgba(176,138,46,.12)}
+  .elx.locked{opacity:.62}
+  .elx-emo{font-size:22px;line-height:1.1;flex:none;filter:grayscale(0)}
+  .elx.locked .elx-emo{filter:grayscale(.85)}
+  .elx-body{flex:1;min-width:0}
+  .elx-nm{font-weight:700;font-size:14px;color:var(--text);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .elx-badge{font-family:'DM Mono',monospace;font-size:9.5px;padding:1px 7px;border-radius:20px;letter-spacing:.03em}
+  .elx-badge.act{background:rgba(78,156,66,.16);color:#3E7D34}
+  .elx-badge.perm{background:rgba(176,138,46,.16);color:var(--gold)}
+  .elx-badge.lock{background:var(--bg-soft);color:var(--muted)}
+  .elx-eff{font-size:12px;color:var(--text);margin-top:3px}
+  .elx-eff b{color:var(--gold)}
+  .elx-real{font-size:11.5px;color:var(--muted);margin-top:2px;font-style:italic}
+  .elx-prog{height:5px;background:var(--bg-soft);border-radius:3px;overflow:hidden;margin-top:7px}
+  .elx-prog>div{height:100%;background:var(--edge);border-radius:3px}
+  .elx-prog-t{font-size:10.5px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
+  /* mentoři */
+  .mnt-grid{display:flex;flex-direction:column;gap:8px}
+  .mnt{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:12px;
+    background:#FFFFFF;border:1px solid var(--line);border-left:3px solid var(--line);transition:opacity .2s}
+  .mnt.locked{opacity:.55}
+  .mnt-emo{font-size:22px;line-height:1.1;flex:none}
+  .mnt.locked .mnt-emo{filter:grayscale(.85)}
+  .mnt-body{flex:1;min-width:0}
+  .mnt-nm{font-weight:700;font-size:14px;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .mnt-lock{font-family:'DM Mono',monospace;font-size:9.5px;padding:1px 7px;border-radius:20px;background:var(--bg-soft);color:var(--muted);letter-spacing:.03em}
+  .mnt-role{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .mnt-line{font-size:13px;color:var(--text);font-style:italic;margin-top:7px;line-height:1.5}
+  .mnt-next{font-size:11px;color:var(--gold);font-family:'DM Mono',monospace;letter-spacing:.03em;margin:14px 2px 0;text-align:center}
   .chakra-cap b{color:var(--gold)}
   .chakra-pt:active{opacity:.85}
   .ch-detail{margin-top:12px;padding-top:12px}
@@ -342,6 +383,8 @@
   .btn.warn:active{border-color:#C6504A;color:#BE5647}
   .set-h{padding:9px 0;border-bottom:1px solid rgba(42,42,58,.5)}
   .sh-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .shstar{background:none;border:none;color:var(--line);font-size:17px;cursor:pointer;padding:2px 4px;line-height:1;flex:none}
+  .shstar.on{color:var(--gold)}
   .sh-ctrls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .set-h input[type=text]{flex:1;min-width:0;background:#F7F3EB;border:1px solid var(--line);
     border-radius:7px;padding:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px}
@@ -385,12 +428,12 @@
 
 <header>
   <h1>Mapa sebe</h1>
-  <div class="sub">Zápis dne · verze 23</div>
+  <div class="sub">Zápis dne · verze 27</div>
 </header>
 
 <main>
   <!-- ============ ZÁPIS ============ -->
-  <section class="view on" id="view-zapis">
+  <section class="view" id="view-zapis">
     <div id="dateNav">
       <button id="prevDay" aria-label="Předchozí den">‹</button>
       <div id="dateLabel"><div class="d"></div><div class="p"></div></div>
@@ -418,17 +461,22 @@
   </section>
 
   <!-- ============ PŘEHLED ============ -->
-  <section class="view" id="view-prehled">
+  <section class="view on" id="view-prehled">
     <div class="card">
       <h3>Level hráče · průměr všech oblastí</h3>
       <div id="lvlRow"><div id="lvlNum">1</div><div id="lvlXp"></div></div>
       <div id="xpBar"><div></div></div>
     </div>
+    <div class="citat-dne" id="citatDne"></div>
     <div class="card" id="chakraCard" style="background:#FBFAF6">
-      <h3>Tělo a čakry · encyklopedie</h3>
+      <h3>That's you:</h3>
       <div id="chakraBody"></div>
-      <div class="note" id="chakraHint" style="text-align:center;margin-top:2px">Klikni na kruh na těle a poznej svou čakru do hloubky. 🌈</div>
       <div id="chakraDetail"></div>
+      <div id="elixiry"></div>
+    </div>
+    <div class="card" id="mentorCard">
+      <h3>Mentoři · průvodci na cestě</h3>
+      <div id="mentors"></div>
     </div>
     <div class="card">
       <h3>Posledních 14 dní · plnění po oblastech</h3>
@@ -490,7 +538,7 @@
     <div class="card">
       <h3>Startovní základ</h3>
       <input type="number" id="baseXp" min="0" step="1" inputmode="numeric">
-      <div class="note">Startovní XP — dosavadní roky se počítají. Rozdělí se rovným dílem mezi 7 oblastí.
+      <div class="note">Startovní aura — dosavadní roky se počítají. Rozdělí se rovným dílem mezi 7 oblastí.
       Levely běží per oblast (kalibrace na ~10 let do L100 při poctivém plnění); celkový level hráče je jejich průměr.</div>
     </div>
     <div class="card">
@@ -530,8 +578,8 @@
 <div id="toast"></div>
 
 <nav>
-  <button data-v="zapis" class="on"><span class="ic">✓</span>Zápis</button>
-  <button data-v="prehled"><span class="ic">◈</span>Přehled</button>
+  <button data-v="zapis"><span class="ic">✓</span>Zápis</button>
+  <button data-v="prehled" class="on"><span class="ic">◈</span>Přehled</button>
   <button data-v="oblasti"><span class="ic">✦</span>Oblasti</button>
   <button data-v="nastaveni"><span class="ic">⚙</span>Nastavení</button>
 </nav>
@@ -787,6 +835,7 @@ function loadQuests(cb){
 }
 var saveTimer=null;
 function save(){
+  if(typeof _elxClearCache==="function") _elxClearCache();
   clearTimeout(saveTimer);
   saveTimer=setTimeout(function(){
     try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
@@ -949,8 +998,71 @@ function areaWeight(areaId){
   });
   return w>0 ? w : 1;
 }
-/* surová XP oblasti = body z návyků × jejich podíl + overpower bonus (+5 % do všech)
-   + rovný podíl startovního baseXp */
+/* ============ ELIXÍRY (model A: násobič zisku podle aktivního okna) ============
+   Elixír se odemkne streakem/počtem u zdrojového návyku. Dokud je aktivní,
+   aura získaná v ten den se násobí (+bonus). Zisky zůstávají i po vypršení. */
+var ELIXIRS = [
+  {id:"dech_klidu",   name:"Dech klidu",    emoji:"🕊", src:"meditace",     thr:7,   mode:"streak", type:"temp",  dur:3,   bonus:0.05, scope:"all",      real:"nižší stres, klidnější reakce"},
+  {id:"pust_svetla",  name:"Půst světla",   emoji:"☀️", src:"h-pust",       thr:7,   mode:"count",  type:"temp",  dur:3,   bonus:0.06, scope:"all",      real:"odpočinek trávení, jasná hlava"},
+  {id:"sila_korene",  name:"Síla kořene",   emoji:"🪨", src:"fitko",        thr:21,  mode:"streak", type:"temp",  dur:14,  bonus:0.08, scope:"zaklad",   real:"víc energie, pevné tělo"},
+  {id:"spanek_krale", name:"Spánek krále",  emoji:"👑", src:"spanek",       thr:30,  mode:"streak", type:"temp",  dur:14,  bonus:0.05, scope:"all",      real:"regenerace, nálada, paměť"},
+  {id:"zrcadlo",      name:"Zrcadlo pravdy",emoji:"🪞", src:"dohody",       thr:30,  mode:"streak", type:"temp",  dur:30,  bonus:0.10, scope:"autentic", real:"míň dramat, čisté vztahy"},
+  {id:"hluboka",      name:"Hluboká práce", emoji:"🎯", src:"offline",      thr:30,  mode:"streak", type:"temp",  dur:30,  bonus:0.10, scope:"osobnost", real:"víc fokusu, míň roztěkanosti"},
+  {id:"ledovy_stit",  name:"Ledový štít",   emoji:"🛡", src:"h-otuzovani",  thr:90,  mode:"streak", type:"while", dur:0,   bonus:0.05, scope:"zaklad",   real:"odolnost, imunita, vůle"},
+  {id:"ledove_srdce", name:"Ledové srdce",  emoji:"❄️", src:"h-otuzovani",  thr:720, mode:"streak", type:"rok",   dur:365, bonus:0.05, scope:"all",      real:"mistrovství nad nepohodlím"},
+  {id:"ziva_voda",    name:"Živá voda",     emoji:"💧", src:"noalkohol",    thr:365, mode:"streak", type:"perm",  dur:0,   bonus:0.08, scope:"zaklad",   real:"jasná mysl, spánek, zdraví jater"},
+  {id:"kamen_mudrcu", name:"Kámen mudrců",  emoji:"🔮", src:"meditace",     thr:365, mode:"streak", type:"perm",  dur:0,   bonus:0.03, scope:"all",      real:"trvalá vyrovnanost"}
+];
+/* seřazené dny, kdy byl zdrojový návyk splněn (>0) */
+function _elxDone(habitId){
+  var arr=[];
+  for(var d in state.records){ if(d.charAt(0)==="_") continue; if((+state.records[d][habitId]||0)>0) arr.push(d); }
+  arr.sort();
+  return arr;
+}
+/* mapa den → streak (počet po sobě jdoucích dní končících tímto dnem) */
+function _elxStreakMap(doneArr){
+  var map={};
+  for(var i=0;i<doneArr.length;i++){ var d=doneArr[i]; map[d]=(map[shiftDate(d,-1)]||0)+1; }
+  return map;
+}
+/* předpočet dat elixíru (cache v rámci jednoho renderu) */
+var _elxCache={};
+function _elxPData(elx){
+  if(_elxCache[elx.id]) return _elxCache[elx.id];
+  var done=_elxDone(elx.src);
+  var map=_elxStreakMap(done);
+  var set={}; for(var i=0;i<done.length;i++) set[done[i]]=true;
+  var unlock=null;
+  if(elx.mode==="count"){ if(done.length>=elx.thr) unlock=done[elx.thr-1]; }
+  else { for(var j=0;j<done.length;j++){ if(map[done[j]]>=elx.thr){ unlock=done[j]; break; } } }
+  var pd={done:done, map:map, set:set, unlock:unlock};
+  _elxCache[elx.id]=pd;
+  return pd;
+}
+function _elxClearCache(){ _elxCache={}; }
+/* je elixír aktivní v daný den? */
+function _elxActiveOn(elx, dateISO){
+  var pd=_elxPData(elx);
+  if(elx.type==="while") return (pd.map[dateISO]||0)>=elx.thr;
+  if(!pd.unlock || dateISO<pd.unlock) return false;
+  if(elx.type==="perm") return true;
+  if(elx.type==="rok")  return dateISO<=shiftDate(pd.unlock, elx.dur);
+  if(elx.type==="temp"){ for(var k=0;k<elx.dur;k++){ if(pd.set[shiftDate(dateISO,-k)]) return true; } return false; }
+  return false;
+}
+/* násobič aury pro oblast v daný den = 1 + Σ bonusů aktivních elixírů té oblasti */
+function elixirMult(areaId, dateISO){
+  var m=1;
+  for(var i=0;i<ELIXIRS.length;i++){
+    var e=ELIXIRS[i];
+    if(e.scope!=="all" && e.scope!==areaId) continue;
+    if(_elxActiveOn(e, dateISO)) m+=e.bonus;
+  }
+  return m;
+}
+
+/* surová XP oblasti = Σ (body z návyků × podíl × elixírový násobič dne) + overpower + baseXp */
 function areaRawXP(areaId){
   var xp = 0, shares = {};
   state.habits.forEach(function(h){
@@ -958,14 +1070,44 @@ function areaRawXP(areaId){
     if(h.overpower) s += 0.05;           /* overpower: +5 % do KAŽDÉ oblasti navrch */
     if(s!==0) shares[h.id] = s;
   });
+  /* má tahle oblast vůbec nějaký elixír? (optimalizace) */
+  var hasElx=false;
+  for(var e=0;e<ELIXIRS.length;e++){ if(ELIXIRS[e].scope==="all"||ELIXIRS[e].scope===areaId){ hasElx=true; break; } }
   for(var date in state.records){
     if(date.charAt(0)==="_") continue;
     var r = state.records[date];
-    for(var k in r){ if(shares[k]) xp += (+r[k]||0) * shares[k]; }
+    var mult = hasElx ? elixirMult(areaId, date) : 1;
+    for(var k in r){ if(shares[k]) xp += (+r[k]||0) * shares[k] * mult; }
   }
   xp += (state.baseXp||0)/AREAS.length;
   return xp;
 }
+/* stav elixíru pro UI (k dnešku) */
+function elixirStatus(elx){
+  var pd=_elxPData(elx);
+  var today=todayISO();
+  var active=_elxActiveOn(elx, today);
+  var learned = elx.type==="while" ? active : !!pd.unlock;
+  var out={id:elx.id, learned:learned, active:active, perm:(elx.type==="perm"), type:elx.type, daysLeft:null, progress:0, metric:0};
+  if(elx.mode==="count"){ out.metric=pd.done.length; }
+  else {
+    /* nejlepší série (kvůli progresu u zamčených — nezkolabuje na 0 mimo dnešek) */
+    var best=0; for(var d in pd.map){ if(pd.map[d]>best) best=pd.map[d]; }
+    out.metric=best;
+  }
+  out.progress = Math.min(1, out.metric/elx.thr);
+  if(active){
+    if(elx.type==="temp"){
+      var lastDone=null;
+      for(var k=0;k<elx.dur;k++){ var dd=shiftDate(today,-k); if(pd.set[dd]){ lastDone=dd; break; } }
+      if(lastDone) out.daysLeft = elx.dur - Math.round((fromISO(today)-fromISO(lastDone))/86400000);
+    } else if(elx.type==="rok" && pd.unlock){
+      out.daysLeft = Math.round((fromISO(shiftDate(pd.unlock,elx.dur))-fromISO(today))/86400000);
+    }
+  }
+  return out;
+}
+
 /* normalizovaná XP = surová × (referenční váha / váha oblasti) */
 function areaXP(areaId){
   return areaRawXP(areaId) * (REF_HABITS / areaWeight(areaId));
@@ -1044,11 +1186,66 @@ function renderDate(){
     (selDate===todayISO()) ? "DNES" : selDate;
 }
 
+/* ============ MOTIVACE (5 na návyk, hlasem archetypu oblasti) ============ */
+var MOTIVACE = {
+  /* — Základ · Strážce — */
+  behkolo:["Nohy tě nesou životem. Poděkuj jim pohybem.","První kilometr bolí, poslední léčí.","Vyběhni. Hlava se cestou vyčistí sama.","Vítr do tváře je lék, co se nedá koupit.","Tělo v pohybu je tělo naživu."],
+  fitko:["Tělo je jediný domov, ze kterého se nedá odstěhovat.","Síla, kterou vybuduješ tady, tě podrží všude.","Každé opakování je slib sobě, že to nevzdáš.","Nejde o zrcadlo. Jde o to, co zvládneš, když je potřeba.","Zvedni to. Pak zvedni sebe."],
+  "h-finance":["Přehled o penězích je přehled o svobodě.","Co změříš, to zvládneš. Podívej se pravdě do očí.","Klid v hlavě začíná pořádkem v číslech.","Každá koruna má mít své místo.","Bohatství není o víc — je o dost a s klidem."],
+  "h-otuzovani":["Studená voda tě naučí, že nepohodlí není nepřítel.","Půl minuty dechu ve studeném tě posílí na celý den.","Kde tělo chce utéct, tam roste vůle.","Chlad probouzí to, co teplo uspalo.","Ovládni dech a ovládneš cokoliv."],
+  noalkohol:["Jasná hlava ráno je nejlepší odměna večera.","Nepotřebuješ nic, co ti bere ostrost.","Každý střízlivý den je den navíc pro tvé tělo.","Skutečný klid nepřichází ze skleničky.","Buď silnější než zvyk."],
+  priroda:["Les nespěchá, a přece všechno stihne.","Bosé nohy na zemi tě vrátí do těla.","Příroda je nejstarší lékárna. Navštěvuj ji.","Zelená uklidní oči i mysl.","Zakoř se v zemi, ať tě vítr nezlomí."],
+  spanek:["Spánek je nejsilnější lék, co máš zdarma.","Co nedospíš, zaplatíš dvakrát.","Regenerace není lenost — je to stavba.","Dobrá noc je základ dobrého dne.","Ulož tělo včas a vstane vděčné."],
+  strava:["Jsi, co jíš — vyber si moudře.","Jídlo je palivo i lék. Nebo jed.","Každé sousto je hlas pro tvé zdraví.","Tělo si pamatuje, čím ho krmíš.","Jez tak, jak chceš, aby ses cítil."],
+  yoga:["Ohebné tělo, ohebná mysl.","Dech vede pohyb, pohyb otevírá tělo.","Psoas je sval duše — pečuj o něj.","Napětí drží v těle. Dýchej ho ven.","Na podložce se učíš být, ne dělat."],
+  /* — Radost · Tvůrce — */
+  "h-hrani":["Hra není únik. Hra je návrat k sobě.","Dospělost bez hry je jen únava.","Kdo si hraje, ten se nezasekne.","Radost potřebuje prostor. Dej jí ho.","Nauč se marnit čas krásně."],
+  "h-prozitek":["Dnešek si zaslouží jednu vědomou krásu.","Zpomal a ochutnej okamžik.","Život se děje mezi úkoly, ne po nich.","Jeden plný nádech přítomnosti mění den.","Užij si to teď — jindy to nebude."],
+  "h-tvoreni":["Tvoř bez cíle. Radost je palivo, ne odměna.","Nemusí to být dobré. Musí to vzniknout.","V každém z nás je tvůrce, co chce ven.","Udělej něco, co tu ještě nebylo.","Tvorba je hra, kterou bereš vážně."],
+  /* — Osobnost · Stratég — */
+  dailyplan:["Nejdřív nejdůležitější úkol. Zbytek je hluk.","Den bez plánu řídí náhoda. Vezmi otěže.","Pět minut plánování ušetří hodinu chaosu.","Vítězství se plánují ráno.","Jasný cíl, jasný krok."],
+  ejakulace:["Zadržená energie je energie k použití.","Vrchol síly přichází sedmý den — vydrž.","Ovládni pud a získáš tah.","Nasměruj sílu výš, ne ven.","Disciplína tady se přelije do všeho."],
+  "h-pust":["Půst je pauza, po které chutná vše víc.","Prázdný žaludek, jasná hlava.","Kdo umí říct ne jídlu, umí říct ne čemukoliv.","Občas nejíst je taky forma síly.","Tělo se čistí, když mu dáš klid."],
+  offline:["Pozornost je měna. Neutrácej ji zadarmo.","Telefon dolů, hlava nahoru.","Scroll ti nevrátí čas. Zavři to.","Nuda je brána k nápadům. Nevyhýbej se jí.","Buď tvůrce svého života, ne konzument cizího."],
+  porn:["Skutečná blízkost porazí každou obrazovku.","Nekrm mozek náhražkou. Šetři touhu pro život.","Každé ne posílí tvou vůli.","Jasná mysl si žádá čisté vstupy.","Vydrž — svoboda je na druhé straně zvyku."],
+  /* — Láska · Pečovatel — */
+  "h-pratele":["Přátelství se měří časem, ne slovy.","Zavolej tomu, na kom ti záleží. Teď.","Dobří lidé jsou nejlepší investice.","Smích s přáteli léčí líp než odpočinek.","Buď ten, kdo se ozve první."],
+  "h-zena":["Láska žije v pozornosti, ne v samozřejmosti.","Buď tady — plně, ne jen tělem.","Malé gesto dnes je víc než velký slib zítra.","Naslouchej, jako bys ji poznával znovu.","Vztah je zahrada. Zalévej ho."],
+  rodina:["Děti hláskují lásku jako Č-A-S.","Tenhle věk se nevrátí. Buď u toho.","Nejlepší dárek je tvá plná přítomnost.","Hraj si na zemi — vzpomínky se rodí dole.","Odlož telefon. Její oči si to pamatují."],
+  /* — Autentičnost · Bard — */
+  denik:["Napsat to znamená vidět to jasně.","Deník je zrcadlo, které nelže.","Co pojmenuješ, přestane tě ovládat.","Pár řádků večer vyčistí hlavu na noc.","Piš pravdu — nikdo jiný to číst nemusí."],
+  "h-sdileni":["Tvůj hlas má cenu. Nepolykej ho.","Sdílené břímě je lehčí, sdílená radost větší.","Upřímnost zbližuje víc než dokonalost.","Řekni, co cítíš — dřív než to zkysne.","Zranitelnost je odvaha, ne slabost."],
+  /* — Mentalita · Mudrc — */
+  cteni:["Kniha je nejlevnější cesta cizí zkušeností.","Deset stran denně z tebe za rok udělá jiného člověka.","Kdo čte, žije mnoho životů.","Mysl roste tím, čím ji krmíš.","Zavři obrazovku, otevři knihu."],
+  palac:["Paměť není dar — je to trénovaná dovednost.","Postav si palác a nikdy nezapomeneš.","Co si představíš, to si zapamatuješ.","Mozek miluje obrazy. Dej mu je.","Trénuj paměť dnes, poděkuješ si zítra."],
+  vzdelavani:["Uč se tak, abys to uměl vysvětlit dítěti.","Opakování v čase poráží biflování přes noc.","Poznávej. Mysl je nástroj, ne pán.","Investice do hlavy nese největší úrok.","Každá hodina studia je krok k mistrovství."],
+  /* — Duchovní · Poutník — */
+  dohody:["Buď bezúhonný ve slovech.","Neber si nic osobně — není to o tobě.","Nedělej si domněnky. Ptej se.","Dělej vše, jak nejlíp umíš — dnes.","Čtyři dohody, celý život praxe."],
+  "h-modlitba":["Modlitba je rozhovor, ne prosba.","Vděčnost je nejkratší cesta k Bohu.","Ztiš se a naslouchej — i to je modlitba.","Srdce ví, co slova neumí.","Přátelství s Bohem se pěstuje denně."],
+  meditace:["Deset minut ticha ti vrátí celý den.","Nejsi své myšlenky. Jsi jejich pozorovatel.","Dech je kotva. Vždycky je tady.","Ticho není prázdno. Ticho je plnost.","Seď a nedělej nic — je to nejtěžší cvičení."]
+};
+/* výchozí hlavní návyky (jednorázově, pak respektuje volbu uživatele) */
+function initMainHabits(){
+  if(state._mainInit) return;
+  var def={meditace:1, fitko:1, spanek:1, noalkohol:1, "h-otuzovani":1};
+  state.habits.forEach(function(h){ if(def[h.id]) h.main=true; });
+  state._mainInit=true;
+  save();
+}
+/* dnešní motivace návyku (rotuje po dnech) */
+function habitMotiv(h){
+  var arr=MOTIVACE[h.id];
+  if(!arr||!arr.length) return "";
+  return arr[dayOfYear()%arr.length];
+}
+
 function renderEntry(){
   renderDate();
+  initMainHabits();
   var html = "";
   AREAS.forEach(function(a){
     var hs = state.habits.filter(function(h){ return h.area===a.id; });
+    hs.sort(function(x,y){ return (y.main?1:0)-(x.main?1:0); });  /* hlavní návyky první */
     if(!hs.length) return;
     var done = hs.filter(function(h){ return isDone(selDate,h.id); }).length;
     html += '<div class="area">'+
@@ -1058,21 +1255,23 @@ function renderEntry(){
       var v = val(selDate,h.id);
       var on = v>=1;
       var st = habitStreak(h);
+      var star = h.main ? '<span class="hstar">★</span>' : '';
       var mid;
       if(h.scoring==="levels"){
-        mid = '<div class="hname">'+esc(h.name)+
+        mid = '<div class="hname">'+star+esc(h.name)+
           (on && h.levels[v] ? '<div class="hlvl">'+esc(h.levels[v])+'</div>' : '')+'</div>'+
           '<div class="pills">'+[1,2,3].map(function(L){
             return '<button class="pill'+(v===L?" on":"")+'" data-lvl="'+L+'">'+L+'</button>';
           }).join("")+'</div>';
       }else{
-        mid = '<div class="hcheck">✓</div><div class="hname">'+esc(h.name)+'</div>';
+        mid = '<div class="hcheck">✓</div><div class="hname">'+star+esc(h.name)+'</div>';
       }
       html += '<div class="habit'+(on?" done":"")+(h.scoring==="levels"?" lvls":"")+'" data-h="'+esc(h.id)+'">'+
         mid+
         (h.type==="weekly" ? '<span class="badge'+(thisWeekCount(h.id)>=(+h.weeklyTarget||1)?" ok":"")+'">TÝDNĚ '+thisWeekCount(h.id)+'/'+(+h.weeklyTarget||1)+'</span>' : '')+
         '<div class="hstreak'+(st>=7?" hot":"")+'">'+(st>0 ? "🔥"+st : "")+'</div>'+
         '</div>';
+      if(h.main){ var mv=habitMotiv(h); if(mv) html += '<div class="hmotiv">„'+esc(mv)+'"</div>'; }
     });
     html += '</div>';
   });
@@ -1270,7 +1469,156 @@ document.getElementById("todayBtn").addEventListener("click", function(){
    RENDER — PŘEHLED
    ===================================================================== */
 
+/* ---- Citát dne (hlasem archetypů, střídá se po dnech) ---- */
+var CITATY = [
+  {t:"Tělo je chrám i zbraň. Postav se pevně.", a:"Strážce"},
+  {t:"Kde stojíš nohama, tam začíná síla.", a:"Strážce"},
+  {t:"Dýchej, zakořeň, vydrž. Zbytek přijde.", a:"Strážce"},
+  {t:"Tvoř bez cíle. Radost je palivo, ne odměna.", a:"Tvůrce"},
+  {t:"Hra není únik. Hra je návrat k sobě.", a:"Tvůrce"},
+  {t:"Dnešek si zaslouží jednu malou krásu.", a:"Tvůrce"},
+  {t:"Disciplína je svoboda. Dělej, cos slíbil.", a:"Stratég"},
+  {t:"Malý krok každý den porazí velký sen jednou za rok.", a:"Stratég"},
+  {t:"Nejdřív to důležité. Zbytek počká.", a:"Stratég"},
+  {t:"Buď tady. Přítomnost je největší dar.", a:"Pečovatel"},
+  {t:"Láska se měří časem, ne slovy.", a:"Pečovatel"},
+  {t:"Zavolej tomu, na kom ti záleží. Teď.", a:"Pečovatel"},
+  {t:"Mluv svou pravdu — nahlas a laskavě.", a:"Bard"},
+  {t:"Tvůj hlas má cenu. Nepolykej ho.", a:"Bard"},
+  {t:"Být sám sebou je odvaha, ne samozřejmost.", a:"Bard"},
+  {t:"Poznávej. Mysl je nástroj, ne pán.", a:"Mudrc"},
+  {t:"Otázka, kterou si klademe, tvaruje odpověď, kterou žijeme.", a:"Mudrc"},
+  {t:"Ztiš myšlenky a uslyšíš, co víš.", a:"Mudrc"},
+  {t:"Ztiš se. V tichu je vše, co hledáš.", a:"Poutník"},
+  {t:"Nejsi svými myšlenkami. Jsi ten, kdo je pozoruje.", a:"Poutník"},
+  {t:"Odevzdej se cestě. Kráčí tě stejně, jako ji kráčíš ty.", a:"Poutník"}
+];
+function dayOfYear(){
+  var d=new Date(), s=new Date(d.getFullYear(),0,0);
+  return Math.floor((d-s)/86400000);
+}
+function renderCitat(){
+  var el=document.getElementById("citatDne");
+  if(!el) return;
+  var q=CITATY[dayOfYear()%CITATY.length];
+  el.innerHTML = '„'+esc(q.t)+'“<span class="cit-arch">— '+esc(q.a)+'</span>';
+}
+
+function renderElixiry(){
+  var el=document.getElementById("elixiry");
+  if(!el) return;
+  function scopeLabel(s){
+    if(s==="all") return "do všech oblastí";
+    var a=AREAS.filter(function(x){return x.id===s;})[0];
+    return "k oblasti "+(a?a.name:s);
+  }
+  var stats=ELIXIRS.map(function(e){ return {e:e, s:elixirStatus(e)}; });
+  function rank(o){ if(o.s.active) return 0; if(o.s.learned) return 1; return 2; }
+  stats.sort(function(a,b){ return rank(a)-rank(b); });
+
+  var rows=stats.map(function(o){
+    var e=o.e, s=o.s, cls, badge, extra="";
+    if(s.active){
+      cls="on";
+      if(s.perm) badge='<span class="elx-badge perm">TRVALÝ</span>';
+      else if(s.daysLeft!=null) badge='<span class="elx-badge act">AKTIVNÍ · '+s.daysLeft+' dní</span>';
+      else badge='<span class="elx-badge act">AKTIVNÍ</span>';
+    } else if(s.learned){
+      cls=""; badge='<span class="elx-badge lock">NAUČENO</span>';
+      extra='<div class="elx-prog-t">obnovíš opakováním návyku</div>';
+    } else {
+      cls="locked"; badge='<span class="elx-badge lock">🔒</span>';
+      var unit = e.mode==="count" ? (s.metric+"× / "+e.thr+"×") : ("nejlepší série "+s.metric+" / "+e.thr+" dní");
+      extra='<div class="elx-prog"><div style="width:'+Math.round(s.progress*100)+'%"></div></div>'+
+            '<div class="elx-prog-t">'+unit+'</div>';
+    }
+    return '<div class="elx '+cls+'">'+
+      '<div class="elx-emo">'+e.emoji+'</div>'+
+      '<div class="elx-body">'+
+        '<div class="elx-nm">'+esc(e.name)+badge+'</div>'+
+        '<div class="elx-eff">+'+Math.round(e.bonus*100)+' % <b>'+scopeLabel(e.scope)+'</b></div>'+
+        '<div class="elx-real">'+esc(e.real)+'</div>'+
+        extra+
+      '</div></div>';
+  }).join("");
+
+  el.innerHTML='<div class="elx-title">Elixíry · odměny za vytrvalost</div><div class="elx-grid">'+rows+'</div>';
+}
+
+/* ============ MENTOŘI (odemykání levely) ============
+   Staří (co level to jeden, L1–L6) + 7 nových archetypů (po 10 levelech
+   od kořene nahoru, L10–L70). Duchovní staří přejmenováni na archetypy. */
+var MENTORS = [
+  /* --- staří průvodci --- */
+  {id:"leo",     name:"Leo",     emoji:"🗡", role:"Spartánský trenér · tělo a disciplína", lvl:1,  color:"#C6504A",
+    lines:["Bolest je slabost opouštějící tělo.","Nečekej na motivaci. Vstaň a udělej to.","Tvé tělo unese víc, než si tvá mysl myslí."]},
+  {id:"lara",    name:"Dr. Lara",emoji:"🧬", role:"Vědkyně dlouhověkosti · mysl a zdraví", lvl:2,  color:"#5B7FC7",
+    lines:["Spánek je nejsilnější lék, co máš zdarma.","Mozek se učí celý život — pokud ho učíš.","Každý pohyb je vklad do tvého budoucího já."]},
+  {id:"victor",  name:"Victor",  emoji:"♟", role:"Chladný stratég · výkon a cíle", lvl:3,  color:"#E0A63E",
+    lines:["Disciplína poráží talent, když talent nemá disciplínu.","Nejdřív nejdůležitější úkol. Zbytek je hluk.","Emoce jsou špatný rádce, ale dobrý sluha."]},
+  {id:"sofos",   name:"Sofos",   emoji:"🏛", role:"Stoický průvodce · vztahy a ctnost", lvl:4,  color:"#5FA65B",
+    lines:["Nemůžeš ovládat vlnu, ale můžeš se naučit plavat.","Buď laskavý — každý svádí těžkou bitvu.","Čas s blízkými se nikdy nevrací. Neplýtvej jím."]},
+  {id:"sattva",  name:"Sattva",  emoji:"🧘", role:"Jógin ticha · energie a přítomnost", lvl:5,  color:"#9B6DC6",
+    lines:["Nejsi tělo, nejsi mysl. Jsi to, co je pozoruje.","Nauč se sedět. V bytí je největší síla.","Vše, co hledáš, je uvnitř. Ztiš se a najdeš to."]},
+  {id:"nadia",   name:"Nadia",   emoji:"🌊", role:"Léčitelka srdce · emoce a odpuštění", lvl:6,  color:"#4E86C6",
+    lines:["Cesta ven vede skrz. Necítěné se neuzdraví.","Pod každou emocí čeká klid, když ji necháš projít.","Odpuštění je dar, který dáváš hlavně sobě."]},
+  /* --- 7 nových archetypů (čakry odspodu nahoru) --- */
+  {id:"strazce",   name:"Strážce",   emoji:"🔴", role:"Základ · tělo, vůle, kořeny", lvl:10, color:"#C6504A",
+    lines:["Kde stojíš nohama, tam začíná síla.","Tělo je chrám i zbraň. Postav se pevně.","Dýchej, zakořeň, vydrž."]},
+  {id:"tvurce",    name:"Tvůrce",    emoji:"🟠", role:"Radost · hravost, tvorba, požitek", lvl:20, color:"#D8763A",
+    lines:["Tvoř bez cíle. Radost je palivo, ne odměna.","Hra je návrat k sobě.","Dnešek si zaslouží jednu malou krásu."]},
+  {id:"strateg",   name:"Stratég",   emoji:"🟡", role:"Osobnost · disciplína, výkon, síla", lvl:30, color:"#E0A63E",
+    lines:["Disciplína je svoboda.","Malý krok každý den porazí velký sen jednou za rok.","Dělej, cos slíbil."]},
+  {id:"pecovatel", name:"Pečovatel", emoji:"🟢", role:"Láska · blízkost, přítomnost, dávání", lvl:40, color:"#5FA65B",
+    lines:["Buď tady. Přítomnost je největší dar.","Láska se měří časem, ne slovy.","Zavolej tomu, na kom ti záleží."]},
+  {id:"bard",      name:"Bard",      emoji:"🔵", role:"Autentičnost · pravda, hlas, projev", lvl:50, color:"#4E86C6",
+    lines:["Mluv svou pravdu — nahlas a laskavě.","Tvůj hlas má cenu.","Být sám sebou je odvaha."]},
+  {id:"mudrc",     name:"Mudrc",     emoji:"🟣", role:"Mentalita · poznání, mysl, vhled", lvl:60, color:"#5B7FC7",
+    lines:["Poznávej. Mysl je nástroj, ne pán.","Otázka, kterou si klademe, tvaruje odpověď.","Ztiš myšlenky a uslyšíš, co víš."]},
+  {id:"poutnik",   name:"Poutník",   emoji:"🟪", role:"Duchovní · ticho, přesah, jednota", lvl:70, color:"#9B6DC6",
+    lines:["Ztiš se. V tichu je vše, co hledáš.","Nejsi své myšlenky. Jsi jejich pozorovatel.","Odevzdej se cestě."]}
+];
+
+function renderMentors(){
+  var el=document.getElementById("mentors");
+  if(!el) return;
+  var pLvl=Math.floor(playerLevel());
+  var doy=dayOfYear();
+  var unlocked=[], locked=[];
+  MENTORS.forEach(function(m){ (pLvl>=m.lvl?unlocked:locked).push(m); });
+  unlocked.sort(function(a,b){return b.lvl-a.lvl;});   /* nejnovější nahoře */
+  locked.sort(function(a,b){return a.lvl-b.lvl;});     /* nejbližší k odemčení nahoře */
+
+  function card(m, isLocked){
+    var line = m.lines[doy % m.lines.length];
+    if(isLocked){
+      return '<div class="mnt locked">'+
+        '<div class="mnt-emo">'+m.emoji+'</div>'+
+        '<div class="mnt-body"><div class="mnt-nm">'+esc(m.name)+
+          '<span class="mnt-lock">🔒 L'+m.lvl+'</span></div>'+
+        '<div class="mnt-role">'+esc(m.role)+'</div></div></div>';
+    }
+    return '<div class="mnt" style="border-left-color:'+m.color+'">'+
+      '<div class="mnt-emo">'+m.emoji+'</div>'+
+      '<div class="mnt-body"><div class="mnt-nm">'+esc(m.name)+'</div>'+
+      '<div class="mnt-role">'+esc(m.role)+'</div>'+
+      '<div class="mnt-line">„'+esc(line)+'"</div></div></div>';
+  }
+
+  var html="";
+  html+='<div class="mnt-grid">'+unlocked.map(function(m){return card(m,false);}).join("")+'</div>';
+  if(locked.length){
+    var next=locked[0];
+    html+='<div class="mnt-next">Další průvodce: '+next.emoji+' <b>'+esc(next.name)+'</b> na L'+next.lvl+'</div>';
+    html+='<div class="mnt-grid" style="margin-top:8px">'+locked.map(function(m){return card(m,true);}).join("")+'</div>';
+  }
+  el.innerHTML=html;
+}
+
 function renderOverview(){
+  renderCitat();
+  renderElixiry();
+  renderMentors();
   var pLvl = playerLevel();
   var pLvlFloor = Math.floor(pLvl);
   document.getElementById("lvlNum").textContent = pLvlFloor;
@@ -1460,7 +1808,7 @@ function renderQuestCards(){
     if(!areaQuestPending(a.id)) return "";
     var qs = areaQuests(a.id);
     if(!qs) return "";
-    var statusLine = '<div class="q-status ready">⏳ Máš dost XP na L'+(L+1)+' — splň quest pro postup!</div>';
+    var statusLine = '<div class="q-status ready">⏳ Máš dost aury na L'+(L+1)+' — splň quest pro postup!</div>';
     var opts = qs.map(function(q,idx){
       return '<div class="q-opt" data-a="'+a.id+'" data-l="'+L+'" data-i="'+idx+'">'+
         '<div class="q-opt-body"><div class="q-t">'+esc(q.t)+'</div>'+
@@ -1477,12 +1825,12 @@ function renderQuestCards(){
     box.innerHTML = '<div class="card" style="text-align:center;padding:22px 16px">'+
       '<div style="font-size:22px;margin-bottom:6px">🌱</div>'+
       '<div style="font-weight:600;color:var(--text)">Teď nemáš žádný quest ke splnění</div>'+
-      '<div class="note" style="margin-top:4px">Sbírej XP plněním návyků — až budeš mít dost, quest se tu objeví.</div></div>';
+      '<div class="note" style="margin-top:4px">Sbírej auru plněním návyků — až budeš mít dost, quest se tu objeví.</div></div>';
     return;
   }
   var header = '<div class="card" style="padding-bottom:10px">'+
     '<h3>Questy ke splnění</h3>'+
-    '<div class="note" style="margin-top:2px">Máš dost XP — splň quest a odemkni další level. Ostatní oblasti zatím sbírají XP.</div></div>';
+    '<div class="note" style="margin-top:2px">Máš dost aury — splň quest a odemkni další level. Ostatní oblasti zatím sbírají auru.</div></div>';
   box.innerHTML = header + cards.join("");
 }
 document.getElementById("questCards").addEventListener("click", function(ev){
@@ -1495,7 +1843,7 @@ document.getElementById("questCards").addEventListener("click", function(ev){
   completeQuest(areaId, L);
   var pending = areaQuestPending(areaId);
   renderOverview();
-  toast(pending ? "🎉 Level "+(L+1)+" odemčen v: "+aName : "✓ Quest L"+L+" splněn — sbírej XP na postup");
+  toast(pending ? "🎉 Level "+(L+1)+" odemčen v: "+aName : "✓ Quest L"+L+" splněn — sbírej auru na postup");
 });
 
 /* ---- Roční graf: měsíce vedle sebe, v každém 6 sloupců oblastí ---- */
@@ -1774,7 +2122,7 @@ var baseXpEl = document.getElementById("baseXp");
 baseXpEl.addEventListener("change", function(){
   state.baseXp = Math.max(0, parseInt(baseXpEl.value,10)||0);
   baseXpEl.value = state.baseXp;
-  save(); toast("Startovní XP uloženo");
+  save(); toast("Startovní aura uložena");
 });
 
 function renderSettings(){
@@ -1783,6 +2131,7 @@ function renderSettings(){
   state.habits.forEach(function(h,i){
     html += '<div class="set-h" data-i="'+i+'">'+
       '<div class="sh-top">'+
+        '<button class="shstar'+(h.main?" on":"")+'" data-f="main" title="Hlavní návyk (řadí se první + motivace)">★</button>'+
         '<input type="text" value="'+esc(h.name)+'" data-f="name">'+
         '<button class="del" aria-label="Smazat">✕</button>'+
       '</div>'+
@@ -1830,6 +2179,12 @@ document.getElementById("habitSettings").addEventListener("input", function(ev){
   }
 });
 document.getElementById("habitSettings").addEventListener("click", function(ev){
+  if(ev.target.classList.contains("shstar")){
+    var r = ev.target.closest(".set-h");
+    var hh = state.habits[+r.getAttribute("data-i")];
+    if(hh){ hh.main = !hh.main; save(); renderSettings(); }
+    return;
+  }
   if(!ev.target.classList.contains("del")) return;
   var row = ev.target.closest(".set-h");
   var i = +row.getAttribute("data-i");
